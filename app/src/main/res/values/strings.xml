@@ -4,4 +4,10 @@
     <string name="dashboard_button_history">History</string>
     <string name="dashboard_button_scoreboard">Scoreboard</string>
     <string name="dashboard_gameName">Memory Game</string>
+    <string name="profilepicture">profilePicture</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="skip">Skip</string>
+    <string name="login">Login</string>
 </resources>
