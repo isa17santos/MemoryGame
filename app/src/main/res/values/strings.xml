@@ -16,8 +16,4 @@
     <string name="quatroXquatroBoard">4x4 Board</string>
     <string name="seisXseisBoard">6x6 Board</string>
     <string name="board_size">Board size</string>
-    <string name="tvNumMoves">Moves: 0</string>
-    <string name="tvNumPairs">Pairs: 0</string>
-    <string name="image_button">image_button</string>
-
 </resources>
