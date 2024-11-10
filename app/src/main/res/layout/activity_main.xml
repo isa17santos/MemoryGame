@@ -87,6 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/white"
+        android:onClick="moveTo_dashboard_user"
         android:padding="18dp"
         android:text="@string/login"
         android:textColor="#3B84F1"
