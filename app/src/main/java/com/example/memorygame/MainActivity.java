@@ -57,4 +57,9 @@ public class MainActivity extends AppCompatActivity {
     {
         setContentView(R.layout.board6x6);
     }
+
+    public void moveTo_dashboard_anonymous (View view)
+    {
+        setContentView(R.layout.dashboard_anonymous);
+    }
 }
