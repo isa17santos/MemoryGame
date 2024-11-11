@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/system_accent2_100"
+    tools:ignore="NewApi">
+
+
+    <EditText
+        tools:ignore="LabelFor"
+        android:autofillHints="text"
+        android:id="@+id/IdTime"
+        android:layout_width="148dp"
+        android:layout_height="71dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="time"
+        android:text="@string/Time"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.028" />
+
+    <EditText
+        tools:ignore="LabelFor"
+        android:autofillHints="text"
+        android:id="@+id/IdScore"
+        android:layout_width="148dp"
+        android:layout_height="71dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="number"
+        android:text="@string/Score"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.028" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="400dp"
+        android:layout_height="500dp"
+        android:layout_margin="10dp"
+        android:layout_marginTop="88dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.636"
+        tools:ignore="MissingConstraints">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula2"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="1"
+            app:layout_row="1">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula10"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="0"
+            app:layout_row="4" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="109dp"
+            android:layout_height="98dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula12"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="2"
+            app:layout_row="4">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula11"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="1"
+            app:layout_row="4">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="109dp"
+            android:layout_height="98dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula3"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="2"
+            app:layout_row="1">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula1"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="0"
+            app:layout_row="1">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula4"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="0"
+            app:layout_row="2">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula5"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="1"
+            app:layout_row="2">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="109dp"
+            android:layout_height="98dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula6"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="2"
+            app:layout_row="2">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula7"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="0"
+            app:layout_row="3" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula8"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="1"
+            app:layout_row="3">
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="109dp"
+            android:layout_height="98dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/celula9"
+            app:cardBackgroundColor="@color/design_default_color_error"
+            app:layout_column="2"
+            app:layout_row="3">
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.gridlayout.widget.GridLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
