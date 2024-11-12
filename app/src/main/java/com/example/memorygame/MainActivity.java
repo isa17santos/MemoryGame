@@ -35,16 +35,16 @@ public class MainActivity extends AppCompatActivity {
         int childCount = gridLayout.getChildCount();
 
         List<Integer> imageResources = new ArrayList<>();
-        imageResources.add(R.drawable.candyCane);
+        imageResources.add(R.drawable.candycane);
         imageResources.add(R.drawable.christmas);
-        imageResources.add(R.drawable.christmasTree);
-        imageResources.add(R.drawable.christmasWreath);
-        imageResources.add(R.drawable.christmasOrnament);
+        imageResources.add(R.drawable.christmastree);
+        imageResources.add(R.drawable.christmaswreath);
+        imageResources.add(R.drawable.christmasornament);
         imageResources.add(R.drawable.december);
         imageResources.add(R.drawable.hat);
-        imageResources.add(R.drawable.gingerbreadMan);
+        imageResources.add(R.drawable.gingerbreadman);
         imageResources.add(R.drawable.gift);
-        imageResources.add(R.drawable.giftBox);
+        imageResources.add(R.drawable.giftbox);
 
         // Duplicar cada imagem para garantir que cada uma tenha um par
         List<Integer> pairedImages = new ArrayList<>(imageResources);
