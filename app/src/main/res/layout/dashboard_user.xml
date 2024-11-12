@@ -112,6 +112,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.911"
-        app:srcCompat="@drawable/coin_image" />
+        app:srcCompat="@drawable/coinImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
