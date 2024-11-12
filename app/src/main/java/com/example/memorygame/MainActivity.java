@@ -2,15 +2,20 @@ package com.example.memorygame;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Collections;
 
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
-
+    
     public void moveTo_boardsize_page (View view)
     {
         setContentView(R.layout.boardsize_page);
@@ -64,5 +69,46 @@ public class MainActivity extends AppCompatActivity {
     public void moveTo_dashboard_anonymous (View view)
     {
         setContentView(R.layout.dashboard_anonymous);
+    }
+
+    public ArrayList<Integer> imagesResources() {
+        ArrayList<Integer> imageResources = new ArrayList<>();
+        imageResources.add(R.drawable.candycane);
+        imageResources.add(R.drawable.christmas);
+        imageResources.add(R.drawable.christmastree);
+        imageResources.add(R.drawable.christmaswreath);
+        imageResources.add(R.drawable.christmasornament);
+        imageResources.add(R.drawable.december);
+        imageResources.add(R.drawable.hat);
+        imageResources.add(R.drawable.gingerbreadman);
+        imageResources.add(R.drawable.gift);
+        imageResources.add(R.drawable.giftbox);
+        imageResources.add(R.drawable.hotdrink);
+        imageResources.add(R.drawable.mistletoe);
+        imageResources.add(R.drawable.reindeer);
+        imageResources.add(R.drawable.sock);
+        imageResources.add(R.drawable.star);
+        imageResources.add(R.drawable.snowflake);
+        imageResources.add(R.drawable.penguin);
+        imageResources.add(R.drawable.christmasbell);
+        return imageResources;
+    }
+    
+    public void randomnizeCards(View view) {
+        GridLayout gridLayout = findViewById(R.id.GridLayout1);
+        ArrayList<Integer> pairedImages = imagesResources();
+        Collections.shuffle(pairedImages);
+
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            View child = gridLayout.getChildAt(i);
+            if (child instanceof CardView) {
+                CardView cardView = (CardView) child;
+                ImageView imageView = new ImageView(this);
+                imageView.setImageResource(pairedImages.get(i));
+                cardView.addView(imageView);
+            }
+
+        }
+        
     }
 }
