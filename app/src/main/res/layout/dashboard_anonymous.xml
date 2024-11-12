@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#B00020"
         android:fontFamily="serif"
+        android:onClick="moveTo_board3x4_anonymous"
         android:text="@string/dashboard_button_start"
         android:textAlignment="center"
         android:textColor="#FFFFFF"

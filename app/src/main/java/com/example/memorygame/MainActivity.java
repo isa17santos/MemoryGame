@@ -43,9 +43,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.dashboard_user);
     }
 
-    public void moveTo_board3x4 (View view)
+    public void moveTo_board3x4_anonymous (View view) { setContentView(R.layout.board3x4_anonymous);
+    }
+
+    public void moveTo_board3x4_user (View view)
     {
-        setContentView(R.layout.board3x4);
+        setContentView(R.layout.board3x4_user);
     }
 
     public void moveTo_board4x4 (View view)
