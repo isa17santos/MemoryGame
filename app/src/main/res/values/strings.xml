@@ -16,4 +16,19 @@
     <string name="quatroXquatroBoard">4x4 Board</string>
     <string name="seisXseisBoard">6x6 Board</string>
     <string name="board_size">Board size</string>
+    <string name="Time">Time:</string>
+    <string name="Score">Score:</string>
+    <string name="celula1">celula1</string>
+    <string name="celula2">celula2</string>
+    <string name="celula3">celula3</string>
+    <string name="celula4">celula4</string>
+    <string name="celula5">celula5</string>
+    <string name="celula6">celula6</string>
+    <string name="celula7">celula7</string>
+    <string name="celula8">celula8</string>
+    <string name="celula9">celula9</string>
+    <string name="celula10">celula10</string>
+    <string name="celula11">celula11</string>
+    <string name="celula12">celula12</string>
+
 </resources>
