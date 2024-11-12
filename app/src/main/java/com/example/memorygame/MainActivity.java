@@ -1,22 +1,13 @@
 package com.example.memorygame;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.GridLayout;
-import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,37 +21,6 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) GridLayout gridLayout = findViewById(R.id.GridLayout1); // Replace with your GridLayout ID
-        int childCount = gridLayout.getChildCount();
-
-        List<Integer> imageResources = new ArrayList<>();
-        imageResources.add(R.drawable.candyCane);
-        imageResources.add(R.drawable.christmas);
-        imageResources.add(R.drawable.christmasTree);
-        imageResources.add(R.drawable.christmasWreath);
-        imageResources.add(R.drawable.christmasOrnament);
-        imageResources.add(R.drawable.december);
-        imageResources.add(R.drawable.hat);
-        imageResources.add(R.drawable.gingerbreadMan);
-        imageResources.add(R.drawable.gift);
-        imageResources.add(R.drawable.giftBox);
-
-        // Duplicar cada imagem para garantir que cada uma tenha um par
-        List<Integer> pairedImages = new ArrayList<>(imageResources);
-        pairedImages.addAll(imageResources);
-
-        Collections.shuffle(pairedImages);
-
-        for(int i = 0; i < childCount; i++) {
-            View child = gridLayout.getChildAt(i);
-            if (child instanceof CardView) {
-                CardView cardView = (CardView) child;
-                ImageView imageView = new ImageView(this);
-                imageView.setImageResource(pairedImages.get(i));
-                cardView.addView(imageView);
-            }
-        }
     }
 
     public void moveTo_boardsize_page (View view)
