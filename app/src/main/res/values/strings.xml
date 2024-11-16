@@ -30,5 +30,19 @@
     <string name="celula10">celula10</string>
     <string name="celula11">celula11</string>
     <string name="celula12">celula12</string>
+    <string name="image1">Image1</string>
+    <string name="image2">Image2</string>
+    <string name="image3">Image3</string>
+    <string name="image4">Image4</string>
+    <string name="image5">Image5</string>
+    <string name="image6">Image6</string>
+    <string name="image7">Image7</string>
+    <string name="image8">Image8</string>
+    <string name="image9">Image9</string>
+    <string name="image10">Image10</string>
+    <string name="image11">Image11</string>
+    <string name="image12">Image12</string>
+
+
 
 </resources>
