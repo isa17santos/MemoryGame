@@ -76,10 +76,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.dashboard_anonymous);
     }
 
-    public ArrayList<MemoryCard> addImages(int size) {
+    public ArrayList<MemoryCard> CreateMemoryCards(int size) {
         ArrayList<Integer> imageResources = new ArrayList<>();
 
         if(size == 12) {
+            imageResources.add(R.drawable.candycane);
+            imageResources.add(R.drawable.christmas);
+            imageResources.add(R.drawable.christmastree);
+            imageResources.add(R.drawable.christmaswreath);
+            imageResources.add(R.drawable.christmasornament);
+            imageResources.add(R.drawable.december);
             imageResources.add(R.drawable.candycane);
             imageResources.add(R.drawable.christmas);
             imageResources.add(R.drawable.christmastree);
@@ -133,11 +139,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void randomizeCards() {
         int childCount = binding.GridLayout1.getChildCount();
-        memoryCards = addImages(childCount);
+        memoryCards = CreateMemoryCards(childCount);
 
-        for (int i = 0; i < childCount/2; i++) {
+        /*for (int i = 0; i < childCount/2; i++) {
             memoryCards.add(new MemoryCard(memoryCards.get(i).getImageId()));
-        }
+        }*/
 
          Collections.shuffle(memoryCards);
 
@@ -152,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView2.setOnClickListener(view -> {
-            // Handle the click event for imageView2 here
             memoryCards.get(1).onClick();
             binding.imageView2.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(1).getColor()));
 
@@ -162,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView3.setOnClickListener(view -> {
-            // Handle the click event for imageView3 here
             memoryCards.get(2).onClick();
             binding.imageView3.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(2).getColor()));
 
@@ -172,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView4.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(3).onClick();
             binding.imageView4.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(3).getColor()));
 
@@ -182,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView5.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(4).onClick();
             binding.imageView5.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(4).getColor()));
 
@@ -192,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView6.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(5).onClick();
             binding.imageView6.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(5).getColor()));
 
@@ -202,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView7.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(6).onClick();
             binding.imageView7.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(6).getColor()));
 
@@ -212,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView8.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(7).onClick();
             binding.imageView8.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(7).getColor()));
 
@@ -222,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView9.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(8).onClick();
             binding.imageView9.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(8).getColor()));
 
@@ -232,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView10.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(9).onClick();
             binding.imageView10.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(9).getColor()));
 
@@ -242,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView11.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(10).onClick();
             binding.imageView11.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(10).getColor()));
 
@@ -252,7 +248,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.imageView12.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
             memoryCards.get(11).onClick();
             binding.imageView12.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(11).getColor()));
 
