@@ -102,9 +102,35 @@ public class MainActivity extends AppCompatActivity {
             imageResources.add(R.drawable.december);
             imageResources.add(R.drawable.hat);
             imageResources.add(R.drawable.gingerbreadman);
+            imageResources.add(R.drawable.candycane);
+            imageResources.add(R.drawable.christmas);
+            imageResources.add(R.drawable.christmastree);
+            imageResources.add(R.drawable.christmaswreath);
+            imageResources.add(R.drawable.christmasornament);
+            imageResources.add(R.drawable.december);
+            imageResources.add(R.drawable.hat);
+            imageResources.add(R.drawable.gingerbreadman);
 
         }
         else if(size == 36){
+            imageResources.add(R.drawable.candycane);
+            imageResources.add(R.drawable.christmas);
+            imageResources.add(R.drawable.christmastree);
+            imageResources.add(R.drawable.christmaswreath);
+            imageResources.add(R.drawable.christmasornament);
+            imageResources.add(R.drawable.december);
+            imageResources.add(R.drawable.hat);
+            imageResources.add(R.drawable.gingerbreadman);
+            imageResources.add(R.drawable.gift);
+            imageResources.add(R.drawable.giftbox);
+            imageResources.add(R.drawable.hotdrink);
+            imageResources.add(R.drawable.mistletoe);
+            imageResources.add(R.drawable.reindeer);
+            imageResources.add(R.drawable.sock);
+            imageResources.add(R.drawable.star);
+            imageResources.add(R.drawable.snowflake);
+            imageResources.add(R.drawable.penguin);
+            imageResources.add(R.drawable.christmasbell);
             imageResources.add(R.drawable.candycane);
             imageResources.add(R.drawable.christmas);
             imageResources.add(R.drawable.christmastree);
@@ -141,11 +167,7 @@ public class MainActivity extends AppCompatActivity {
         int childCount = binding.GridLayout1.getChildCount();
         memoryCards = CreateMemoryCards(childCount);
 
-        /*for (int i = 0; i < childCount/2; i++) {
-            memoryCards.add(new MemoryCard(memoryCards.get(i).getImageId()));
-        }*/
-
-         Collections.shuffle(memoryCards);
+        Collections.shuffle(memoryCards);
 
         binding.imageView1.setOnClickListener(view -> {
             // Handle the click event for imageView1 here
