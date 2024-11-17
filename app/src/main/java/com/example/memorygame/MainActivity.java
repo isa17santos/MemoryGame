@@ -18,6 +18,30 @@ import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+
+
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.os.Handler;
+
+
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.memorygame.databinding.Board3x4AnonymousBinding;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class MainActivity extends AppCompatActivity {
 
     // Variables
@@ -27,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
     private ImageView firstCardImageView = null; // Declare a variable to store the ImageView
     int matchCount = 0;
     boolean isWaiting = false;
+
+    private TextView timerTextView;
+    private final Handler handler = new Handler();
+    private int seconds = 0; // Start from 0 seconds
+    private Runnable updateTimerRunnable;
+
+    private boolean initializeTimer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +71,43 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void startTimer() {
+        // Define the Runnable that updates the TextView every second
+        updateTimerRunnable = new Runnable() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void run() {
+                seconds++; // Increment seconds by 1
+
+                // Calculate minutes and seconds
+                int minutes = seconds / 60; // Calculate minutes
+                int remainingSeconds = seconds % 60; // Calculate remaining seconds
+
+                // Update the TextView with formatted time (MM:SS)
+                timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
+
+                // Post the Runnable again after 1 second (1000ms)
+                handler.postDelayed(this, 1000);
+            }
+        };
+
+        // Start the Runnable for the first time
+        handler.post(updateTimerRunnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Remove the Runnable to stop the timer when the activity is paused
+        handler.removeCallbacks(updateTimerRunnable);
+    }
+
+    private void stopTimer() {
+        // Remove the Runnable from the message queue to stop it from executing
+        handler.removeCallbacks(updateTimerRunnable);
+    }
+
 
     public void moveTo_boardsize_page(View view) {
         setContentView(R.layout.boardsize_page);
@@ -163,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
 
         binding = Board3x4AnonymousBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        timerTextView = binding.timerTextView;
+
 
         setupGame();
     }
@@ -178,6 +248,8 @@ public class MainActivity extends AppCompatActivity {
         firstCardImageView = null;
         matchCount = 0;
         isWaiting = false;
+        initializeTimer = false;
+
 
     }
 
@@ -193,8 +265,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleCardClick(ImageView imageView) {
-        if (isWaiting) {
-        }else {
+        if (!isWaiting) {
+
+            if(!initializeTimer){
+                initializeTimer = true;
+                startTimer();
+            }
             int index = (int) imageView.getTag();
             MemoryCard card = memoryCards.get(index);
 
@@ -221,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
                         if (matchCount == memoryCards.size() / 2) {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
+                            stopTimer();
                         }
                     } else {
                         isWaiting = true;
