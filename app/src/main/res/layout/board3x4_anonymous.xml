@@ -10,46 +10,64 @@
 
 
     <EditText
-        tools:ignore="LabelFor"
-        android:autofillHints="text"
         android:id="@+id/IdTime"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:autofillHints="text"
         android:ems="10"
         android:gravity="center"
         android:inputType="time"
         android:text="@string/Time"
-        android:autoSizeTextType="uniform"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.028"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintWidth_percent="0.38"
-        app:layout_constraintHeight_percent="0.1"/>
+        tools:ignore="LabelFor" />
+
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="133dp"
+        android:layout_height="73dp"
+        android:layout_marginTop="84dp"
+        android:autoSizeTextType="uniform"
+        android:ellipsize="end"
+        android:text="@string/Timer"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintHorizontal_bias="0.097"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.83"
+        tools:ignore="MissingConstraints" />
 
     <EditText
-        tools:ignore="LabelFor"
-        android:autofillHints="text"
         android:id="@+id/IdScore"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:autofillHints="text"
         android:ems="10"
         android:gravity="center"
         android:inputType="number"
         android:text="@string/Score"
-        android:autoSizeTextType="uniform"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.91"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.028"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintWidth_percent="0.38"
-        app:layout_constraintHeight_percent="0.1"/>
+        tools:ignore="LabelFor" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/MemoryGrid"

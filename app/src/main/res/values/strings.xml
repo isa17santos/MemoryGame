@@ -42,7 +42,7 @@
     <string name="image10">Image10</string>
     <string name="image11">Image11</string>
     <string name="image12">Image12</string>
-
+    <string name="Timer">00:00:00</string>
 
 
 </resources>
