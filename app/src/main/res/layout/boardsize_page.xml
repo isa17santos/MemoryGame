@@ -13,27 +13,30 @@
 
     <Button
         android:id="@+id/button_3x4_board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
-        android:onClick="moveTo_board3x4"
+        android:onClick="moveTo_board3x4_user"
         android:text="@string/tresXquatroBoard"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
-        android:textSize="45sp"
+        android:textSize="35sp"
+        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42" />
+        app:layout_constraintVertical_bias="0.42"
+        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintWidth_percent="0.73"/>
 
     <Button
         android:id="@+id/button_4x4_board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
         android:onClick="moveTo_board4x4"
@@ -41,18 +44,21 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
-        android:textSize="45sp"
+        android:textSize="35sp"
+        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.63" />
+        app:layout_constraintVertical_bias="0.63"
+        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintWidth_percent="0.73"/>
 
     <Button
         android:id="@+id/button_6x6_board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
         android:onClick="moveTo_board6x6"
@@ -60,28 +66,34 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
-        android:textSize="45sp"
+        android:textSize="35sp"
+        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.844" />
+        app:layout_constraintVertical_bias="0.844"
+        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintWidth_percent="0.73"/>
 
     <TextView
         android:id="@+id/textBoardSize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
         android:fontFamily="serif"
         android:text="@string/board_size"
         android:textAlignment="center"
         android:textColor="#C8E6C9"
-        android:textSize="48sp"
+        android:textSize="38sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.238" />
+        app:layout_constraintVertical_bias="0.238"
+        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintWidth_percent="0.73"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

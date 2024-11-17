@@ -13,43 +13,49 @@
         tools:ignore="LabelFor"
         android:autofillHints="text"
         android:id="@+id/IdTime"
-        android:layout_width="148dp"
-        android:layout_height="71dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:ems="10"
         android:gravity="center"
         android:inputType="time"
         android:text="@string/Time"
+        android:autoSizeTextType="uniform"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.028" />
+        app:layout_constraintVertical_bias="0.028"
+        app:layout_constraintWidth_percent="0.38"
+        app:layout_constraintHeight_percent="0.1"/>
 
     <EditText
         tools:ignore="LabelFor"
         android:autofillHints="text"
         android:id="@+id/IdScore"
-        android:layout_width="148dp"
-        android:layout_height="71dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:ems="10"
         android:gravity="center"
         android:inputType="number"
         android:text="@string/Score"
+        android:autoSizeTextType="uniform"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.028" />
+        app:layout_constraintVertical_bias="0.028"
+        app:layout_constraintWidth_percent="0.38"
+        app:layout_constraintHeight_percent="0.1"/>
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/MemoryGrid"
         android:clickable="false"
-        android:layout_width="400dp"
-        android:layout_height="500dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_margin="10dp"
         android:layout_marginTop="88dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,43 +64,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.636"
+        app:layout_constraintWidth_percent="0.88"
+        app:layout_constraintHeight_percent="0.70"
         tools:ignore="MissingConstraints">
 
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:gravity="center"
             android:text="@string/celula1"
             android:contentDescription="@string/image1"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="0"
-            app:layout_row="1">
-
+            app:layout_row="1"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView2"
             android:clickable="true"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:gravity="center"
             android:text="@string/celula2"
             android:contentDescription="@string/image2"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="1"
             app:layout_row="1"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1"
             tools:ignore="KeyboardInaccessibleWidget">
-
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="109dp"
-            android:layout_height="98dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:background="@color/design_default_color_error"
             android:clickable="true"
@@ -102,46 +114,56 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula3"
+            android:scaleType="fitCenter"
+            app:layout_column="2"
+            app:layout_row="1"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1"
             tools:ignore="ImageContrastCheck">
-
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView4"
             android:clickable="true"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula4"
             android:contentDescription="@string/image4"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="0"
-            app:layout_row="2">
+            app:layout_row="2"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
 
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView5"
             android:clickable="true"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula5"
             android:contentDescription="@string/image5"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="1"
-            app:layout_row="2">
+            app:layout_row="2"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
 
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView6"
-            android:layout_width="109dp"
-            android:layout_height="98dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:background="@color/design_default_color_error"
             android:clickable="true"
@@ -149,101 +171,124 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula6"
+            android:contentDescription="@string/image6"
+            android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="2"
             app:layout_row="2"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1"
             tools:ignore="ImageContrastCheck">
-
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView7"
             android:clickable="true"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula7"
             android:contentDescription="@string/image7"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="0"
-            app:layout_row="3" />
+            app:layout_row="3"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
+        </ImageView>
 
         <ImageView
             android:id="@+id/imageView8"
             android:clickable="true"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula8"
             android:contentDescription="@string/image8"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="1"
-            app:layout_row="3">
+            app:layout_row="3"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
 
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView9"
             android:clickable="true"
-            android:layout_width="109dp"
-            android:layout_height="98dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula9"
             android:contentDescription="@string/image9"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="2"
-            app:layout_row="3">
+            app:layout_row="3"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
 
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView10"
             android:clickable="true"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula10"
             android:contentDescription="@string/image10"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="0"
-            app:layout_row="4" />
+            app:layout_row="4"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1"/>
 
         <ImageView
             android:id="@+id/imageView11"
             android:clickable="true"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula11"
             android:contentDescription="@string/image11"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="1"
-            app:layout_row="4">
+            app:layout_row="4"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
 
         </ImageView>
 
         <ImageView
             android:id="@+id/imageView12"
             android:clickable="true"
-            android:layout_width="109dp"
-            android:layout_height="98dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="8dp"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/celula12"
             android:contentDescription="@string/image12"
             android:background="@color/design_default_color_error"
+            android:scaleType="fitCenter"
             app:layout_column="2"
-            app:layout_row="4">
+            app:layout_row="4"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1">
 
         </ImageView>
 
