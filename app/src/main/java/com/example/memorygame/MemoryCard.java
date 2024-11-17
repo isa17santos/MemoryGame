@@ -1,7 +1,6 @@
 package com.example.memorygame;
 
 public class MemoryCard {
-    private int cardviewId;
     private int imageId;
     private int color = android.R.color.holo_red_light;
     private boolean isFlipped = false;
@@ -11,11 +10,20 @@ public class MemoryCard {
         this.imageId = imageId;
     }
 
-    public void onClick() {
-        isFlipped = !isFlipped;
-        if (isFlipped) {
+    public void flipCardUp() {
+        if (isFlipped || isMatched){
+            return;
+        } else {
+            isFlipped = true;
             color = android.R.color.transparent;
-        }else{
+        }
+    }
+
+    public void flipCardDown() {
+        if (!isFlipped || isMatched){
+            return;
+        } else {
+            isFlipped = false;
             color = R.color.design_default_color_error;
         }
     }
@@ -24,11 +32,37 @@ public class MemoryCard {
         return color;
     }
 
+    public boolean isFlipped() {
+        return isFlipped;
+    }
+
+    public void setFlipped(boolean flipped) {
+        isFlipped = flipped;
+    }
+
+    public boolean isMatched() {
+        return isMatched;
+    }
+
+    public void setMatched(boolean matched) {
+        isMatched = matched;
+    }
+
     public int getImageId() {
         if (isFlipped) {
             return imageId;
         }else{
             return R.drawable.baseline_question_mark_24;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MemoryCard{" +
+                "imageId=" + imageId +
+                ", color=" + color +
+                ", isFlipped=" + isFlipped +
+                ", isMatched=" + isMatched +
+                '}';
     }
 }
