@@ -3,6 +3,7 @@ package com.example.memorygame;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +22,11 @@ public class MainActivity extends AppCompatActivity {
 
     // Variables
     private Board3x4AnonymousBinding binding;
-
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
+    MemoryCard FirstCard = null;
+    private ImageView firstCardImageView = null; // Declare a variable to store the ImageView
+    int matchCount = 0;
+    boolean isWaiting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_dashboard_user(View view) {
         setContentView(R.layout.dashboard_user);
-    }
-
-    public void moveTo_board3x4_anonymous(View view) {
-
-        binding = Board3x4AnonymousBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        randomizeCards();
     }
 
     public void moveTo_board3x4_user(View view) {
@@ -160,123 +156,93 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < size; i++) {
             memoryCards.add(new MemoryCard(imageResources.get(i)));
         }
-
         return memoryCards;
     }
 
-    public void randomizeCards() {
-        int childCount = binding.GridLayout1.getChildCount();
-        memoryCards = CreateMemoryCards(childCount);
+    public void moveTo_board3x4_anonymous(View view) {
 
+        binding = Board3x4AnonymousBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        setupGame();
+    }
+
+    public void setupGame() {
+
+        int cardCount = binding.MemoryGrid.getChildCount();
+        memoryCards = CreateMemoryCards(cardCount);
         Collections.shuffle(memoryCards);
+        initializeMemoryCards();
 
-        binding.imageView1.setOnClickListener(view -> {
-            // Handle the click event for imageView1 here
-            memoryCards.get(0).onClick();
-            binding.imageView1.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(0).getColor()));
+        FirstCard = null;
+        firstCardImageView = null;
+        matchCount = 0;
+        isWaiting = false;
 
-            binding.imageView1.setImageResource(memoryCards.get(0).getImageId());
+    }
 
-            Log.d("MemoryCard", "imageView1 clicked");
-        });
+    private void initializeMemoryCards() {
+        for (int i = 0; i < memoryCards.size(); i++) {
+            ImageView imageView = (ImageView) binding.MemoryGrid.getChildAt(i);
+            imageView.setClickable(true);
+            imageView.setTag(i);
 
-        binding.imageView2.setOnClickListener(view -> {
-            memoryCards.get(1).onClick();
-            binding.imageView2.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(1).getColor()));
+            // Set click listener for each ImageView
+            imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+        }
+    }
 
-            binding.imageView2.setImageResource(memoryCards.get(1).getImageId());
+    private void handleCardClick(ImageView imageView) {
+        if (isWaiting) {
+        }else {
+            int index = (int) imageView.getTag();
+            MemoryCard card = memoryCards.get(index);
 
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
+            Log.d("MemoryCard", "ImageView clicked at index: " + index + ", revealing card: " + card.getImageId());
 
-        binding.imageView3.setOnClickListener(view -> {
-            memoryCards.get(2).onClick();
-            binding.imageView3.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(2).getColor()));
+            if(!card.isMatched() || !card.isFlipped()) {
+                card.flipCardUp();
+                imageView.setBackgroundColor(ContextCompat.getColor(imageView.getContext(), card.getColor()));
+                imageView.setImageResource(card.getImageId());
 
-            binding.imageView3.setImageResource(memoryCards.get(2).getImageId());
+                if (FirstCard == null) {
+                    FirstCard = card;
+                    firstCardImageView = imageView; // Store the ImageView reference
+                } else {
+                    if (FirstCard.getImageId() == card.getImageId()) {
+                        // Matched
+                        matchCount++;
+                        FirstCard.setMatched(true);
+                        card.setMatched(true);
+                        FirstCard = null;
+                        firstCardImageView = null;
+                        Log.d("MemoryCard", "Matched");
 
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView4.setOnClickListener(view -> {
-            memoryCards.get(3).onClick();
-            binding.imageView4.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(3).getColor()));
-
-            binding.imageView4.setImageResource(memoryCards.get(3).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView5.setOnClickListener(view -> {
-            memoryCards.get(4).onClick();
-            binding.imageView5.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(4).getColor()));
-
-            binding.imageView5.setImageResource(memoryCards.get(4).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView6.setOnClickListener(view -> {
-            memoryCards.get(5).onClick();
-            binding.imageView6.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(5).getColor()));
-
-            binding.imageView6.setImageResource(memoryCards.get(5).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView7.setOnClickListener(view -> {
-            memoryCards.get(6).onClick();
-            binding.imageView7.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(6).getColor()));
-
-            binding.imageView7.setImageResource(memoryCards.get(6).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView8.setOnClickListener(view -> {
-            memoryCards.get(7).onClick();
-            binding.imageView8.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(7).getColor()));
-
-            binding.imageView8.setImageResource(memoryCards.get(7).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView9.setOnClickListener(view -> {
-            memoryCards.get(8).onClick();
-            binding.imageView9.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(8).getColor()));
-
-            binding.imageView9.setImageResource(memoryCards.get(8).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView10.setOnClickListener(view -> {
-            memoryCards.get(9).onClick();
-            binding.imageView10.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(9).getColor()));
-
-            binding.imageView10.setImageResource(memoryCards.get(9).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView11.setOnClickListener(view -> {
-            memoryCards.get(10).onClick();
-            binding.imageView11.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(10).getColor()));
-
-            binding.imageView11.setImageResource(memoryCards.get(10).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
-
-        binding.imageView12.setOnClickListener(view -> {
-            memoryCards.get(11).onClick();
-            binding.imageView12.setBackgroundColor(ContextCompat.getColor(binding.getRoot().getContext(), memoryCards.get(11).getColor()));
-
-            binding.imageView12.setImageResource(memoryCards.get(11).getImageId());
-
-            Log.d("MemoryCard", "imageView2 clicked");
-        });
+                        if (matchCount == memoryCards.size() / 2) {
+                            // Game Over
+                            Log.d("MemoryCard", "Game Over");
+                        }
+                    } else {
+                        isWaiting = true;
+                        // Not Matched
+                        Log.d("MemoryCard", "Not Matched");
+                        imageView.postDelayed(() -> {
+                            isWaiting = false;
+                            card.flipCardDown();
+                            imageView.setBackgroundColor(ContextCompat.getColor(imageView.getContext(), card.getColor()));
+                            imageView.setImageResource(card.getImageId());
+                            FirstCard.flipCardDown();
+                            firstCardImageView.setBackgroundColor(ContextCompat.getColor(firstCardImageView.getContext(), FirstCard.getColor()));
+                            firstCardImageView.setImageResource(FirstCard.getImageId());
+                            FirstCard = null;
+                            firstCardImageView = null;
+                        }, 1000);
+                    }
+                }
+            } else {
+                Log.d("MemoryCard", "Card already flipped");
+            }
+        }
     }
 }
+
