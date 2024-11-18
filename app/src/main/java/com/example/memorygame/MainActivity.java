@@ -57,6 +57,15 @@ public class MainActivity extends AppCompatActivity {
     private int seconds = 0; // Start from 0 seconds
     private Runnable updateTimerRunnable;
 
+    //"attempts" - 1 attempt = 2 cartas viradas
+    //"score":
+    //1 attempt correta = +5 pontos
+    //1 attempt errada = -1 pontos
+    private TextView attemptsTextView;
+    private TextView scoreTextView;
+    private int attempts = 0;
+    private int score = 0;
+
     private boolean initializeTimer = false;
 
     @Override
@@ -232,7 +241,8 @@ public class MainActivity extends AppCompatActivity {
         binding = Board3x4AnonymousBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         timerTextView = binding.timerTextView;
-
+        attemptsTextView = binding.attemptsText;
+        scoreTextView = binding.scoreText;
 
         setupGame();
     }
@@ -264,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private void handleCardClick(ImageView imageView) {
         if (!isWaiting) {
 
@@ -294,6 +305,11 @@ public class MainActivity extends AppCompatActivity {
                         firstCardImageView = null;
                         Log.d("MemoryCard", "Matched");
 
+                        score += 5;
+                        attempts++;
+                        scoreTextView.setText(String.format("%d", score));
+                        attemptsTextView.setText(String.format("%d", attempts));
+
                         if (matchCount == memoryCards.size() / 2) {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
@@ -314,6 +330,14 @@ public class MainActivity extends AppCompatActivity {
                             FirstCard = null;
                             firstCardImageView = null;
                         }, 1000);
+
+                        score -= 1;
+                        if(score < 0){
+                            score = 0;
+                        }
+                        attempts++;
+                        scoreTextView.setText(String.format("%d", score));
+                        attemptsTextView.setText(String.format("%d", attempts));
                     }
                 }
             } else {
