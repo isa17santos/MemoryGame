@@ -18,6 +18,7 @@
     <string name="board_size">Board size</string>
     <string name="Time">Time:</string>
     <string name="Score">Score:</string>
+    <string name="Attempts">Attempts:</string>
     <string name="celula1">celula1</string>
     <string name="celula2">celula2</string>
     <string name="celula3">celula3</string>
@@ -43,6 +44,8 @@
     <string name="image11">Image11</string>
     <string name="image12">Image12</string>
     <string name="Timer">00:00</string>
+    <string name="AttemptText">0</string>
+    <string name="ScoreText">0</string>
 
 
 </resources>
