@@ -11,7 +11,7 @@ public class MemoryCard {
     }
 
     public void flipCardUp() {
-        if (isFlipped || isMatched){
+        if (isFlipped || isMatched) {
             return;
         } else {
             isFlipped = true;
