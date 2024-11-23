@@ -94,7 +94,7 @@
     <string name="Timer">00:00</string>
     <string name="AttemptText">0</string>
     <string name="ScoreText">0</string>
-    <string name="hint">Hint</string>
+    <string name="hint" />
 
 
 </resources>
