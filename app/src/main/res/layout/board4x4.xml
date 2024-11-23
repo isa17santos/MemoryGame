@@ -428,7 +428,7 @@
         android:autoSizeTextType="uniform"
         android:backgroundTint="#77D6DB"
         android:fontFamily="serif"
-        android:text=""
+        android:text="@string/hint"
         android:contentDescription="Hints"
         android:onClick="buyingThings"
         app:layout_constraintBottom_toBottomOf="parent"
