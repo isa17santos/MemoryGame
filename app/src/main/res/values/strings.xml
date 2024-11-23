@@ -95,6 +95,7 @@
     <string name="AttemptText">0</string>
     <string name="ScoreText">0</string>
     <string name="hint">Hint</string>
+    <string name="gameOverMessage">Game finished!</string>
 
 
 </resources>

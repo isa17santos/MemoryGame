@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -382,6 +383,21 @@ public class MainActivity extends AppCompatActivity {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
+                            // Create an AlertDialog.Builder instance
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                            // Set title, message, and buttons
+                            builder.setTitle("Game Finished!");
+
+                            // Positive Button (e.g., OK)
+                            builder.setPositiveButton("OK", (dialog, which) -> {
+                                // Handle OK button click
+                                dialog.dismiss(); // Close the pop-up
+                            });
+
+                            // Create and show the dialog
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
                         }
                     } else {
                         isWaiting = true;
