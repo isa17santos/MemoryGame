@@ -21,29 +21,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
-
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Handler;
 
-
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import com.example.memorygame.databinding.Board6x6Binding;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView timerTextView;
     private final Handler handler = new Handler();
     private int seconds = 0; // Start from 0 seconds
+    int minutes = 0;
+    int remainingSeconds = 0;
     private Runnable updateTimerRunnable;
 
     //"attempts" - 1 attempt = 2 cartas viradas
@@ -140,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
                 seconds++; // Increment seconds by 1
 
                 // Calculate minutes and seconds
-                int minutes = seconds / 60; // Calculate minutes
-                int remainingSeconds = seconds % 60; // Calculate remaining seconds
+                minutes = seconds / 60; // Calculate minutes
+                remainingSeconds = seconds % 60; // Calculate remaining seconds
 
                 // Update the TextView with formatted time (MM:SS)
                 timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
@@ -344,7 +329,11 @@ public class MainActivity extends AppCompatActivity {
         matchCount = 0;
         isWaiting = false;
         initializeTimer = false;
-
+        seconds = 0;
+        minutes = 0;
+        remainingSeconds = 0;
+        attempts = 0;
+        score = 0;
 
     }
 
@@ -364,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -381,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else // Invalid board size
             {
@@ -391,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView) {
+    private void handleCardClick(ImageView imageView, int boardType) {
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -430,6 +419,7 @@ public class MainActivity extends AppCompatActivity {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
+                            gameOverPopUp(boardType);
                         }
                     } else {
                         isWaiting = true;
@@ -460,6 +450,31 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MemoryCard", "Card already flipped");
             }
         }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void gameOverPopUp(int boardType) {
+        // Create an AlertDialog.Builder instance
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set title, message, and buttons
+        builder.setTitle("Game Finished!");
+        builder.setMessage(String.format("Score: %d\n" + "Attempts: %d\n" + "Time: %02d:%02d", score, attempts, minutes, remainingSeconds));
+
+        // Positive Button (e.g., OK)
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // Handle OK button click
+            dialog.dismiss(); // Close the pop-up
+            if (boardType == 0) {
+                setContentView(R.layout.dashboard_anonymous);
+            } else {
+                setContentView(R.layout.dashboard_user);
+            }
+        });
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
 
