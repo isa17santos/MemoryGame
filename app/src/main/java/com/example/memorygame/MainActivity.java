@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
         // 0 -> Board 3x4 anonymous
         // 1 -> Board 3x4 user
         // 2 -> Board 4x4 user
-        // 3 -> Board 6x5 user
+        // 3 -> Board 6x6 user
 
         if (boardType == 0) // Board 3x4 anonymous
         {
