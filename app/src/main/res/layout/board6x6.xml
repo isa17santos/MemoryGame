@@ -796,13 +796,14 @@
     </androidx.gridlayout.widget.GridLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonHint_board6x6"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
         android:backgroundTint="#77D6DB"
         android:fontFamily="serif"
         android:text="@string/hint"
+        android:onClick="buyingThings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.07"
@@ -833,7 +834,7 @@
         app:layout_constraintWidth_percent="0.06" />
 
     <ImageView
-        android:id="@+id/image_coins"
+        android:id="@+id/image_coins_board6x6"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/image_coin"

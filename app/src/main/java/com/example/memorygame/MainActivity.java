@@ -3,9 +3,11 @@ package com.example.memorygame;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -81,6 +83,52 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+    }
+
+    public void buyingThings(View view)
+    {
+        TextView textView = findViewById(R.id.num_coins);
+        Button button = findViewById(R.id.buttonHint_board6x6);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the current value of the TextView
+                String text = textView.getText().toString();
+                int value = Integer.parseInt(text);
+
+                if (value <= 0) //not enough coins
+                {
+                    notEnoughtCoins();
+                }
+                else {
+                    // Decrement the value
+                    value-=1;
+                }
+
+                // Update the TextView with the new value
+                textView.setText(String.valueOf(value));
+            }
+        });
+    }
+
+    private void notEnoughtCoins()
+    {
+        // Create an AlertDialog.Builder instance
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set title, message, and buttons
+        builder.setTitle("Not enough coins!");
+
+        // Positive Button (e.g., OK)
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // Handle OK button click
+            dialog.dismiss(); // Close the pop-up
+        });
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void startTimer() {
