@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
+import com.example.memorygame.databinding.Board4x4Binding;
 
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     // Variables
     private Board6x6Binding binding6x6;
     private Board3x4AnonymousBinding binding;
+    private Board4x4Binding binding4x4;
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
     private ImageView firstCardImageView = null; // Declare a variable to store the ImageView
@@ -188,9 +190,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.board3x4_user);
     }
 
-    public void moveTo_board4x4(View view) {
-        setContentView(R.layout.board4x4);
-    }
 
     public void moveTo_dashboard_anonymous(View view) {
         setContentView(R.layout.dashboard_anonymous);
@@ -304,6 +303,16 @@ public class MainActivity extends AppCompatActivity {
         setupGame(0);
     }
 
+    public void moveTo_board4x4(View view) {
+        binding4x4 = Board4x4Binding.inflate(getLayoutInflater());
+        setContentView(binding4x4.getRoot());
+        timerTextView = binding4x4.timerTextViewBoard4x4;
+        attemptsTextView = binding4x4.attemptsTextBoard4x4;
+        scoreTextView = binding4x4.scoreTextBoard4x4;
+
+        setupGame(2);
+    }
+
     public void setupGame(int boardType) {
         // boardType:
         // 0 -> Board 3x4 anonymous
@@ -323,7 +332,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (boardType == 2) // Board 4x4 user
         {
-            // TO DO
+            int cardCount = binding4x4.MemoryGrid.getChildCount();
+            memoryCards = CreateMemoryCards(cardCount);
+            Collections.shuffle(memoryCards);
         }
         else if (boardType == 3) // Board 6x6 user
         {
@@ -372,7 +383,12 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (boardType == 2) // Board 4x4 user
             {
-                // TO DO
+                ImageView imageView = (ImageView) binding4x4.MemoryGrid.getChildAt(i);
+                imageView.setClickable(true);
+                imageView.setTag(i);
+
+                // Set click listener for each ImageView
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
             }
             else if (boardType == 3) // Board 6x6 user
             {
