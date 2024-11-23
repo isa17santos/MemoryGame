@@ -9,7 +9,7 @@
     tools:ignore="NewApi">
 
     <TextView
-        android:id="@+id/IdTime"
+        android:id="@+id/IdTimeBoard3x4Anonymous"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
@@ -26,7 +26,7 @@
         app:layout_constraintWidth_percent="0.3" />
 
     <TextView
-        android:id="@+id/timerTextView"
+        android:id="@+id/timerTextViewBoard3x4Anonymous"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
@@ -37,12 +37,12 @@
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHeight_percent="0.06"
-        app:layout_constraintStart_toEndOf="@id/IdTime"
-        app:layout_constraintTop_toTopOf="@id/IdTime"
+        app:layout_constraintStart_toEndOf="@id/IdTimeBoard3x4Anonymous"
+        app:layout_constraintTop_toTopOf="@id/IdTimeBoard3x4Anonymous"
         app:layout_constraintWidth_percent="0.3" />
 
     <TextView
-        android:id="@+id/IdScore"
+        android:id="@+id/IdScoreBoard3x4Anonymous"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
@@ -61,7 +61,7 @@
         tools:ignore="LabelFor" />
 
     <TextView
-        android:id="@+id/attemptsText"
+        android:id="@+id/attemptsTextBoard3x4Anonymous"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -72,12 +72,12 @@
         android:textColor="@color/black"
         android:textSize="10sp"
         app:layout_constraintHeight_percent="0.06"
-        app:layout_constraintStart_toEndOf="@id/IdAttempts"
-        app:layout_constraintTop_toTopOf="@id/IdAttempts"
+        app:layout_constraintStart_toEndOf="@id/IdAttemptsBoard3x4Anonymous"
+        app:layout_constraintTop_toTopOf="@id/IdAttemptsBoard3x4Anonymous"
         app:layout_constraintWidth_percent="0.15" />
 
     <TextView
-        android:id="@+id/IdAttempts"
+        android:id="@+id/IdAttemptsBoard3x4Anonymous"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
@@ -96,7 +96,7 @@
         tools:ignore="LabelFor" />
 
     <TextView
-        android:id="@+id/scoreText"
+        android:id="@+id/scoreTextBoard3x4Anonymous"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
@@ -106,8 +106,8 @@
         android:textColor="@color/black"
         android:textSize="10sp"
         app:layout_constraintHeight_percent="0.06"
-        app:layout_constraintStart_toEndOf="@id/IdScore"
-        app:layout_constraintTop_toTopOf="@id/IdScore"
+        app:layout_constraintStart_toEndOf="@id/IdScoreBoard3x4Anonymous"
+        app:layout_constraintTop_toTopOf="@id/IdScoreBoard3x4Anonymous"
         app:layout_constraintWidth_percent="0.15" />
 
     <androidx.gridlayout.widget.GridLayout
@@ -124,12 +124,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.694"
-        app:layout_constraintWidth_percent="0.88"
+        app:layout_constraintWidth_percent="0.95"
         tools:ignore="MissingConstraints">
 
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/imageView1Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -144,7 +144,7 @@
             app:layout_rowWeight="1"></ImageView>
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageView2Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -161,7 +161,7 @@
             tools:ignore="KeyboardInaccessibleWidget"></ImageView>
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView3Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -179,7 +179,7 @@
             tools:ignore="ImageContrastCheck"></ImageView>
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/imageView4Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -198,7 +198,7 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/imageView5Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -217,7 +217,7 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/imageView6Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -235,7 +235,7 @@
             tools:ignore="ImageContrastCheck"></ImageView>
 
         <ImageView
-            android:id="@+id/imageView7"
+            android:id="@+id/imageView7Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -252,7 +252,7 @@
             app:layout_rowWeight="1"></ImageView>
 
         <ImageView
-            android:id="@+id/imageView8"
+            android:id="@+id/imageView8Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -271,7 +271,7 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageView9"
+            android:id="@+id/imageView9Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -290,7 +290,7 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageView10"
+            android:id="@+id/imageView10Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -307,7 +307,7 @@
             app:layout_rowWeight="1" />
 
         <ImageView
-            android:id="@+id/imageView11"
+            android:id="@+id/imageView11Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"
@@ -326,7 +326,7 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageView12"
+            android:id="@+id/imageView12Board3x4Anonymous"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="8dp"

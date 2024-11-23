@@ -38,6 +38,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
+import com.example.memorygame.databinding.Board6x6Binding;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +46,7 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
 
     // Variables
+    private Board6x6Binding binding6x6;
     private Board3x4AnonymousBinding binding;
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -142,10 +144,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.board4x4);
     }
 
-    public void moveTo_board6x6(View view) {
-        setContentView(R.layout.board6x6);
-    }
-
     public void moveTo_dashboard_anonymous(View view) {
         setContentView(R.layout.dashboard_anonymous);
     }
@@ -236,23 +234,62 @@ public class MainActivity extends AppCompatActivity {
         return memoryCards;
     }
 
+    public void moveTo_board6x6(View view) {
+
+        binding6x6 = Board6x6Binding.inflate(getLayoutInflater());
+        setContentView(binding6x6.getRoot());
+        timerTextView = binding6x6.timerTextViewBoard6x6;
+        attemptsTextView = binding6x6.attemptsTextBoard6x6;
+        scoreTextView = binding6x6.scoreTextBoard6x6;
+
+        setupGame(3);
+    }
+
     public void moveTo_board3x4_anonymous(View view) {
 
         binding = Board3x4AnonymousBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        timerTextView = binding.timerTextView;
-        attemptsTextView = binding.attemptsText;
-        scoreTextView = binding.scoreText;
+        timerTextView = binding.timerTextViewBoard3x4Anonymous;
+        attemptsTextView = binding.attemptsTextBoard3x4Anonymous;
+        scoreTextView = binding.scoreTextBoard3x4Anonymous;
 
-        setupGame();
+        setupGame(0);
     }
 
-    public void setupGame() {
+    public void setupGame(int boardType) {
+        // boardType:
+        // 0 -> Board 3x4 anonymous
+        // 1 -> Board 3x4 user
+        // 2 -> Board 4x4 user
+        // 3 -> Board 6x5 user
 
-        int cardCount = binding.MemoryGrid.getChildCount();
-        memoryCards = CreateMemoryCards(cardCount);
-        Collections.shuffle(memoryCards);
-        initializeMemoryCards();
+        if (boardType == 0) // Board 3x4 anonymous
+        {
+            int cardCount = binding.MemoryGrid.getChildCount();
+            memoryCards = CreateMemoryCards(cardCount);
+            Collections.shuffle(memoryCards);
+        }
+        else if (boardType == 1) // Board 3x4 user
+        {
+            // TO DO
+        }
+        else if (boardType == 2) // Board 4x4 user
+        {
+            // TO DO
+        }
+        else if (boardType == 3) // Board 6x6 user
+        {
+            int cardCount = binding6x6.MemoryGrid.getChildCount();
+            memoryCards = CreateMemoryCards(cardCount);
+            Collections.shuffle(memoryCards);
+        }
+        else // Invalid board size
+        {
+            throw new IllegalArgumentException("Invalid board size");
+        }
+
+
+        initializeMemoryCards(boardType);
 
         FirstCard = null;
         firstCardImageView = null;
@@ -263,14 +300,45 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initializeMemoryCards() {
-        for (int i = 0; i < memoryCards.size(); i++) {
-            ImageView imageView = (ImageView) binding.MemoryGrid.getChildAt(i);
-            imageView.setClickable(true);
-            imageView.setTag(i);
+    private void initializeMemoryCards(int boardType) {
+        // boardType:
+        // 0 -> Board 3x4 anonymous
+        // 1 -> Board 3x4 user
+        // 2 -> Board 4x4 user
+        // 3 -> Board 6x5 user
 
-            // Set click listener for each ImageView
-            imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+        for (int i = 0; i < memoryCards.size(); i++) {
+
+            if (boardType == 0) // Board 3x4 anonymous
+            {
+                ImageView imageView = (ImageView) binding.MemoryGrid.getChildAt(i);
+                imageView.setClickable(true);
+                imageView.setTag(i);
+
+                // Set click listener for each ImageView
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+            }
+            else if (boardType == 1) // Board 3x4 user
+            {
+                // TO DO
+            }
+            else if (boardType == 2) // Board 4x4 user
+            {
+                // TO DO
+            }
+            else if (boardType == 3) // Board 6x6 user
+            {
+                ImageView imageView = (ImageView) binding6x6.MemoryGrid.getChildAt(i);
+                imageView.setClickable(true);
+                imageView.setTag(i);
+
+                // Set click listener for each ImageView
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+            }
+            else // Invalid board size
+            {
+                throw new IllegalArgumentException("Invalid board size");
+            }
         }
     }
 
