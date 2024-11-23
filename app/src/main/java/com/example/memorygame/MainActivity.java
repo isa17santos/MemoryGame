@@ -15,6 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
+import com.example.memorygame.databinding.Board3x4UserBinding;
+
 
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
+import com.example.memorygame.databinding.Board3x4UserBinding;
 import com.example.memorygame.databinding.Board6x6Binding;
 
 import java.util.ArrayList;
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     // Variables
     private Board6x6Binding binding6x6;
     private Board3x4AnonymousBinding binding;
+
+    private Board3x4UserBinding binding3x4;
+
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
     private ImageView firstCardImageView = null; // Declare a variable to store the ImageView
@@ -184,10 +190,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.dashboard_user);
     }
 
-    public void moveTo_board3x4_user(View view) {
-        setContentView(R.layout.board3x4_user);
-    }
-
     public void moveTo_board4x4(View view) {
         setContentView(R.layout.board4x4);
     }
@@ -304,6 +306,18 @@ public class MainActivity extends AppCompatActivity {
         setupGame(0);
     }
 
+    public void moveTo_board3x4_user(View view) {
+
+        binding3x4 = Board3x4UserBinding.inflate(getLayoutInflater());
+        setContentView(binding3x4.getRoot());
+        timerTextView = binding3x4.timerTextViewBoard3x4User;
+        attemptsTextView = binding3x4.attemptsTextBoard3x4User;
+        scoreTextView = binding3x4.scoreTextBoard3x4User;
+
+        setupGame(1);
+    }
+
+
     public void setupGame(int boardType) {
         // boardType:
         // 0 -> Board 3x4 anonymous
@@ -319,7 +333,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (boardType == 1) // Board 3x4 user
         {
-            // TO DO
+            int cardCount = binding3x4.MemoryGrid.getChildCount();
+            memoryCards = CreateMemoryCards(cardCount);
+            Collections.shuffle(memoryCards);
+
         }
         else if (boardType == 2) // Board 4x4 user
         {
@@ -368,7 +385,12 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (boardType == 1) // Board 3x4 user
             {
-                // TO DO
+                ImageView imageView = (ImageView) binding3x4.MemoryGrid.getChildAt(i);
+                imageView.setClickable(true);
+                imageView.setTag(i);
+
+                // Set click listener for each ImageView
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
             }
             else if (boardType == 2) // Board 4x4 user
             {
