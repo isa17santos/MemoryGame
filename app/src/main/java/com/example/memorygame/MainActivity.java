@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 3) // Board 6x6 user
             {
