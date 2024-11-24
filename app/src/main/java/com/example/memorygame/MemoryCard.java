@@ -56,6 +56,11 @@ public class MemoryCard {
         }
     }
 
+    //to get image while flippedDown
+    public int getRealImageId() {
+        return imageId;
+    }
+
     @Override
     public String toString() {
         return "MemoryCard{" +

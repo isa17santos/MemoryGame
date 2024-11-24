@@ -5,15 +5,34 @@
     android:id="@+id/dashboard_anonimo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/natal2"
+    android:onClick="moveTo_login_page"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:ignore="ExtraText"
-    android:background="@drawable/natal2"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:ignore="ExtraText">
+
+
+    <ImageView
+        android:id="@+id/backDashboardAnonymous"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="moveTo_login_page"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_arrow_back_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.038"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:layout_constraintWidth_percent="0.12" />
 
     <Button
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
         android:backgroundTint="#B00020"
         android:fontFamily="serif"
         android:onClick="moveTo_board3x4_anonymous"
@@ -22,15 +41,14 @@
         android:textColor="#FFFFFF"
         android:textColorLink="#B00020"
         android:textSize="35sp"
-        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.421"
-        app:layout_constraintHeight_percent="0.12"
-        app:layout_constraintWidth_percent="0.73"/>
+        app:layout_constraintWidth_percent="0.73" />
 
     <TextView
         android:id="@+id/Nome_jogo"
@@ -38,18 +56,18 @@
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
         android:fontFamily="serif"
+        android:padding="16dp"
         android:text="@string/dashboard_gameName"
         android:textAlignment="center"
         android:textColor="#B00020"
         android:textSize="38sp"
-        android:padding="16dp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.128"
-        app:layout_constraintWidth_percent="0.83"
-        app:layout_constraintHeight_percent="0.3"/>
+        app:layout_constraintWidth_percent="0.83" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,21 @@
     android:padding="16dp"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/backBoardSizePage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="moveTo_dashboard_user"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_arrow_back_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.038"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:layout_constraintWidth_percent="0.12" />
 
     <Button
         android:id="@+id/button_3x4_board"
