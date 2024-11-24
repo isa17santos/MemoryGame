@@ -1,6 +1,5 @@
 package com.example.memorygame;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -171,8 +170,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.history_page);
     }
 
-    public void moveTo_scoreboard_page(View view) {
-        setContentView(R.layout.scoreboard_page);
+    public void moveTo_scoreboard_page_user(View view) {
+        setContentView(R.layout.scoreboard_page_user);
+    }
+
+    public void moveTo_scoreboard_global_page(View view) {
+        setContentView(R.layout.scoreboard_global_page);
+    }
+
+    public void moveTo_scoreboard_personal_page(View view) {
+        setContentView(R.layout.scoreboard_personal_page);
     }
 
     public void moveTo_dashboard_user(View view) {
@@ -182,6 +189,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_dashboard_anonymous(View view) {
         setContentView(R.layout.dashboard_anonymous);
+    }
+
+    public void moveTo_notification_page(View view) {
+        setContentView(R.layout.notification_page);
     }
 
     public ArrayList<MemoryCard> CreateMemoryCards(int size) {

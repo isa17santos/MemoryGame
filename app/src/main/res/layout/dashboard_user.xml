@@ -75,23 +75,23 @@
         android:id="@+id/button_3x4_board"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
-        android:onClick="moveTo_scoreboard_page"
+        android:onClick="moveTo_scoreboard_page_user"
         android:text="@string/dashboard_button_scoreboard"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
         android:textSize="35sp"
-        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.786"
-        app:layout_constraintWidth_percent="0.73"
-        app:layout_constraintHeight_percent="0.12"/>
+        app:layout_constraintWidth_percent="0.73" />
 
     <TextView
         android:id="@+id/name_game_dashboard_user"
@@ -137,6 +137,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/image_coin"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.08"
@@ -146,5 +147,22 @@
         app:layout_constraintVertical_bias="0.925"
         app:layout_constraintWidth_percent="0.14"
         app:srcCompat="@drawable/coin_image" />
+
+    <ImageView
+        android:id="@+id/image_notifications"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/notifications"
+        android:onClick="moveTo_notification_page"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.963"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.16"
+        app:srcCompat="@drawable/email_box" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
