@@ -393,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 2) // Board 4x4 user
             {
@@ -512,21 +512,17 @@ public class MainActivity extends AppCompatActivity {
                 for (int j = i + 1; j < memoryCards.size(); j++) {
                     MemoryCard card2 = memoryCards.get(j);
                     if (!card2.isMatched() && card1.getRealImageId() == card2.getRealImageId()) {
-                        if(boardType == 0) {
+                        if (boardType == 0) {
                             imageView1 = (ImageView) binding.MemoryGrid.getChildAt(i);
                             imageView2 = (ImageView) binding.MemoryGrid.getChildAt(j);
-                        }
-                        else if(boardType == 1) {
+                        } else if (boardType == 1) {
                             // TO DO
-                        }
-                        else if(boardType == 2) {
+                        } else if (boardType == 2) {
                             // TO DO
-                        }
-                        else if(boardType == 3) {
+                        } else if (boardType == 3) {
                             imageView1 = (ImageView) binding6x6.MemoryGrid.getChildAt(i);
                             imageView2 = (ImageView) binding6x6.MemoryGrid.getChildAt(j);
-                        }
-                        else {
+                        } else {
                             throw new IllegalArgumentException("Invalid board size");
                         }
                         // Flip both cards up
@@ -554,6 +550,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
 
     @SuppressLint("DefaultLocale")
     private void gameOverPopUp(int boardType) {
