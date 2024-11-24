@@ -154,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
         handler.removeCallbacks(updateTimerRunnable);
     }
 
+    public void moveTo_login_page(View view) {
+        setContentView(R.layout.activity_main);
+    }
 
     public void moveTo_boardsize_page(View view) {
         setContentView(R.layout.boardsize_page);
