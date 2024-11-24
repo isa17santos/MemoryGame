@@ -3,7 +3,6 @@ package com.example.memorygame;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -27,16 +26,19 @@ import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import com.example.memorygame.databinding.Board3x4UserBinding;
 import com.example.memorygame.databinding.Board4x4Binding;
 import com.example.memorygame.databinding.Board6x6Binding;
+import com.example.memorygame.databinding.BoardsizePageBinding;
+import com.example.memorygame.databinding.DashboardUserBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     // Variables
-    private Board6x6Binding binding6x6;
+
     private Board3x4AnonymousBinding binding;
-
     private Board3x4UserBinding binding3x4;
-
     private Board4x4Binding binding4x4;
+    private Board6x6Binding binding6x6;
+    private BoardsizePageBinding bindingSize;
+    private DashboardUserBinding userBinding;
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView scoreTextView;
     private int attempts = 0;
     private int score = 0;
-
+    int value = 5;
     private boolean initializeTimer = false;
 
     @Override
@@ -73,34 +75,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-    }
-
-    public void buyingThings(View view)
-    {
-        TextView textView = findViewById(R.id.num_coins);
-        Button button = findViewById(R.id.buttonHint_board6x6);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get the current value of the TextView
-                String text = textView.getText().toString();
-                int value = Integer.parseInt(text);
-
-                if (value <= 0) //not enough coins
-                {
-                    notEnoughtCoins();
-                }
-                else {
-                    // Decrement the value
-                    value-=1;
-                    getHint(3);
-                }
-
-                // Update the TextView with the new value
-                textView.setText(String.valueOf(value));
-            }
-        });
     }
 
     private void notEnoughtCoins()
@@ -164,6 +138,50 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_boardsize_page(View view) {
         setContentView(R.layout.boardsize_page);
+        bindingSize = BoardsizePageBinding.inflate(getLayoutInflater());
+        setContentView(bindingSize.getRoot());
+        View button3x4 = bindingSize.button3x4Board;
+        View button4x4 = bindingSize.button4x4Board;
+        View button6x6 = bindingSize.button6x6Board;
+        TextView coins = bindingSize.numCoins;
+        coins.setText(String.valueOf(value));
+
+        button4x4.setOnClickListener(v -> {
+            if(value <= 0) //   not enough coins
+                notEnoughtCoins();
+            else{
+                buyingThings(button4x4, coins);
+                moveTo_board4x4(button4x4);
+            }
+        });
+
+        button6x6.setOnClickListener(v -> {
+            if(value <= 0) //   not enough coins
+                notEnoughtCoins();
+            else{
+                buyingThings(button6x6, coins);
+                moveTo_board6x6(button6x6);
+            }
+        });
+    }
+
+    public void buyingThings(View view, TextView coins)
+    {
+        // Get the current value of the TextView
+        String text = coins.getText().toString();
+        value = Integer.parseInt(text);
+
+        if (value <= 0) //not enough coins
+        {
+            notEnoughtCoins();
+        }
+        else {
+            // Decrement the value
+            value-=1;
+        }
+
+        // Update the TextView with the new value
+        coins.setText(String.valueOf(value));
     }
 
     public void moveTo_history_page(View view) {
@@ -184,12 +202,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_dashboard_user(View view) {
         setContentView(R.layout.dashboard_user);
-    }
+        userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+        setContentView(userBinding.getRoot());
+        TextView coins = userBinding.numCoins;
+        coins.setText(String.valueOf(value));
+   }
 
-
-    public void moveTo_dashboard_anonymous(View view) {
-        setContentView(R.layout.dashboard_anonymous);
-    }
+    public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
 
     public void moveTo_notification_page(View view) {
         setContentView(R.layout.notification_page);
@@ -281,21 +300,11 @@ public class MainActivity extends AppCompatActivity {
         return memoryCards;
     }
 
-    public void moveTo_board6x6(View view) {
-
-        binding6x6 = Board6x6Binding.inflate(getLayoutInflater());
-        setContentView(binding6x6.getRoot());
-        timerTextView = binding6x6.timerTextViewBoard6x6;
-        attemptsTextView = binding6x6.attemptsTextBoard6x6;
-        scoreTextView = binding6x6.scoreTextBoard6x6;
-
-        setupGame(3);
-    }
-
     public void moveTo_board3x4_anonymous(View view) {
 
         binding = Board3x4AnonymousBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        
         timerTextView = binding.timerTextViewBoard3x4Anonymous;
         attemptsTextView = binding.attemptsTextBoard3x4Anonymous;
         scoreTextView = binding.scoreTextBoard3x4Anonymous;
@@ -307,24 +316,61 @@ public class MainActivity extends AppCompatActivity {
 
         binding3x4 = Board3x4UserBinding.inflate(getLayoutInflater());
         setContentView(binding3x4.getRoot());
+
         timerTextView = binding3x4.timerTextViewBoard3x4User;
         attemptsTextView = binding3x4.attemptsTextBoard3x4User;
         scoreTextView = binding3x4.scoreTextBoard3x4User;
 
+        View buttonHint = binding3x4.buttonHintBoard3x4User;
+        TextView coins = binding3x4.numCoins;
+        coins.setText(String.valueOf(value));
+
+        buttonHint.setOnClickListener(v -> {
+            buyHint(v, coins, 1);
+        });
+
         setupGame(1);
     }
 
-
     public void moveTo_board4x4(View view) {
+
         binding4x4 = Board4x4Binding.inflate(getLayoutInflater());
         setContentView(binding4x4.getRoot());
+
         timerTextView = binding4x4.timerTextViewBoard4x4;
         attemptsTextView = binding4x4.attemptsTextBoard4x4;
         scoreTextView = binding4x4.scoreTextBoard4x4;
 
+        View buttonHint = binding4x4.buttonHintBoard4x4;
+        TextView coins = binding4x4.numCoins;
+        coins.setText(String.valueOf(value));
+
+        buttonHint.setOnClickListener(v -> {
+            buyHint(v, coins, 2);
+        });
+
         setupGame(2);
     }
 
+    public void moveTo_board6x6(View view) {
+
+        binding6x6 = Board6x6Binding.inflate(getLayoutInflater());
+        setContentView(binding6x6.getRoot());
+
+        timerTextView = binding6x6.timerTextViewBoard6x6;
+        attemptsTextView = binding6x6.attemptsTextBoard6x6;
+        scoreTextView = binding6x6.scoreTextBoard6x6;
+
+        View buttonHint = binding6x6.buttonHintBoard6x6;
+        TextView coins = binding6x6.numCoins;
+        coins.setText(String.valueOf(value));
+
+        buttonHint.setOnClickListener(v -> {
+            buyHint(v, coins, 3);
+        });
+
+        setupGame(3);
+    }
 
     public void setupGame(int boardType) {
         // boardType:
@@ -504,6 +550,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void buyHint(View view, TextView coins, int boardType) {
+        if(value <= 0) //   not enough coins
+            notEnoughtCoins();
+        else {
+            buyingThings(view, coins);
+            getHint(boardType);
+        }
+    }
+
     private void getHint(int boardType) {
         ImageView imageView1 = null;
         ImageView imageView2 = null;
@@ -527,9 +582,11 @@ public class MainActivity extends AppCompatActivity {
                             imageView1 = (ImageView) binding.MemoryGrid.getChildAt(i);
                             imageView2 = (ImageView) binding.MemoryGrid.getChildAt(j);
                         } else if (boardType == 1) {
-                            // TO DO
+                            imageView1 = (ImageView) binding3x4.MemoryGrid.getChildAt(i);
+                            imageView2 = (ImageView) binding3x4.MemoryGrid.getChildAt(j);
                         } else if (boardType == 2) {
-                            // TO DO
+                            imageView1 = (ImageView) binding4x4.MemoryGrid.getChildAt(i);
+                            imageView2 = (ImageView) binding4x4.MemoryGrid.getChildAt(j);
                         } else if (boardType == 3) {
                             imageView1 = (ImageView) binding6x6.MemoryGrid.getChildAt(i);
                             imageView2 = (ImageView) binding6x6.MemoryGrid.getChildAt(j);
@@ -570,16 +627,16 @@ public class MainActivity extends AppCompatActivity {
 
         // Set title, message, and buttons
         builder.setTitle("Game Finished!");
-        builder.setMessage(String.format("Score: %d\n" + "Attempts: %d\n" + "Time: %02d:%02d", score, attempts, minutes, remainingSeconds));
+        builder.setMessage(String.format("Score: %d\n\n" + "Attempts: %d\n\n" + "Time: %02d:%02d", score, attempts, minutes, remainingSeconds));
 
         // Positive Button (e.g., OK)
         builder.setPositiveButton("OK", (dialog, which) -> {
             // Handle OK button click
             dialog.dismiss(); // Close the pop-up
             if (boardType == 0) {
-                setContentView(R.layout.dashboard_anonymous);
+                moveTo_dashboard_anonymous(null);
             } else {
-                setContentView(R.layout.dashboard_user);
+                moveTo_dashboard_user(null);
             }
         });
 

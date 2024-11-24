@@ -803,7 +803,6 @@
         android:backgroundTint="#77D6DB"
         android:fontFamily="serif"
         android:text="@string/hint"
-        android:onClick="buyingThings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.07"

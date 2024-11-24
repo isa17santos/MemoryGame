@@ -30,6 +30,7 @@
         android:id="@+id/button_3x4_board"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
         android:onClick="moveTo_board3x4_user"
@@ -38,15 +39,14 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
         android:textSize="35sp"
-        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42"
-        app:layout_constraintHeight_percent="0.12"
-        app:layout_constraintWidth_percent="0.73"/>
+        app:layout_constraintVertical_bias="0.428"
+        app:layout_constraintWidth_percent="0.73" />
 
     <Button
         android:id="@+id/button_4x4_board"
@@ -64,20 +64,21 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.63"
-        app:layout_constraintHeight_percent="0.12"
-        app:layout_constraintWidth_percent="0.73"/>
+        app:layout_constraintVertical_bias="0.607"
+        app:layout_constraintWidth_percent="0.73"
+        app:layout_constraintHeight_percent="0.12"/>
 
     <Button
         android:id="@+id/button_6x6_board"
+        android:onClick="moveTo_board6x6"
+        android:text="@string/seisXseisBoard"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
-        android:onClick="moveTo_board6x6"
-        android:text="@string/seisXseisBoard"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
@@ -88,9 +89,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.844"
-        app:layout_constraintHeight_percent="0.12"
-        app:layout_constraintWidth_percent="0.73"/>
+        app:layout_constraintVertical_bias="0.786"
+        app:layout_constraintWidth_percent="0.73"
+        app:layout_constraintHeight_percent="0.12"/>
 
     <TextView
         android:id="@+id/textBoardSize"
@@ -105,10 +106,45 @@
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.238"
-        app:layout_constraintHeight_percent="0.12"
-        app:layout_constraintWidth_percent="0.73"/>
+        app:layout_constraintWidth_percent="0.73" />
+
+    <TextView
+        android:id="@+id/num_coins"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="serif"
+        android:text="@string/num_coins"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:autoSizeTextType="uniform"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintHorizontal_bias="0.431"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.925"
+        app:layout_constraintWidth_percent="0.14" />
+
+    <ImageView
+        android:id="@+id/image_coins_dashboard_user"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/image_coin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintHorizontal_bias="0.616"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.925"
+        app:layout_constraintWidth_percent="0.14"
+        app:srcCompat="@drawable/coin_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
