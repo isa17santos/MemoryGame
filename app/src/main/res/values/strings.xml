@@ -95,7 +95,8 @@
     <string name="AttemptText">0</string>
     <string name="ScoreText">0</string>
     <string name="hint">Hint</string>
-
-
+    <string name="personal_scoreboard">Personal</string>
+    <string name="global_scoreboard">Global</string>
+    <string name="notifications">notifications</string>
 
 </resources>
