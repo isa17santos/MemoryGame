@@ -16,41 +16,26 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
+import com.example.memorygame.databinding.Board4x4Binding;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
-
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Handler;
 
-
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import com.example.memorygame.databinding.Board6x6Binding;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
     // Variables
     private Board6x6Binding binding6x6;
     private Board3x4AnonymousBinding binding;
+    private Board4x4Binding binding4x4;
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
     private ImageView firstCardImageView = null; // Declare a variable to store the ImageView
@@ -60,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView timerTextView;
     private final Handler handler = new Handler();
     private int seconds = 0; // Start from 0 seconds
+    int minutes = 0;
+    int remainingSeconds = 0;
     private Runnable updateTimerRunnable;
 
     //"attempts" - 1 attempt = 2 cartas viradas
@@ -142,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 seconds++; // Increment seconds by 1
 
                 // Calculate minutes and seconds
-                int minutes = seconds / 60; // Calculate minutes
-                int remainingSeconds = seconds % 60; // Calculate remaining seconds
+                minutes = seconds / 60; // Calculate minutes
+                remainingSeconds = seconds % 60; // Calculate remaining seconds
 
                 // Update the TextView with formatted time (MM:SS)
                 timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
@@ -169,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
         handler.removeCallbacks(updateTimerRunnable);
     }
 
+    public void moveTo_login_page(View view) {
+        setContentView(R.layout.activity_main);
+    }
 
     public void moveTo_boardsize_page(View view) {
         setContentView(R.layout.boardsize_page);
@@ -190,9 +180,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.board3x4_user);
     }
 
-    public void moveTo_board4x4(View view) {
-        setContentView(R.layout.board4x4);
-    }
 
     public void moveTo_dashboard_anonymous(View view) {
         setContentView(R.layout.dashboard_anonymous);
@@ -306,6 +293,16 @@ public class MainActivity extends AppCompatActivity {
         setupGame(0);
     }
 
+    public void moveTo_board4x4(View view) {
+        binding4x4 = Board4x4Binding.inflate(getLayoutInflater());
+        setContentView(binding4x4.getRoot());
+        timerTextView = binding4x4.timerTextViewBoard4x4;
+        attemptsTextView = binding4x4.attemptsTextBoard4x4;
+        scoreTextView = binding4x4.scoreTextBoard4x4;
+
+        setupGame(2);
+    }
+
     public void setupGame(int boardType) {
         // boardType:
         // 0 -> Board 3x4 anonymous
@@ -325,7 +322,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (boardType == 2) // Board 4x4 user
         {
-            // TO DO
+            int cardCount = binding4x4.MemoryGrid.getChildCount();
+            memoryCards = CreateMemoryCards(cardCount);
+            Collections.shuffle(memoryCards);
         }
         else if (boardType == 3) // Board 6x6 user
         {
@@ -346,7 +345,11 @@ public class MainActivity extends AppCompatActivity {
         matchCount = 0;
         isWaiting = false;
         initializeTimer = false;
-
+        seconds = 0;
+        minutes = 0;
+        remainingSeconds = 0;
+        attempts = 0;
+        score = 0;
 
     }
 
@@ -366,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -374,7 +377,12 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (boardType == 2) // Board 4x4 user
             {
-                // TO DO
+                ImageView imageView = (ImageView) binding4x4.MemoryGrid.getChildAt(i);
+                imageView.setClickable(true);
+                imageView.setTag(i);
+
+                // Set click listener for each ImageView
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 3) // Board 6x6 user
             {
@@ -383,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else // Invalid board size
             {
@@ -393,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView) {
+    private void handleCardClick(ImageView imageView, int boardType) {
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -432,6 +440,7 @@ public class MainActivity extends AppCompatActivity {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
+                            gameOverPopUp(boardType);
                         }
                     } else {
                         isWaiting = true;
@@ -525,6 +534,31 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+    @SuppressLint("DefaultLocale")
+    private void gameOverPopUp(int boardType) {
+        // Create an AlertDialog.Builder instance
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set title, message, and buttons
+        builder.setTitle("Game Finished!");
+        builder.setMessage(String.format("Score: %d\n" + "Attempts: %d\n" + "Time: %02d:%02d", score, attempts, minutes, remainingSeconds));
+
+        // Positive Button (e.g., OK)
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // Handle OK button click
+            dialog.dismiss(); // Close the pop-up
+            if (boardType == 0) {
+                setContentView(R.layout.dashboard_anonymous);
+            } else {
+                setContentView(R.layout.dashboard_user);
+            }
+        });
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 }
 
