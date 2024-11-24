@@ -430,7 +430,6 @@
         android:fontFamily="serif"
         android:text="@string/hint"
         android:contentDescription="Hints"
-        android:onClick="buyingThings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.07"

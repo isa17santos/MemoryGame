@@ -12,9 +12,9 @@
     <string name="login">Login</string>
     <string name="num_coins">5</string>
     <string name="image_coin">imageCoin</string>
-    <string name="tresXquatroBoard">3x4 Board</string>
-    <string name="quatroXquatroBoard">4x4 Board</string>
-    <string name="seisXseisBoard">6x6 Board</string>
+    <string name="tresXquatroBoard">3x4 Board - Free</string>
+    <string name="quatroXquatroBoard">4x4 Board - 1$</string>
+    <string name="seisXseisBoard">6x6 Board - 1$</string>
     <string name="board_size">Board size</string>
     <string name="Time">Time:</string>
     <string name="Score">Score:</string>
