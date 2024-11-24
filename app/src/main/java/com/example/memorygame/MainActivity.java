@@ -1,5 +1,6 @@
 package com.example.memorygame;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     // Decrement the value
                     value-=1;
+                    getHint(3);
                 }
 
                 // Update the TextView with the new value
@@ -471,6 +473,68 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getHint(int boardType) {
+        ImageView imageView1 = null;
+        ImageView imageView2 = null;
+        if (FirstCard != null && !FirstCard.isMatched()) {
+            // Unflip the first card if it hasn't found its match
+            FirstCard.flipCardDown();
+            firstCardImageView.setBackgroundColor(ContextCompat.getColor(firstCardImageView.getContext(), FirstCard.getColor()));
+            firstCardImageView.setImageResource(FirstCard.getImageId());
+            FirstCard = null;
+            firstCardImageView = null;
+        }
+
+
+        for (int i = 0; i < memoryCards.size(); i++) {
+            MemoryCard card1 = memoryCards.get(i);
+            if (!card1.isMatched()) {
+                for (int j = i + 1; j < memoryCards.size(); j++) {
+                    MemoryCard card2 = memoryCards.get(j);
+                    if (!card2.isMatched() && card1.getRealImageId() == card2.getRealImageId()) {
+                        if(boardType == 0) {
+                            imageView1 = (ImageView) binding.MemoryGrid.getChildAt(i);
+                            imageView2 = (ImageView) binding.MemoryGrid.getChildAt(j);
+                        }
+                        else if(boardType == 1) {
+                            // TO DO
+                        }
+                        else if(boardType == 2) {
+                            // TO DO
+                        }
+                        else if(boardType == 3) {
+                            imageView1 = (ImageView) binding6x6.MemoryGrid.getChildAt(i);
+                            imageView2 = (ImageView) binding6x6.MemoryGrid.getChildAt(j);
+                        }
+                        else {
+                            throw new IllegalArgumentException("Invalid board size");
+                        }
+                        // Flip both cards up
+                        card1.flipCardUp();
+                        card2.flipCardUp();
+                        imageView1.setBackgroundColor(ContextCompat.getColor(imageView1.getContext(), card1.getColor()));
+                        imageView1.setImageResource(card1.getImageId());
+                        imageView2.setBackgroundColor(ContextCompat.getColor(imageView2.getContext(), card2.getColor()));
+                        imageView2.setImageResource(card2.getImageId());
+
+                        // Hide the cards again after a short delay
+                        ImageView finalImageView = imageView1;
+                        ImageView finalImageView1 = imageView2;
+                        imageView1.postDelayed(() -> {
+                            card1.flipCardDown();
+                            finalImageView.setBackgroundColor(ContextCompat.getColor(finalImageView.getContext(), card1.getColor()));
+                            finalImageView.setImageResource(card1.getImageId());
+                            card2.flipCardDown();
+                            finalImageView1.setBackgroundColor(ContextCompat.getColor(finalImageView1.getContext(), card2.getColor()));
+                            finalImageView1.setImageResource(card2.getImageId());
+                        }, 1000); // 1 second delay
+
+                        return;
+                    }
+                }
+            }
+        }
+
     @SuppressLint("DefaultLocale")
     private void gameOverPopUp(int boardType) {
         // Create an AlertDialog.Builder instance
@@ -494,6 +558,7 @@ public class MainActivity extends AppCompatActivity {
         // Create and show the dialog
         AlertDialog dialog = builder.create();
         dialog.show();
+
     }
 }
 
