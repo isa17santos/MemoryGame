@@ -1,5 +1,8 @@
 package com.example.memorygame;
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -64,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
     int value = 5;
     private boolean initializeTimer = false;
 
+    // Get the writable database
+    SQLiteDatabase db = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +82,82 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        //------------------------------- DATABASE --------------------------------------
+        // Initialize the database helper
+        MemoryGameDatabaseHelper dbHelper = new MemoryGameDatabaseHelper(this);
+
+        try {
+            db = dbHelper.getWritableDatabase(); // Open or create the database
+            Log.d("Database", "Database initialized successfully.");
+
+            // Create a new UserDAO instance
+            UserDAO userDAO = new UserDAO(db);
+
+
+            // Check if users have already been created using SharedPreferences
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            boolean usersCreated = preferences.getBoolean("users_created", false);
+
+            if (!usersCreated) {
+                // If users haven't been created, insert users
+                insertTestUsers(userDAO);
+
+                // After creating users, set the flag to true
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("users_created", true);
+                editor.apply();
+
+                Log.d("UserCreation", "Users created successfully.");
+            } else {
+                Log.d("UserCreation", "Users already created, skipping.");
+            }
+
+            // Retrieve and log all users
+            Cursor cursor = userDAO.getAllUsers();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
+                    @SuppressLint("Range") String password = cursor.getString(cursor.getColumnIndex("password"));
+                    @SuppressLint("Range") int coins = cursor.getInt(cursor.getColumnIndex("coins"));
+                    Log.d("User", "ID: " + id + ", Username: " + username + ", Coins: " + coins);
+                } while (cursor.moveToNext());
+            } else {
+                Log.d("User", "No users found in the database.");
+            }
+
+            // Close the cursor
+            if (cursor != null) {
+                cursor.close();
+            }
+
+        } catch (Exception e) {
+            Log.e("Database", "Error interacting with the database", e);
+        }
+
+
+
+            // For Games
+            //GameDAO gameDAO = new GameDAO(db);
+            //gameDAO.insertGame(5, 200, "02:30", 4, (int) userId);
+            //Cursor gamesCursor = gameDAO.getGamesByUser((int) userId);
+            //gamesCursor.close();
+
+
+            // For Notifications
+            //NotificationDAO notificationDAO = new NotificationDAO(db);
+            //notificationDAO.insertNotification("Welcome to the game!", (int) userId);
+
+        //------------------------------- DATABASE --------------------------------------
+    }
+
+    // Method to insert test users
+    private void insertTestUsers(UserDAO userDAO) {
+        userDAO.insertUser("isa", "isa123", 20);
+        userDAO.insertUser("bruno", "bruno123", 20);
+        userDAO.insertUser("carolina", "carolina123", 20);
+        userDAO.insertUser("duarte", "duarte123", 20);
+        userDAO.insertUser("test", "test123", 100);
     }
 
     private void notEnoughtCoins()
