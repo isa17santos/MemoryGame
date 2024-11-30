@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (username.equals("test") && password.equals("test")) {
+        if (username.equals("test") && password.equals("test123")) {
             setContentView(R.layout.test_dashboard);
             testBinding = TestDashboardBinding.inflate(getLayoutInflater());
             setContentView(testBinding.getRoot());
