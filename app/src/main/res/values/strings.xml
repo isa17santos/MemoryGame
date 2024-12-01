@@ -2,7 +2,7 @@
     <string name="app_name">MemoryGame</string>
     <string name="dashboard_button_start">Start</string>
     <string name="dashboard_button_history">History</string>
-    <string name="dashboard_button_scoreboard">Scoreboard</string>
+    <string name="global_leaderboard">Global Leaderboard</string>
     <string name="dashboard_gameName">Memory Game</string>
     <string name="profilepicture">profilePicture</string>
     <string name="username">Username</string>
@@ -98,8 +98,27 @@
     <string name="personal_scoreboard">Personal</string>
     <string name="global_scoreboard">Global</string>
     <string name="notifications">notifications</string>
+
     <string name="test_board_3x4">Test board 3x4</string>
     <string name="testboard3x4" />
     <string name="testboard_3x4">TestBoard 3x4</string>
+
+    <string name="game_finished">Game Finished!</string>
+    <string name="score">Score:</string>
+    <string name="attempts">Attempts:</string>
+    <string name="time">Time:</string>
+    <string name="close">close</string>
+
+    <string name="Time_Scoreboard">Time</string>
+    <string name="dashboard_button_scoreboard">Scoreboard</string>
+
+
+    <string name="error">ERROR!</string>
+
+    <string name="emptyFields">Empty fields! Write our username and password.</string>
+
+    <string name="notEnoughCoins">Not enough coins!</string>
+
+
 
 </resources>
