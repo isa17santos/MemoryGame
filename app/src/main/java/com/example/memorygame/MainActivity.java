@@ -13,10 +13,13 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 
@@ -67,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean testMode = false;
 
+    List<Notification> notificationList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
     }
 
     private void notEnoughtCoins()
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.scoreboard_personal_page);
     }
 
-    public void moveTo_dashboard_user(View view) {
+    public void login(View view) {
         EditText usernameInput = findViewById(R.id.username_input);
         EditText passwordInput = findViewById(R.id.password_input);
         String username = usernameInput.getText().toString();
@@ -234,10 +238,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void moveTo_dashboard_user(View view) {
+        setContentView(R.layout.dashboard_user);
+        userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+        setContentView(userBinding.getRoot());
+        TextView coins = userBinding.numCoins;
+        coins.setText(String.valueOf(value));
+    }
+
     public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
 
     public void moveTo_notification_page(View view) {
         setContentView(R.layout.notification_page);
+        if( findViewById(R.id.recyclerView_notifications) != null){
+            RecyclerView recyclerView = findViewById(R.id.recyclerView_notifications);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            notificationList.add(new Notification("Bem Vindo!", "Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!"));
+
+            NotificationAdapter notificationAdapter = new NotificationAdapter(notificationList);
+            recyclerView.setAdapter(notificationAdapter);
+        }
     }
 
     public ArrayList<MemoryCard> CreateMemoryCards(int size) {
