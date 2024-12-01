@@ -1,9 +1,14 @@
 package com.example.memorygame;
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.view.ViewStub;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -29,8 +34,13 @@ import com.example.memorygame.databinding.Board4x4Binding;
 import com.example.memorygame.databinding.Board6x6Binding;
 import com.example.memorygame.databinding.BoardsizePageBinding;
 import com.example.memorygame.databinding.DashboardUserBinding;
+
 import com.example.memorygame.databinding.Testboard3x4Binding;
 import com.example.memorygame.databinding.TestDashboardBinding;
+
+import com.example.memorygame.databinding.GameOverPopUpBinding;
+import com.example.memorygame.databinding.PopUpBinding;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private Testboard3x4Binding bindingTest3x4;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
+
     private TestDashboardBinding testBinding;
+
+    private PopUpBinding popUpBinding;
+
+     private GameOverPopUpBinding gameOverPopUpBinding;
+
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -69,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
     int value = 5;
     private boolean initializeTimer = false;
 
+    // Get the writable database
+    SQLiteDatabase db = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +100,82 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        //------------------------------- DATABASE --------------------------------------
+        // Initialize the database helper
+        MemoryGameDatabaseHelper dbHelper = new MemoryGameDatabaseHelper(this);
+
+        try {
+            db = dbHelper.getWritableDatabase(); // Open or create the database
+            Log.d("Database", "Database initialized successfully.");
+
+            // Create a new UserDAO instance
+            UserDAO userDAO = new UserDAO(db);
+
+
+            // Check if users have already been created using SharedPreferences
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            boolean usersCreated = preferences.getBoolean("users_created", false);
+
+            if (!usersCreated) {
+                // If users haven't been created, insert users
+                insertTestUsers(userDAO);
+
+                // After creating users, set the flag to true
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("users_created", true);
+                editor.apply();
+
+                Log.d("UserCreation", "Users created successfully.");
+            } else {
+                Log.d("UserCreation", "Users already created, skipping.");
+            }
+
+            // Retrieve and log all users
+            Cursor cursor = userDAO.getAllUsers();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
+                    @SuppressLint("Range") String password = cursor.getString(cursor.getColumnIndex("password"));
+                    @SuppressLint("Range") int coins = cursor.getInt(cursor.getColumnIndex("coins"));
+                    Log.d("User", "ID: " + id + ", Username: " + username + ", Coins: " + coins);
+                } while (cursor.moveToNext());
+            } else {
+                Log.d("User", "No users found in the database.");
+            }
+
+            // Close the cursor
+            if (cursor != null) {
+                cursor.close();
+            }
+
+        } catch (Exception e) {
+            Log.e("Database", "Error interacting with the database", e);
+        }
+
+
+
+            // For Games
+            //GameDAO gameDAO = new GameDAO(db);
+            //gameDAO.insertGame(5, 200, "02:30", 4, (int) userId);
+            //Cursor gamesCursor = gameDAO.getGamesByUser((int) userId);
+            //gamesCursor.close();
+
+
+            // For Notifications
+            //NotificationDAO notificationDAO = new NotificationDAO(db);
+            //notificationDAO.insertNotification("Welcome to the game!", (int) userId);
+
+        //------------------------------- DATABASE --------------------------------------
+    }
+
+    // Method to insert test users
+    private void insertTestUsers(UserDAO userDAO) {
+        userDAO.insertUser("isa", "isa123", 20);
+        userDAO.insertUser("bruno", "bruno123", 20);
+        userDAO.insertUser("carolina", "carolina123", 20);
+        userDAO.insertUser("duarte", "duarte123", 20);
+        userDAO.insertUser("test", "test123", 100);
     }
 
     private void notEnoughtCoins()
@@ -494,7 +590,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,0));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -503,7 +599,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
             else if (boardType == 2) // Board 4x4 user
             {
@@ -512,7 +608,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
             else if (boardType == 3) // Board 6x6 user
             {
@@ -521,7 +617,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
             else if (boardType == 4) // Board 3x4 Test
             {
@@ -541,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView, int boardType) {
+    private void handleCardClick(ImageView imageView, int gameMode) {
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -580,7 +676,17 @@ public class MainActivity extends AppCompatActivity {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
-                            gameOverPopUp(boardType);
+
+                            if(gameMode == 0) // anonymous
+                            {
+                                showPopupWithDynamicLayout(1,0);
+                            }
+                            else if(gameMode == 1) // user
+                            {
+                                showPopupWithDynamicLayout(1,1);
+                            }
+
+
                         }
                     } else {
                         isWaiting = true;
@@ -685,30 +791,74 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @SuppressLint("DefaultLocale")
-    private void gameOverPopUp(int boardType) {
-        // Create an AlertDialog.Builder instance
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void showPopupWithDynamicLayout(int caseType, int gameMode) {
+        // caseType values:
+        // 1- game over pop up
+        // 2- not enough coins pop up
+        // 3- leave game poop up
 
-        // Set title, message, and buttons
-        builder.setTitle("Game Finished!");
-        builder.setMessage(String.format("Score: %d\n\n" + "Attempts: %d\n\n" + "Time: %02d:%02d", score, attempts, minutes, remainingSeconds));
+        // gameMode values:
+        // 0 -> anonymous
+        // 1 -> user
 
-        // Positive Button (e.g., OK)
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            // Handle OK button click
-            dialog.dismiss(); // Close the pop-up
-            if (boardType == 0) {
-                moveTo_dashboard_anonymous(null);
-            } else {
-                moveTo_dashboard_user(null);
+
+        try {
+            popUpBinding = PopUpBinding.inflate(getLayoutInflater());
+
+            ViewStub viewStub = popUpBinding.viewStub;
+
+            if (caseType == 1) {
+                gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
+                timerTextView = gameOverPopUpBinding.TimeValue;
+                attemptsTextView = gameOverPopUpBinding.AttemptsValue;
+                scoreTextView = gameOverPopUpBinding.ScoreValue;
+
+                attemptsTextView.setText(String.valueOf(attempts));
+                scoreTextView.setText(String.valueOf(score));
+                timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
+
+
+                Log.d("PopupDebug", "CaseType: " + caseType);
+                Log.d("PopupDebug", "Attempts: " + attempts + ", Time: " + minutes + ":" + remainingSeconds + ", Score: " + score);
+
+                viewStub.setLayoutResource(R.layout.game_over_pop_up);
+
+                View close = gameOverPopUpBinding.closeButton;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(gameOverPopUpBinding.getRoot());
+                final AlertDialog dialog = builder.create(); // Make the dialog final
+
+
+                close.setOnClickListener(v -> {
+                    dialog.dismiss(); // Close the dialog
+
+                    if(gameMode == 0 ) //  anonymous
+                        moveTo_dashboard_anonymous(null);
+                    else{  //  anonymous
+                        moveTo_dashboard_user(null);
+                    }
+
+
+                });
+
+                dialog.show();
+
+            } else if (caseType == 2) {
+                //viewStub.setLayoutResource(R.layout.p);
             }
-        });
 
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            if (viewStub.getParent() != null) {
+                View inflatedView = viewStub.inflate();
+            }
 
+        }
+        catch (Exception e){
+            Log.e("PopupError", "Error in showPopupWithDynamicLayout", e);
+        }
     }
+
 }
 
