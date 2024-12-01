@@ -531,7 +531,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,0));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -540,7 +540,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
             else if (boardType == 2) // Board 4x4 user
             {
@@ -549,7 +549,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
             else if (boardType == 3) // Board 6x6 user
             {
@@ -558,7 +558,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
             else // Invalid board size
             {
@@ -568,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView, int boardType) {
+    private void handleCardClick(ImageView imageView, int gameMode) {
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -607,7 +607,17 @@ public class MainActivity extends AppCompatActivity {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
-                            showPopupWithDynamicLayout(1);
+
+                            if(gameMode == 0) // anonymous
+                            {
+                                showPopupWithDynamicLayout(1,0);
+                            }
+                            else if(gameMode == 1) // user
+                            {
+                                showPopupWithDynamicLayout(1,1);
+                            }
+
+
                         }
                     } else {
                         isWaiting = true;
@@ -710,45 +720,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("DefaultLocale")
-    private void gameOverPopUp(int boardType) {
-        // Create an AlertDialog.Builder instance
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Set title, message, and buttons
-        builder.setTitle("Game Finished!");
-        builder.setMessage(String.format("Score: %d\n\n" + "Attempts: %d\n\n" + "Time: %02d:%02d", score, attempts, minutes, remainingSeconds));
-
-        // Positive Button (e.g., OK)
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            // Handle OK button click
-            dialog.dismiss(); // Close the pop-up
-            if (boardType == 0) {
-                moveTo_dashboard_anonymous(null);
-            } else {
-                moveTo_dashboard_user(null);
-            }
-        });
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-    }
-
 
     @SuppressLint("DefaultLocale")
-    private void showPopupWithDynamicLayout(int caseType) {
+    private void showPopupWithDynamicLayout(int caseType, int gameMode) {
         // caseType values:
         // 1- game over pop up
         // 2- not enough coins pop up
         // 3- leave game poop up
 
-        // boardType values:
-        // 0 -> Board 3x4 anonymous
-        // 1 -> Board 3x4 user
-        // 2 -> Board 4x4 user
-        // 3 -> Board 6x6 user
+        // gameMode values:
+        // 0 -> anonymous
+        // 1 -> user
+
 
         try {
             popUpBinding = PopUpBinding.inflate(getLayoutInflater());
@@ -771,6 +754,26 @@ public class MainActivity extends AppCompatActivity {
 
                 viewStub.setLayoutResource(R.layout.game_over_pop_up);
 
+                View close = gameOverPopUpBinding.closeButton;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(gameOverPopUpBinding.getRoot());
+                final AlertDialog dialog = builder.create(); // Make the dialog final
+
+
+                close.setOnClickListener(v -> {
+                    dialog.dismiss(); // Close the dialog
+
+                    if(gameMode == 0 ) //  anonymous
+                        moveTo_dashboard_anonymous(null);
+                    else{  //  anonymous
+                        moveTo_dashboard_user(null);
+                    }
+
+
+                });
+
+                dialog.show();
 
             } else if (caseType == 2) {
                 //viewStub.setLayoutResource(R.layout.p);
@@ -780,13 +783,6 @@ public class MainActivity extends AppCompatActivity {
                 View inflatedView = viewStub.inflate();
             }
 
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(gameOverPopUpBinding.getRoot());
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            popUpBinding.closeButton.setOnClickListener(v -> dialog.dismiss());
         }
         catch (Exception e){
             Log.e("PopupError", "Error in showPopupWithDynamicLayout", e);
