@@ -1,9 +1,15 @@
 package com.example.memorygame;
 
+import android.content.ContentValues;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.view.ViewStub;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -30,6 +36,10 @@ import com.example.memorygame.databinding.Board6x6Binding;
 import com.example.memorygame.databinding.BoardsizePageBinding;
 import com.example.memorygame.databinding.DashboardUserBinding;
 
+
+import com.example.memorygame.databinding.GameOverPopUpBinding;
+
+
 public class MainActivity extends AppCompatActivity {
 
     // Variables
@@ -40,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private Board6x6Binding binding6x6;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
+
+     private GameOverPopUpBinding gameOverPopUpBinding;
+
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -67,6 +80,16 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean testMode = false;
 
+    private GameDAO gameDAO;
+
+    private String currentUser;
+  
+    // Get the writable database
+    private SQLiteDatabase db = null;
+
+    private UserDAO userDAO;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,26 +101,84 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        //------------------------------- DATABASE --------------------------------------
+        // Initialize the database helper
+        MemoryGameDatabaseHelper dbHelper = new MemoryGameDatabaseHelper(this);
+
+        try {
+            db = dbHelper.getWritableDatabase(); // Open or create the database
+            Log.d("Database", "Database initialized successfully.");
+
+            // Create a new UserDAO instance
+            userDAO = new UserDAO(db);
+
+
+            // Check if users have already been created using SharedPreferences
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            boolean usersCreated = preferences.getBoolean("users_created", false);
+
+            if (!usersCreated) {
+                // If users haven't been created, insert users
+                insertTestUsers(userDAO);
+
+                // After creating users, set the flag to true
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("users_created", true);
+                editor.apply();
+
+                Log.d("UserCreation", "Users created successfully.");
+            } else {
+                Log.d("UserCreation", "Users already created, skipping.");
+            }
+
+            // Retrieve and log all users
+            Cursor cursor = userDAO.getAllUsers();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
+                    @SuppressLint("Range") String password = cursor.getString(cursor.getColumnIndex("password"));
+                    @SuppressLint("Range") int coins = cursor.getInt(cursor.getColumnIndex("coins"));
+                    Log.d("User", "ID: " + id + ", Username: " + username + ", Coins: " + coins);
+                } while (cursor.moveToNext());
+            } else {
+                Log.d("User", "No users found in the database.");
+            }
+
+            // Close the cursor
+            if (cursor != null) {
+                cursor.close();
+            }
+
+        } catch (Exception e) {
+            Log.e("Database", "Error interacting with the database", e);
+        }
+
+
+
+            // For Games
+            //GameDAO gameDAO = new GameDAO(db);
+            //gameDAO.insertGame(5, 200, "02:30", 4, (int) userId);
+            //Cursor gamesCursor = gameDAO.getGamesByUser((int) userId);
+            //gamesCursor.close();
+
+
+            // For Notifications
+            //NotificationDAO notificationDAO = new NotificationDAO(db);
+            //notificationDAO.insertNotification("Welcome to the game!", (int) userId);
+
+        //------------------------------- DATABASE --------------------------------------
     }
 
-    private void notEnoughtCoins()
-    {
-        // Create an AlertDialog.Builder instance
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Set title, message, and buttons
-        builder.setTitle("Not enough coins!");
-
-        // Positive Button (e.g., OK)
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            // Handle OK button click
-            dialog.dismiss(); // Close the pop-up
-        });
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    // Method to insert test users
+    private void insertTestUsers(UserDAO userDAO) {
+        userDAO.insertUser("isa", "isa123", 20);
+        userDAO.insertUser("bruno", "bruno123", 20);
+        userDAO.insertUser("carolina", "carolina123", 20);
+        userDAO.insertUser("duarte", "duarte123", 20);
+        userDAO.insertUser("test", "test123", 100);
     }
+
 
     private void startTimer() {
         // Define the Runnable that updates the TextView every second
@@ -150,17 +231,19 @@ public class MainActivity extends AppCompatActivity {
         coins.setText(String.valueOf(value));
 
         button3x4.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
-            else{
+            if(value <= 0) { //   not enough coins
+                //notEnoughtCoins();
+            }else{
                 buyingThings(button3x4, coins);
                 moveTo_board3x4_user(button3x4);
             }
         });
 
         button4x4.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+            if(value <= 0){//   not enough coins
+                //notEnoughtCoins();
+            }
+
             else{
                 buyingThings(button4x4, coins);
                 moveTo_board4x4(button4x4);
@@ -168,8 +251,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button6x6.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+            if(value <= 0){ //   not enough coins
+                //notEnoughtCoins();
+            }
+
             else{
                 buyingThings(button6x6, coins);
                 moveTo_board6x6(button6x6);
@@ -185,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (value <= 0) //not enough coins
         {
-            notEnoughtCoins();
+            //notEnoughtCoins();
         }
         else {
             // Decrement the value
@@ -212,26 +297,41 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.scoreboard_personal_page);
     }
 
+    public void moveTo_testDashboard(View view) {
+        setContentView(R.layout.test_dashboard);
+    }
+
     public void moveTo_dashboard_user(View view) {
         EditText usernameInput = findViewById(R.id.username_input);
         EditText passwordInput = findViewById(R.id.password_input);
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (username.equals("test") && password.equals("test123")) {
-            testMode = true;
-            setContentView(R.layout.dashboard_user);
-            userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-            setContentView(userBinding.getRoot());
-            TextView coins = userBinding.numCoins;
-            coins.setText(String.valueOf(value));
-        } else {
-            setContentView(R.layout.dashboard_user);
-            userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-            setContentView(userBinding.getRoot());
-            TextView coins = userBinding.numCoins;
-            coins.setText(String.valueOf(value));
+        if (username.isEmpty() || password.isEmpty()) { // Empty fields
+
+        } else { // written fields
+            boolean isAuthenticated = userDAO.authenticateUser(username, password);
+            if (isAuthenticated) { // Login successful
+                if (username.equals("test") && password.equals("test123")) {
+                  testMode = true;
+                  setContentView(R.layout.dashboard_user);
+                  userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                  setContentView(userBinding.getRoot());
+                  TextView coins = userBinding.numCoins;
+                  coins.setText(String.valueOf(value));
+                } else {
+                  setContentView(R.layout.dashboard_user);
+                  userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                  setContentView(userBinding.getRoot());
+                  TextView coins = userBinding.numCoins;
+                  coins.setText(String.valueOf(value));
+                }
+            } else { // Login failed
+                // TO DO
+                // POP UP INVALID LOGIN
+            }
         }
+
     }
 
     public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
@@ -477,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,0,3));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -486,7 +586,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1, 3));
             }
             else if (boardType == 2) // Board 4x4 user
             {
@@ -495,7 +595,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1, 4));
             }
             else if (boardType == 3) // Board 6x6 user
             {
@@ -504,8 +604,9 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1, 6));
             }
+
             else // Invalid board size
             {
                 throw new IllegalArgumentException("Invalid board size");
@@ -514,7 +615,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView, int boardType) {
+    private void handleCardClick(ImageView imageView, int gameMode) {
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -553,7 +654,29 @@ public class MainActivity extends AppCompatActivity {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
-                            gameOverPopUp(boardType);
+
+                            if(gameMode == 0) // anonymous
+                            {
+                                showPopupWithDynamicLayout(1,0);
+                            }
+                            else if(gameMode == 1) // user
+                            {
+                                showPopupWithDynamicLayout(1,1);
+                            }
+                            else if (gameMode == 2) // test
+                            {
+                                showPopupWithDynamicLayout(1,2);
+                            }
+
+                            // Insert a game record
+
+                            String time = String.format("%02d:%02d", minutes, seconds);
+
+                            long val = gameDAO.insertGame(attempts, score, time, boardSize, userDAO.getLoggedInUserId(currentUser));
+                            Log.d("MemoryCard", "Game record inserted with ID: " + val);
+                            if (val == -1) {
+                                Log.d("MemoryCard", "Game record insertion failed");
+                            }
                         }
                     } else {
                         isWaiting = true;
@@ -587,8 +710,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buyHint(View view, TextView coins, int boardType) {
-        if(value <= 0) //   not enough coins
-            notEnoughtCoins();
+        if(value <= 0){//   not enough coins
+            //notEnoughtCoins();
+        }
+
         else {
             buyingThings(view, coins);
             getHint(boardType);
@@ -655,30 +780,86 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @SuppressLint("DefaultLocale")
-    private void gameOverPopUp(int boardType) {
-        // Create an AlertDialog.Builder instance
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void showPopupWithDynamicLayout(int caseType, int gameMode) {
+        // caseType values:
+        // 1- game over pop up
+        // 2- not enough coins pop up
+        // 3- leave game pop up
+        // 4- invalid login pop up
+        // 5- empty fields pop up
 
-        // Set title, message, and buttons
-        builder.setTitle("Game Finished!");
-        builder.setMessage(String.format("Score: %d\n\n" + "Attempts: %d\n\n" + "Time: %02d:%02d", score, attempts, minutes, remainingSeconds));
+        // gameMode values:
+        // 0 -> anonymous
+        // 1 -> user
+        // 2 -> test
 
-        // Positive Button (e.g., OK)
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            // Handle OK button click
-            dialog.dismiss(); // Close the pop-up
-            if (boardType == 0) {
-                moveTo_dashboard_anonymous(null);
-            } else {
-                moveTo_dashboard_user(null);
+
+        try {
+
+            if (caseType == 1) { // 1- game over pop up
+
+                gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
+                timerTextView = gameOverPopUpBinding.TimeValue;
+                attemptsTextView = gameOverPopUpBinding.AttemptsValue;
+                scoreTextView = gameOverPopUpBinding.ScoreValue;
+
+                attemptsTextView.setText(String.valueOf(attempts));
+                scoreTextView.setText(String.valueOf(score));
+                timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
+
+
+                Log.d("PopupDebug", "CaseType: " + caseType);
+                Log.d("PopupDebug", "Attempts: " + attempts + ", Time: " + minutes + ":" + remainingSeconds + ", Score: " + score);
+
+
+                View close = gameOverPopUpBinding.closeButtonGameOver;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(gameOverPopUpBinding.getRoot());
+                final AlertDialog dialog = builder.create(); // Make the dialog final
+
+
+                close.setOnClickListener(v -> {
+                    dialog.dismiss(); // Close the dialog
+
+                    if(gameMode == 0 ) //  anonymous
+                        moveTo_dashboard_anonymous(null);
+                    else if (gameMode == 1){  //  user
+                        moveTo_dashboard_user(null);
+                    }
+                    else if (gameMode == 2){  //  test
+                        moveTo_testDashboard(null);
+                    }
+
+
+                });
+
+                dialog.show();
+
             }
-        });
+            else if (caseType == 2) { // 2- not enough coins pop up
 
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            }
+            else if (caseType == 3) { // 3- leave game pop up
 
+                //viewStub.setLayoutResource(R.layout.p);
+            }
+            else if (caseType == 4) { // 4- invalid login pop up
+
+                //viewStub.setLayoutResource(R.layout.p);
+            }
+            else if (caseType == 5) { // 5- empty fields pop up
+
+            }
+
+
+        }
+        catch (Exception e){
+            Log.e("PopupError", "Error in showPopupWithDynamicLayout", e);
+        }
     }
+
 }
 
