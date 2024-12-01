@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -31,6 +33,8 @@ import com.example.memorygame.databinding.Board4x4Binding;
 import com.example.memorygame.databinding.Board6x6Binding;
 import com.example.memorygame.databinding.BoardsizePageBinding;
 import com.example.memorygame.databinding.DashboardUserBinding;
+import com.example.memorygame.databinding.GameOverPopUpBinding;
+import com.example.memorygame.databinding.PopUpBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private Board6x6Binding binding6x6;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
+    private PopUpBinding popUpBinding;
+
+     private GameOverPopUpBinding gameOverPopUpBinding;
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -600,7 +607,7 @@ public class MainActivity extends AppCompatActivity {
                             // Game Over
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
-                            gameOverPopUp(boardType);
+                            showPopupWithDynamicLayout(1);
                         }
                     } else {
                         isWaiting = true;
@@ -728,5 +735,63 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
+
+    @SuppressLint("DefaultLocale")
+    private void showPopupWithDynamicLayout(int caseType) {
+        // caseType values:
+        // 1- game over pop up
+        // 2- not enough coins pop up
+        // 3- leave game poop up
+
+        // boardType values:
+        // 0 -> Board 3x4 anonymous
+        // 1 -> Board 3x4 user
+        // 2 -> Board 4x4 user
+        // 3 -> Board 6x6 user
+
+        try {
+            popUpBinding = PopUpBinding.inflate(getLayoutInflater());
+
+            ViewStub viewStub = popUpBinding.viewStub;
+
+            if (caseType == 1) {
+                gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
+                timerTextView = gameOverPopUpBinding.TimeValue;
+                attemptsTextView = gameOverPopUpBinding.AttemptsValue;
+                scoreTextView = gameOverPopUpBinding.ScoreValue;
+
+                attemptsTextView.setText(String.valueOf(attempts));
+                scoreTextView.setText(String.valueOf(score));
+                timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
+
+
+                Log.d("PopupDebug", "CaseType: " + caseType);
+                Log.d("PopupDebug", "Attempts: " + attempts + ", Time: " + minutes + ":" + remainingSeconds + ", Score: " + score);
+
+                viewStub.setLayoutResource(R.layout.game_over_pop_up);
+
+
+            } else if (caseType == 2) {
+                //viewStub.setLayoutResource(R.layout.p);
+            }
+
+            if (viewStub.getParent() != null) {
+                View inflatedView = viewStub.inflate();
+            }
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(gameOverPopUpBinding.getRoot());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            popUpBinding.closeButton.setOnClickListener(v -> dialog.dismiss());
+        }
+        catch (Exception e){
+            Log.e("PopupError", "Error in showPopupWithDynamicLayout", e);
+        }
+    }
+
 }
 

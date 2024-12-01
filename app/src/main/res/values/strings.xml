@@ -98,5 +98,11 @@
     <string name="personal_scoreboard">Personal</string>
     <string name="global_scoreboard">Global</string>
     <string name="notifications">notifications</string>
+    <string name="game_finished">Game Finished!</string>
+    <string name="score">Score:</string>
+    <string name="attempts">Attempts:</string>
+    <string name="time">Time:</string>
+    <string name="close">close</string>
+
 
 </resources>
