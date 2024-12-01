@@ -1,5 +1,6 @@
 package com.example.memorygame;
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -83,10 +84,17 @@ public class MainActivity extends AppCompatActivity {
     int value = 5;
     private boolean initializeTimer = false;
 
+    
+    
+    private GameDAO gameDAO;
+
+    private String currentUser;
+  
     // Get the writable database
     private SQLiteDatabase db = null;
 
     private UserDAO userDAO;
+
 
 
     @Override
@@ -594,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,0));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,0,3));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -603,7 +611,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1, 3));
             }
             else if (boardType == 2) // Board 4x4 user
             {
@@ -612,7 +620,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1, 4));
             }
             else if (boardType == 3) // Board 6x6 user
             {
@@ -621,7 +629,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1, 6));
             }
             else if (boardType == 4) // Board 3x4 Test
             {
@@ -630,7 +638,9 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
+
                 imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2));
+
             }
 
             else // Invalid board size
@@ -694,7 +704,15 @@ public class MainActivity extends AppCompatActivity {
                                 showPopupWithDynamicLayout(1,2);
                             }
 
+                            // Insert a game record
 
+                            String time = String.format("%02d:%02d", minutes, seconds);
+
+                            long val = gameDAO.insertGame(attempts, score, time, boardSize, userDAO.getLoggedInUserId(currentUser));
+                            Log.d("MemoryCard", "Game record inserted with ID: " + val);
+                            if (val == -1) {
+                                Log.d("MemoryCard", "Game record insertion failed");
+                            }
                         }
                     } else {
                         isWaiting = true;

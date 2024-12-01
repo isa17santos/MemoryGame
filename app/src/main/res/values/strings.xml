@@ -2,7 +2,7 @@
     <string name="app_name">MemoryGame</string>
     <string name="dashboard_button_start">Start</string>
     <string name="dashboard_button_history">History</string>
-    <string name="dashboard_button_scoreboard">Scoreboard</string>
+    <string name="global_leaderboard">Global Leaderboard</string>
     <string name="dashboard_gameName">Memory Game</string>
     <string name="profilepicture">profilePicture</string>
     <string name="username">Username</string>
@@ -108,6 +108,10 @@
     <string name="attempts">Attempts:</string>
     <string name="time">Time:</string>
     <string name="close">close</string>
+
+    <string name="Time_Scoreboard">Time</string>
+    <string name="dashboard_button_scoreboard">Scoreboard</string>
+
 
     <string name="error">ERROR!</string>
 
