@@ -53,11 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private Testboard3x4Binding bindingTest3x4;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
-
     private TestDashboardBinding testBinding;
-
-
-     private GameOverPopUpBinding gameOverPopUpBinding;
+    private GameOverPopUpBinding gameOverPopUpBinding;
 
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
@@ -85,15 +82,17 @@ public class MainActivity extends AppCompatActivity {
     private boolean initializeTimer = false;
 
     
-    
+    // Database variables
     private GameDAO gameDAO;
 
     private String currentUser;
+    private int currentUserId;
   
     // Get the writable database
     private SQLiteDatabase db = null;
 
     private UserDAO userDAO;
+
 
 
 
@@ -118,11 +117,12 @@ public class MainActivity extends AppCompatActivity {
 
             // Create a new UserDAO instance
             userDAO = new UserDAO(db);
-
+            gameDAO = new GameDAO(db);
 
             // Check if users have already been created using SharedPreferences
             SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             boolean usersCreated = preferences.getBoolean("users_created", false);
+
 
             if (!usersCreated) {
                 // If users haven't been created, insert users
@@ -228,9 +228,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo_boardsize_page(View view) {
-        setContentView(R.layout.boardsize_page);
         bindingSize = BoardsizePageBinding.inflate(getLayoutInflater());
         setContentView(bindingSize.getRoot());
+
         View button3x4 = bindingSize.button3x4Board;
         View button4x4 = bindingSize.button4x4Board;
         View button6x6 = bindingSize.button6x6Board;
@@ -241,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
             if(value <= 0) { //   not enough coins
                 //notEnoughtCoins();
             }else{
-                buyingThings(button3x4, coins);
                 moveTo_board3x4_user(button3x4);
             }
         });
@@ -314,6 +313,10 @@ public class MainActivity extends AppCompatActivity {
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
 
+        // Know who is logged in
+        currentUser = username;
+        currentUserId = userDAO.getLoggedInUserId(username);
+        Log.d("User", "User ID: " + currentUserId);
 
         if (username.isEmpty() || password.isEmpty()) { // Empty fields
 
@@ -322,14 +325,13 @@ public class MainActivity extends AppCompatActivity {
             if (isAuthenticated) { // Login successful
                 if (username.equals("test") && password.equals("test123")) {  // test user
 
-                    setContentView(R.layout.test_dashboard);
                     testBinding = TestDashboardBinding.inflate(getLayoutInflater());
                     setContentView(testBinding.getRoot());
                     TextView coins = testBinding.numCoins;
                     coins.setText(String.valueOf(value));
 
                 } else {  // other users
-                    setContentView(R.layout.dashboard_user);
+
                     userBinding = DashboardUserBinding.inflate(getLayoutInflater());
                     setContentView(userBinding.getRoot());
                     TextView coins = userBinding.numCoins;
@@ -639,7 +641,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set click listener for each ImageView
 
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2, 4));
 
             }
 
@@ -651,7 +653,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView, int gameMode) {
+    private void handleCardClick(ImageView imageView, int gameMode, int boardSize) {
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -708,11 +710,12 @@ public class MainActivity extends AppCompatActivity {
 
                             String time = String.format("%02d:%02d", minutes, seconds);
 
-                            long val = gameDAO.insertGame(attempts, score, time, boardSize, userDAO.getLoggedInUserId(currentUser));
+                            long val = gameDAO.insertGame(attempts, score, time, boardSize, currentUserId);
                             Log.d("MemoryCard", "Game record inserted with ID: " + val);
                             if (val == -1) {
                                 Log.d("MemoryCard", "Game record insertion failed");
                             }
+
                         }
                     } else {
                         isWaiting = true;
@@ -871,7 +874,6 @@ public class MainActivity extends AppCompatActivity {
                     else if (gameMode == 2){  //  test
                         moveTo_testDashboard(null);
                     }
-
 
                 });
 
