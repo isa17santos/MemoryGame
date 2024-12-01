@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.view.ViewStub;
 import android.widget.ImageView;
 
@@ -33,8 +34,13 @@ import com.example.memorygame.databinding.Board4x4Binding;
 import com.example.memorygame.databinding.Board6x6Binding;
 import com.example.memorygame.databinding.BoardsizePageBinding;
 import com.example.memorygame.databinding.DashboardUserBinding;
+
+import com.example.memorygame.databinding.Testboard3x4Binding;
+import com.example.memorygame.databinding.TestDashboardBinding;
+
 import com.example.memorygame.databinding.GameOverPopUpBinding;
 import com.example.memorygame.databinding.PopUpBinding;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,11 +50,16 @@ public class MainActivity extends AppCompatActivity {
     private Board3x4UserBinding binding3x4;
     private Board4x4Binding binding4x4;
     private Board6x6Binding binding6x6;
+    private Testboard3x4Binding bindingTest3x4;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
+
+    private TestDashboardBinding testBinding;
+
     private PopUpBinding popUpBinding;
 
      private GameOverPopUpBinding gameOverPopUpBinding;
+
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -236,6 +247,15 @@ public class MainActivity extends AppCompatActivity {
         TextView coins = bindingSize.numCoins;
         coins.setText(String.valueOf(value));
 
+        button3x4.setOnClickListener(v -> {
+            if(value <= 0) //   not enough coins
+                notEnoughtCoins();
+            else{
+                buyingThings(button3x4, coins);
+                moveTo_board3x4_user(button3x4);
+            }
+        });
+
         button4x4.setOnClickListener(v -> {
             if(value <= 0) //   not enough coins
                 notEnoughtCoins();
@@ -291,12 +311,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo_dashboard_user(View view) {
-        setContentView(R.layout.dashboard_user);
-        userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-        setContentView(userBinding.getRoot());
-        TextView coins = userBinding.numCoins;
-        coins.setText(String.valueOf(value));
-   }
+        EditText usernameInput = findViewById(R.id.username_input);
+        EditText passwordInput = findViewById(R.id.password_input);
+        String username = usernameInput.getText().toString();
+        String password = passwordInput.getText().toString();
+
+        if (username.equals("test") && password.equals("test123")) {
+            setContentView(R.layout.test_dashboard);
+            testBinding = TestDashboardBinding.inflate(getLayoutInflater());
+            setContentView(testBinding.getRoot());
+            TextView coins = testBinding.numCoins;
+            coins.setText(String.valueOf(value));
+        } else {
+            setContentView(R.layout.dashboard_user);
+            userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+            setContentView(userBinding.getRoot());
+            TextView coins = userBinding.numCoins;
+            coins.setText(String.valueOf(value));
+        }
+    }
 
     public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
 
@@ -462,12 +495,33 @@ public class MainActivity extends AppCompatActivity {
         setupGame(3);
     }
 
+    public void moveTo_testBoard3x4(View view) {
+
+        bindingTest3x4 = Testboard3x4Binding.inflate(getLayoutInflater());
+        setContentView(bindingTest3x4.getRoot());
+
+        timerTextView = bindingTest3x4.timerTextViewBoard3x4Test;
+        attemptsTextView = bindingTest3x4.attemptsTextBoard3x4Test;
+        scoreTextView = bindingTest3x4.scoreTextBoard3x4Test;
+
+        View buttonHint = bindingTest3x4.buttonHintBoard3x4Test;
+        TextView coins = bindingTest3x4.numCoins;
+        coins.setText(String.valueOf(value));
+
+        buttonHint.setOnClickListener(v -> {
+            buyHint(v, coins, 4);
+        });
+
+        setupGame(4);
+    }
+
     public void setupGame(int boardType) {
         // boardType:
         // 0 -> Board 3x4 anonymous
         // 1 -> Board 3x4 user
         // 2 -> Board 4x4 user
         // 3 -> Board 6x6 user
+        // 4 -> TestBoard 3x4
 
         if (boardType == 0) // Board 3x4 anonymous
         {
@@ -493,6 +547,10 @@ public class MainActivity extends AppCompatActivity {
             int cardCount = binding6x6.MemoryGrid.getChildCount();
             memoryCards = CreateMemoryCards(cardCount);
             Collections.shuffle(memoryCards);
+        }
+        else if (boardType == 4){
+            int cardCount = bindingTest3x4.MemoryGrid.getChildCount();
+            memoryCards = CreateMemoryCards(cardCount);
         }
         else // Invalid board size
         {
@@ -520,7 +578,8 @@ public class MainActivity extends AppCompatActivity {
         // 0 -> Board 3x4 anonymous
         // 1 -> Board 3x4 user
         // 2 -> Board 4x4 user
-        // 3 -> Board 6x5 user
+        // 3 -> Board 6x6 user
+        // 4 -> TestBoard 3x4
 
         for (int i = 0; i < memoryCards.size(); i++) {
 
@@ -560,6 +619,16 @@ public class MainActivity extends AppCompatActivity {
                 // Set click listener for each ImageView
                 imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
+            else if (boardType == 4) // Board 3x4 Test
+            {
+                ImageView imageView = (ImageView) bindingTest3x4.MemoryGrid.getChildAt(i);
+                imageView.setClickable(true);
+                imageView.setTag(i);
+
+                // Set click listener for each ImageView
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+            }
+
             else // Invalid board size
             {
                 throw new IllegalArgumentException("Invalid board size");
@@ -671,7 +740,6 @@ public class MainActivity extends AppCompatActivity {
             firstCardImageView = null;
         }
 
-
         for (int i = 0; i < memoryCards.size(); i++) {
             MemoryCard card1 = memoryCards.get(i);
             if (!card1.isMatched()) {
@@ -690,6 +758,9 @@ public class MainActivity extends AppCompatActivity {
                         } else if (boardType == 3) {
                             imageView1 = (ImageView) binding6x6.MemoryGrid.getChildAt(i);
                             imageView2 = (ImageView) binding6x6.MemoryGrid.getChildAt(j);
+                        } else if (boardType == 4) {
+                            imageView1 = (ImageView) bindingTest3x4.MemoryGrid.getChildAt(i);
+                            imageView2 = (ImageView) bindingTest3x4.MemoryGrid.getChildAt(j);
                         } else {
                             throw new IllegalArgumentException("Invalid board size");
                         }
