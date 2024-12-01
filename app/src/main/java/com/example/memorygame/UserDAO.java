@@ -1,5 +1,7 @@
 package com.example.memorygame;
 
+import static com.example.memorygame.MemoryGameDatabaseHelper.TABLE_USERS;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,6 +22,16 @@ public class UserDAO {
         values.put("password", password);
         values.put("coins", coins);
         return db.insert("Users", null, values);
+    }
+
+    // Method to authenticate user credentials
+    public boolean authenticateUser(String username, String password) {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE username = ? AND password = ?",
+                new String[]{username, password});
+
+        boolean isAuthenticated = cursor.getCount() > 0;
+        cursor.close();
+        return isAuthenticated;
     }
 
     // Query all users
