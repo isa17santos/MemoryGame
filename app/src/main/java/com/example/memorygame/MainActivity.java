@@ -230,17 +230,19 @@ public class MainActivity extends AppCompatActivity {
         coins.setText(String.valueOf(value));
 
         button3x4.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
-            else{
+            if(value <= 0) { //   not enough coins
+                //notEnoughtCoins();
+            }else{
                 buyingThings(button3x4, coins);
                 moveTo_board3x4_user(button3x4);
             }
         });
 
         button4x4.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+            if(value <= 0){//   not enough coins
+                //notEnoughtCoins();
+            }
+
             else{
                 buyingThings(button4x4, coins);
                 moveTo_board4x4(button4x4);
@@ -248,8 +250,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button6x6.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+            if(value <= 0){ //   not enough coins
+                //notEnoughtCoins();
+            }
+
             else{
                 buyingThings(button6x6, coins);
                 moveTo_board6x6(button6x6);
@@ -265,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (value <= 0) //not enough coins
         {
-            notEnoughtCoins();
+            //notEnoughtCoins();
         }
         else {
             // Decrement the value
@@ -724,8 +728,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buyHint(View view, TextView coins, int boardType) {
-        if(value <= 0) //   not enough coins
-            notEnoughtCoins();
+        if(value <= 0){//   not enough coins
+            //notEnoughtCoins();
+        }
+
         else {
             buyingThings(view, coins);
             getHint(boardType);
