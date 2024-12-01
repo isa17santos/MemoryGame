@@ -40,7 +40,6 @@ import com.example.memorygame.databinding.Testboard3x4Binding;
 import com.example.memorygame.databinding.TestDashboardBinding;
 
 import com.example.memorygame.databinding.GameOverPopUpBinding;
-import com.example.memorygame.databinding.PopUpBinding;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -57,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TestDashboardBinding testBinding;
 
-    private PopUpBinding popUpBinding;
 
      private GameOverPopUpBinding gameOverPopUpBinding;
 
@@ -86,12 +84,17 @@ public class MainActivity extends AppCompatActivity {
     int value = 5;
     private boolean initializeTimer = false;
 
-    // Get the writable database
-    SQLiteDatabase db = null;
+    
+    
     private GameDAO gameDAO;
-    private UserDAO userDAO;
 
     private String currentUser;
+  
+    // Get the writable database
+    private SQLiteDatabase db = null;
+
+    private UserDAO userDAO;
+
 
 
     @Override
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Database", "Database initialized successfully.");
 
             // Create a new UserDAO instance
-            UserDAO userDAO = new UserDAO(db);
+            userDAO = new UserDAO(db);
 
 
             // Check if users have already been created using SharedPreferences
@@ -183,24 +186,6 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("test", "test123", 100);
     }
 
-    private void notEnoughtCoins()
-    {
-        // Create an AlertDialog.Builder instance
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Set title, message, and buttons
-        builder.setTitle("Not enough coins!");
-
-        // Positive Button (e.g., OK)
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            // Handle OK button click
-            dialog.dismiss(); // Close the pop-up
-        });
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
     private void startTimer() {
         // Define the Runnable that updates the TextView every second
@@ -253,17 +238,19 @@ public class MainActivity extends AppCompatActivity {
         coins.setText(String.valueOf(value));
 
         button3x4.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
-            else{
+            if(value <= 0) { //   not enough coins
+                //notEnoughtCoins();
+            }else{
                 buyingThings(button3x4, coins);
                 moveTo_board3x4_user(button3x4);
             }
         });
 
         button4x4.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+            if(value <= 0){//   not enough coins
+                //notEnoughtCoins();
+            }
+
             else{
                 buyingThings(button4x4, coins);
                 moveTo_board4x4(button4x4);
@@ -271,8 +258,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button6x6.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+            if(value <= 0){ //   not enough coins
+                //notEnoughtCoins();
+            }
+
             else{
                 buyingThings(button6x6, coins);
                 moveTo_board6x6(button6x6);
@@ -288,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (value <= 0) //not enough coins
         {
-            notEnoughtCoins();
+            //notEnoughtCoins();
         }
         else {
             // Decrement the value
@@ -315,25 +304,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.scoreboard_personal_page);
     }
 
+    public void moveTo_testDashboard(View view) {
+        setContentView(R.layout.test_dashboard);
+    }
+
     public void moveTo_dashboard_user(View view) {
         EditText usernameInput = findViewById(R.id.username_input);
         EditText passwordInput = findViewById(R.id.password_input);
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (username.equals("test") && password.equals("test123")) {
-            setContentView(R.layout.test_dashboard);
-            testBinding = TestDashboardBinding.inflate(getLayoutInflater());
-            setContentView(testBinding.getRoot());
-            TextView coins = testBinding.numCoins;
-            coins.setText(String.valueOf(value));
-        } else {
-            setContentView(R.layout.dashboard_user);
-            userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-            setContentView(userBinding.getRoot());
-            TextView coins = userBinding.numCoins;
-            coins.setText(String.valueOf(value));
+
+        if (username.isEmpty() || password.isEmpty()) { // Empty fields
+
+        } else { // written fields
+            boolean isAuthenticated = userDAO.authenticateUser(username, password);
+            if (isAuthenticated) { // Login successful
+                if (username.equals("test") && password.equals("test123")) {  // test user
+
+                    setContentView(R.layout.test_dashboard);
+                    testBinding = TestDashboardBinding.inflate(getLayoutInflater());
+                    setContentView(testBinding.getRoot());
+                    TextView coins = testBinding.numCoins;
+                    coins.setText(String.valueOf(value));
+
+                } else {  // other users
+                    setContentView(R.layout.dashboard_user);
+                    userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                    setContentView(userBinding.getRoot());
+                    TextView coins = userBinding.numCoins;
+                    coins.setText(String.valueOf(value));
+                }
+            } else { // Login failed
+                // TO DO
+                // POP UP INVALID LOGIN
+            }
         }
+
     }
 
     public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
@@ -631,7 +638,9 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType, 3));
+
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2));
+
             }
 
             else // Invalid board size
@@ -642,7 +651,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView, int gameMode, int boardSize) {
+    private void handleCardClick(ImageView imageView, int gameMode) {
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -690,6 +699,10 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 showPopupWithDynamicLayout(1,1);
                             }
+                            else if (gameMode == 2) // test
+                            {
+                                showPopupWithDynamicLayout(1,2);
+                            }
 
                             // Insert a game record
 
@@ -733,8 +746,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buyHint(View view, TextView coins, int boardType) {
-        if(value <= 0) //   not enough coins
-            notEnoughtCoins();
+        if(value <= 0){//   not enough coins
+            //notEnoughtCoins();
+        }
+
         else {
             buyingThings(view, coins);
             getHint(boardType);
@@ -810,19 +825,20 @@ public class MainActivity extends AppCompatActivity {
         // caseType values:
         // 1- game over pop up
         // 2- not enough coins pop up
-        // 3- leave game poop up
+        // 3- leave game pop up
+        // 4- invalid login pop up
+        // 5- empty fields pop up
 
         // gameMode values:
         // 0 -> anonymous
         // 1 -> user
+        // 2 -> test
 
 
         try {
-            popUpBinding = PopUpBinding.inflate(getLayoutInflater());
 
-            ViewStub viewStub = popUpBinding.viewStub;
+            if (caseType == 1) { // 1- game over pop up
 
-            if (caseType == 1) {
                 gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
                 timerTextView = gameOverPopUpBinding.TimeValue;
                 attemptsTextView = gameOverPopUpBinding.AttemptsValue;
@@ -836,9 +852,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("PopupDebug", "CaseType: " + caseType);
                 Log.d("PopupDebug", "Attempts: " + attempts + ", Time: " + minutes + ":" + remainingSeconds + ", Score: " + score);
 
-                viewStub.setLayoutResource(R.layout.game_over_pop_up);
 
-                View close = gameOverPopUpBinding.closeButton;
+                View close = gameOverPopUpBinding.closeButtonGameOver;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setView(gameOverPopUpBinding.getRoot());
@@ -850,8 +865,11 @@ public class MainActivity extends AppCompatActivity {
 
                     if(gameMode == 0 ) //  anonymous
                         moveTo_dashboard_anonymous(null);
-                    else{  //  anonymous
+                    else if (gameMode == 1){  //  user
                         moveTo_dashboard_user(null);
+                    }
+                    else if (gameMode == 2){  //  test
+                        moveTo_testDashboard(null);
                     }
 
 
@@ -859,13 +877,22 @@ public class MainActivity extends AppCompatActivity {
 
                 dialog.show();
 
-            } else if (caseType == 2) {
+            }
+            else if (caseType == 2) { // 2- not enough coins pop up
+
+            }
+            else if (caseType == 3) { // 3- leave game pop up
+
                 //viewStub.setLayoutResource(R.layout.p);
             }
+            else if (caseType == 4) { // 4- invalid login pop up
 
-            if (viewStub.getParent() != null) {
-                View inflatedView = viewStub.inflate();
+                //viewStub.setLayoutResource(R.layout.p);
             }
+            else if (caseType == 5) { // 5- empty fields pop up
+
+            }
+
 
         }
         catch (Exception e){
