@@ -33,6 +33,9 @@ import com.example.memorygame.databinding.Board6x6Binding;
 import com.example.memorygame.databinding.BoardsizePageBinding;
 import com.example.memorygame.databinding.DashboardUserBinding;
 
+import com.example.memorygame.databinding.GameOverPopUpBinding;
+
+
 public class MainActivity extends AppCompatActivity {
 
     // Variables
@@ -43,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private Board6x6Binding binding6x6;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
+
+
+     private GameOverPopUpBinding gameOverPopUpBinding;
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -71,6 +77,16 @@ public class MainActivity extends AppCompatActivity {
     private boolean testMode = false;
 
     List<Notification> notificationList = new ArrayList<>();
+
+
+    private GameDAO gameDAO;
+
+    private String currentUser;
+  
+    // Get the writable database
+    private SQLiteDatabase db = null;
+
+    private UserDAO userDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,19 +238,29 @@ public class MainActivity extends AppCompatActivity {
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (username.equals("test") && password.equals("test123")) {
-            testMode = true;
-            setContentView(R.layout.dashboard_user);
-            userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-            setContentView(userBinding.getRoot());
-            TextView coins = userBinding.numCoins;
-            coins.setText(String.valueOf(value));
-        } else {
-            setContentView(R.layout.dashboard_user);
-            userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-            setContentView(userBinding.getRoot());
-            TextView coins = userBinding.numCoins;
-            coins.setText(String.valueOf(value));
+        if (username.isEmpty() || password.isEmpty()) { // Empty fields
+
+        } else { // written fields
+            boolean isAuthenticated = userDAO.authenticateUser(username, password);
+            if (isAuthenticated) { // Login successful
+                if (username.equals("test") && password.equals("test123")) {
+                  testMode = true;
+                  setContentView(R.layout.dashboard_user);
+                  userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                  setContentView(userBinding.getRoot());
+                  TextView coins = userBinding.numCoins;
+                  coins.setText(String.valueOf(value));
+                } else {
+                  setContentView(R.layout.dashboard_user);
+                  userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                  setContentView(userBinding.getRoot());
+                  TextView coins = userBinding.numCoins;
+                  coins.setText(String.valueOf(value));
+            } else { // Login failed
+                // TO DO
+                // POP UP INVALID LOGIN
+            }
+
         }
     }
 
@@ -525,8 +551,10 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
+
+
             else // Invalid board size
             {
                 throw new IllegalArgumentException("Invalid board size");
