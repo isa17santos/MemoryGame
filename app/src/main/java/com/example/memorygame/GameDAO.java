@@ -14,18 +14,19 @@ public class GameDAO {
     }
 
     // Insert a game record
-    public long insertGame(int attempts, int score, String time, int boardSize, int userId) {
+    public long insertGame(int attempts, int score, String time, int boardSize, int userId, String date) {
         ContentValues values = new ContentValues();
         values.put("attempts", attempts);
         values.put("score", score);
         values.put("time", time);
         values.put("boardSize", boardSize);
         values.put("idUser", userId);
+        values.put("date", date);
         return db.insert("Games", null, values);
     }
 
-    // Query games for a specific user
-    public Cursor getGamesByUser(int userId) {
+    // Query games for a specific user by date
+    public Cursor getHistorico(int userId) {
         return db.query(
                 "Games",
                 null,
@@ -33,33 +34,59 @@ public class GameDAO {
                 new String[]{String.valueOf(userId)},
                 null,
                 null,
-                "score DESC" // Sort by score descending
+                "date ASC" // Sort by score descending
         );
     }
 
-    // Query games
-    public Cursor getAllGamesByTime() {
+    // Query games for a specific user by time and boardSize
+    public Cursor getGamesByUserByTimeAndBoardSize(int userId, int boardSize) {
+        return db.query(
+                "Games",
+                null,
+                "idUser = ? AND boardSize = ?", // Updated selection
+                new String[]{String.valueOf(userId), String.valueOf(boardSize)}, // Updated selectionArgs
+                null,
+                null,
+                "time ASC"
+        );
+    }
+
+    // Query games for a specific user by time and boardSize
+    public Cursor getGamesByUserByAttemptsAndBoardSize(int userId, int boardSize) {
+        return db.query(
+                "Games",
+                null,
+                "idUser = ? AND boardSize = ?", // Updated selection
+                new String[]{String.valueOf(userId), String.valueOf(boardSize)}, // Updated selectionArgs
+                null,
+                null,
+                "time ASC" // Sort by score descending
+        );
+    }
+
+    // Query the best game by time of a certain boardSize of each user
+    public Cursor getLeaderboardByTimeAndBoardSize(int boardSize) {
         return db.query(
                 "Games", // Table name
                 null,    // All columns
-                null,    // No WHERE clause
-                null,    // No arguments
-                null,    // No grouping
+                "boardSize = ?", // Updated selection
+                new String[]{String.valueOf(boardSize)},
+                "idUser",    //  Group by userId
                 null,    // No having
                 "time ASC" // Sort by username
         );
     }
 
-    // Query games
-    public Cursor getAllGamesByAttempts() {
+    // Query all games by attempts of a certain boardSize
+    public Cursor getLeadboardByAttemptsAndBoardSize(int boardSize) {
         return db.query(
                 "Games", // Table name
                 null,    // All columns
-                null,    // No WHERE clause
-                null,    // No arguments
-                null,    // No grouping
+                "boardSize = ?", // Updated selection
+                new String[]{String.valueOf(boardSize)},
+                "idUser",    // Group by userId
                 null,    // No having
-                "attempts ASC" // Sort by username
+                "attempts ASC" // Sort by attempts
         );
     }
 

@@ -21,14 +21,18 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 
 import android.widget.TextView;
 import android.os.Handler;
 
+import com.example.memorygame.databinding.ActivityMainBinding;
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import com.example.memorygame.databinding.Board3x4UserBinding;
 import com.example.memorygame.databinding.Board4x4Binding;
@@ -55,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private DashboardUserBinding userBinding;
     private TestDashboardBinding testBinding;
     private GameOverPopUpBinding gameOverPopUpBinding;
-
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -87,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String currentUser;
     private int currentUserId;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    String currentDate = dateFormat.format(new Date());
   
     // Get the writable database
     private SQLiteDatabase db = null;
@@ -123,21 +128,6 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             boolean usersCreated = preferences.getBoolean("users_created", false);
 
-
-            if (!usersCreated) {
-                // If users haven't been created, insert users
-                insertTestUsers(userDAO);
-
-                // After creating users, set the flag to true
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("users_created", true);
-                editor.apply();
-
-                Log.d("UserCreation", "Users created successfully.");
-            } else {
-                Log.d("UserCreation", "Users already created, skipping.");
-            }
-
             // Retrieve and log all users
             Cursor cursor = userDAO.getAllUsers();
             if (cursor != null && cursor.moveToFirst()) {
@@ -160,8 +150,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("Database", "Error interacting with the database", e);
         }
-
-
 
             // For Games
             //GameDAO gameDAO = new GameDAO(db);
@@ -308,6 +296,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo_dashboard_user(View view) {
+
+        // Get the username and password from the EditText fields
         EditText usernameInput = findViewById(R.id.username_input);
         EditText passwordInput = findViewById(R.id.password_input);
         String username = usernameInput.getText().toString();
@@ -326,16 +316,16 @@ public class MainActivity extends AppCompatActivity {
                 if (username.equals("test") && password.equals("test123")) {  // test user
 
                     testBinding = TestDashboardBinding.inflate(getLayoutInflater());
-                    setContentView(testBinding.getRoot());
                     TextView coins = testBinding.numCoins;
                     coins.setText(String.valueOf(value));
+                    setContentView(testBinding.getRoot());
 
                 } else {  // other users
 
                     userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-                    setContentView(userBinding.getRoot());
                     TextView coins = userBinding.numCoins;
                     coins.setText(String.valueOf(value));
+                    setContentView(userBinding.getRoot());
                 }
             } else { // Login failed
                 // TO DO
@@ -710,7 +700,7 @@ public class MainActivity extends AppCompatActivity {
 
                             String time = String.format("%02d:%02d", minutes, seconds);
 
-                            long val = gameDAO.insertGame(attempts, score, time, boardSize, currentUserId);
+                            long val = gameDAO.insertGame(attempts, score, time, boardSize, currentUserId, currentDate);
                             Log.d("MemoryCard", "Game record inserted with ID: " + val);
                             if (val == -1) {
                                 Log.d("MemoryCard", "Game record insertion failed");
