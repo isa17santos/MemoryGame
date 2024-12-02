@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.gridlayout.widget.GridLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,12 +51,26 @@ import com.example.memorygame.databinding.DashboardUserBinding;
 
 
 import com.example.memorygame.databinding.EmptyFieldsPopUpBinding;
+import com.example.memorygame.databinding.HistoryPageBinding;
 import com.example.memorygame.databinding.InvalidLoginPopUpBinding;
 import com.example.memorygame.databinding.LeavingGamePopUpBinding;
 import com.example.memorygame.databinding.PopUpNotEnoughCoinsBinding;
 
 
 import com.example.memorygame.databinding.GameOverPopUpBinding;
+import com.example.memorygame.databinding.ScoreboardBoardsizesGlobalBinding;
+import com.example.memorygame.databinding.ScoreboardGlobalPageAttempts3x4Binding;
+import com.example.memorygame.databinding.ScoreboardGlobalPageAttempts4x4Binding;
+import com.example.memorygame.databinding.ScoreboardGlobalPageAttempts6x6Binding;
+import com.example.memorygame.databinding.ScoreboardGlobalPageTime3x4Binding;
+import com.example.memorygame.databinding.ScoreboardGlobalPageTime4x4Binding;
+import com.example.memorygame.databinding.ScoreboardGlobalPageTime6x6Binding;
+import com.example.memorygame.databinding.ScoreboardPersonalPageAttempts3x4Binding;
+import com.example.memorygame.databinding.ScoreboardPersonalPageAttempts4x4Binding;
+import com.example.memorygame.databinding.ScoreboardPersonalPageAttempts6x6Binding;
+import com.example.memorygame.databinding.ScoreboardPersonalPageTime3x4Binding;
+import com.example.memorygame.databinding.ScoreboardPersonalPageTime4x4Binding;
+import com.example.memorygame.databinding.ScoreboardPersonalPageTime6x6Binding;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -68,7 +83,22 @@ public class MainActivity extends AppCompatActivity {
     private Board6x6Binding binding6x6;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
+    private ScoreboardBoardsizesGlobalBinding scoreboardBoardsizesGlobalBinding;
+    private ScoreboardGlobalPageTime3x4Binding scoreboardGlobalPageTime3x4Binding;
+    private ScoreboardGlobalPageTime4x4Binding scoreboardGlobalPageTime4x4Binding;
+    private ScoreboardGlobalPageTime6x6Binding scoreboardGlobalPageTime6x6Binding;
+    private ScoreboardGlobalPageAttempts3x4Binding scoreboardGlobalPageAttempts3x4Binding;
+    private ScoreboardGlobalPageAttempts4x4Binding scoreboardGlobalPageAttempts4x4Binding;
+    private ScoreboardGlobalPageAttempts6x6Binding scoreboardGlobalPageAttempts6x6Binding;
+    private ScoreboardPersonalPageTime3x4Binding scoreboardPersonalPageTime3x4Binding;
+    private ScoreboardPersonalPageTime4x4Binding scoreboardPersonalPageTime4x4Binding;
+    private ScoreboardPersonalPageTime6x6Binding scoreboardPersonalPageTime6x6Binding;
+    private ScoreboardPersonalPageAttempts3x4Binding scoreboardPersonalPageAttempts3x4Binding;
+    private ScoreboardPersonalPageAttempts4x4Binding scoreboardPersonalPageAttempts4x4Binding;
+    private ScoreboardPersonalPageAttempts6x6Binding scoreboardPersonalPageAttempts6x6Binding;
 
+
+    private HistoryPageBinding historyPageBinding;
     private GameOverPopUpBinding gameOverPopUpBinding;
 
     private TableLayout tableLayout;
@@ -102,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView scoreTextView;
     private int attempts = 0;
     private int score = 0;
-    int value = 5;
+    int userCoins = 0;
     private boolean initializeTimer = false;
 
 
@@ -114,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
 
     private GameDAO gameDAO;
 
-    private String currentUser;
-    private int currentUserId;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private String currentUser = null;
+    private int currentUserId = 0;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
     String currentDate = dateFormat.format(new Date());
   
     // Get the writable database
@@ -345,11 +375,11 @@ public class MainActivity extends AppCompatActivity {
         View button4x4 = bindingSize.button4x4Board;
         View button6x6 = bindingSize.button6x6Board;
         TextView coins = bindingSize.numCoins;
-        coins.setText(String.valueOf(value));
+        coins.setText(String.valueOf(userCoins));
 
         button3x4.setOnClickListener(v -> {
 
-            if(value <= 0) { //   not enough coins
+            if(userCoins <= 0) { //   not enough coins
                 showNotEnoughCoinsPopUp();
             }else{
                 moveTo_board3x4_user(button3x4);
@@ -357,7 +387,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button4x4.setOnClickListener(v -> {
-            if(value <= 0){//   not enough coins
+            if(userCoins <= 0){//   not enough coins
                 showNotEnoughCoinsPopUp();
             }
 
@@ -369,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
 
         button6x6.setOnClickListener(v -> {
 
-            if(value <= 0){ //   not enough coins
+            if(userCoins <= 0){ //   not enough coins
                 showNotEnoughCoinsPopUp();
             }
 
@@ -384,9 +414,9 @@ public class MainActivity extends AppCompatActivity {
     {
         // Get the current value of the TextView
         String text = coins.getText().toString();
-        value = Integer.parseInt(text);
+        userCoins = Integer.parseInt(text);
 
-        if (value <= 0) //not enough coins
+        if (userCoins <= 0) //not enough coins
         {
 
             showNotEnoughCoinsPopUp();
@@ -394,39 +424,550 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             // Decrement the value
-            value-=1;
+            userDAO.decrementCoins(currentUserId, userCoins);
         }
 
         // Update the TextView with the new value
-        coins.setText(String.valueOf(value));
+        coins.setText(String.valueOf(userCoins));
     }
 
     public void moveTo_history_page(View view) {
-        setContentView(R.layout.history_page);
-    }
+        historyPageBinding = HistoryPageBinding.inflate(getLayoutInflater());
+        setContentView(historyPageBinding.getRoot());
 
+        Cursor cursor = gameDAO.getHistorico(currentUserId);
+        GridLayout gridLayout = historyPageBinding.GameHistory;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                    @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("idUser"));
+                @SuppressLint("Range") String score = cursor.getString(cursor.getColumnIndex("score"));
+                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+                @SuppressLint("Range") String date = cursor.getString(cursor.getColumnIndex("date"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Score: " + score + ", Attempts: " + attempts + ", Time: " + time + ", Board Size: " + board + ", Date: " + date);
+
+                TextView scoreTextView = createTextView(score);
+                TextView attemptsTextView = createTextView(attempts);
+                TextView timeTextView = createTextView(attempts);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, score, rowIndex, 0, 1f, 1f); // Score in column 0
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 0
+                addViewToGridLayout(gridLayout, time, rowIndex, 2, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 3, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
     public void moveTo_scoreboard_page_user(View view) {
         setContentView(R.layout.scoreboard_page_user);
     }
 
-    public void moveTo_scoreboard_global_page(View view) {
-        setContentView(R.layout.scoreboard_global_page);
+    public void moveTo_scoreboard_boardsizes_global(View view) {
+        scoreboardBoardsizesGlobalBinding = ScoreboardBoardsizesGlobalBinding.inflate(getLayoutInflater());
+        setContentView(scoreboardBoardsizesGlobalBinding.getRoot());
+
+        View backArrow = scoreboardBoardsizesGlobalBinding.backArrow;
+
+        backArrow.setOnClickListener(v -> {
+
+            if(currentUser != null){
+                moveTo_scoreboard_page_user(backArrow);
+            }else{
+                moveTo_dashboard_anonymous(backArrow);
+            }
+        });
+    }
+    public void moveTo_scoreboard_global_page_time_3x4(View view) {
+        scoreboardGlobalPageTime3x4Binding = ScoreboardGlobalPageTime3x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardGlobalPageTime3x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getLeaderboardByTimeAndBoardSize(1);
+        GridLayout gridLayout = scoreboardGlobalPageTime3x4Binding.GlobalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(time);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_global_page_time_4x4(View view) {
+        scoreboardGlobalPageTime4x4Binding = ScoreboardGlobalPageTime4x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardGlobalPageTime4x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getLeaderboardByTimeAndBoardSize(2);
+        GridLayout gridLayout = scoreboardGlobalPageTime4x4Binding.GlobalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(time);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_global_page_time_6x6(View view) {
+        scoreboardGlobalPageTime6x6Binding = ScoreboardGlobalPageTime6x6Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardGlobalPageTime6x6Binding.getRoot());
+
+        Cursor cursor = gameDAO.getLeaderboardByTimeAndBoardSize(3);
+        GridLayout gridLayout = scoreboardGlobalPageTime6x6Binding.GlobalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(time);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_global_page_attempts_3x4(View view) {
+        scoreboardGlobalPageAttempts3x4Binding = ScoreboardGlobalPageAttempts3x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardGlobalPageAttempts3x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getLeaderboardByAttemptsAndBoardSize(1);
+        GridLayout gridLayout = scoreboardGlobalPageAttempts3x4Binding.GlobalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(attempts);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_global_page_attempts_4x4(View view) {
+        scoreboardGlobalPageAttempts4x4Binding = ScoreboardGlobalPageAttempts4x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardGlobalPageAttempts4x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getLeaderboardByAttemptsAndBoardSize(2);
+        GridLayout gridLayout = scoreboardGlobalPageAttempts4x4Binding.GlobalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(attempts);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_global_page_attempts_6x6(View view) {
+        scoreboardGlobalPageAttempts6x6Binding = ScoreboardGlobalPageAttempts6x6Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardGlobalPageAttempts6x6Binding.getRoot());
+
+        Cursor cursor = gameDAO.getLeaderboardByAttemptsAndBoardSize(3);
+        GridLayout gridLayout = scoreboardGlobalPageAttempts6x6Binding.GlobalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(attempts);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
-    public void moveTo_scoreboard_personal_page(View view) {
-        setContentView(R.layout.scoreboard_personal_page);
+    public void moveTo_scoreboard_boardsizes_personal(View view) {
+        setContentView(R.layout.scoreboard_boardsizes_personal);
+    }
+    public void moveTo_scoreboard_personal_page_time_3x4(View view) {
+
+        scoreboardPersonalPageTime3x4Binding = ScoreboardPersonalPageTime3x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardPersonalPageTime3x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getPersonalScoreboardByTimeAndBoardSize(currentUserId, 1);
+        GridLayout gridLayout = scoreboardPersonalPageTime3x4Binding.PersonalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(time);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_personal_page_time_4x4(View view) {
+        scoreboardPersonalPageTime4x4Binding = ScoreboardPersonalPageTime4x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardPersonalPageTime4x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getPersonalScoreboardByTimeAndBoardSize(currentUserId, 2);
+        GridLayout gridLayout = scoreboardPersonalPageTime4x4Binding.PersonalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(time);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_personal_page_time_6x6(View view) {
+        scoreboardPersonalPageTime6x6Binding = ScoreboardPersonalPageTime6x6Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardPersonalPageTime6x6Binding.getRoot());
+
+        Cursor cursor = gameDAO.getPersonalScoreboardByTimeAndBoardSize(currentUserId, 3);
+        GridLayout gridLayout = scoreboardPersonalPageTime6x6Binding.PersonalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(time);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_personal_page_attempts_3x4(View view) {
+        scoreboardPersonalPageAttempts3x4Binding = ScoreboardPersonalPageAttempts3x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardPersonalPageAttempts3x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getPersonalScoreboardByAttemptsAndBoardSize(currentUserId, 1);
+        GridLayout gridLayout = scoreboardPersonalPageAttempts3x4Binding.PersonalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(attempts);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_personal_page_attempts_4x4(View view) {
+        scoreboardPersonalPageAttempts4x4Binding = ScoreboardPersonalPageAttempts4x4Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardPersonalPageAttempts4x4Binding.getRoot());
+
+        Cursor cursor = gameDAO.getPersonalScoreboardByAttemptsAndBoardSize(currentUserId, 2);
+        GridLayout gridLayout = scoreboardPersonalPageAttempts4x4Binding.PersonalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(attempts);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+    public void moveTo_scoreboard_personal_page_attempts_6x6(View view) {
+        scoreboardPersonalPageAttempts6x6Binding = ScoreboardPersonalPageAttempts6x6Binding.inflate(getLayoutInflater());
+        setContentView(scoreboardPersonalPageAttempts6x6Binding.getRoot());
+
+        Cursor cursor = gameDAO.getPersonalScoreboardByAttemptsAndBoardSize(currentUserId, 3);
+        GridLayout gridLayout = scoreboardPersonalPageAttempts6x6Binding.PersonalLeaderboard;
+        int rowIndex = 1;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Game", "Data found in database");
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
+                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+
+                TextView usernameTextView = createTextView(user);
+                TextView timeTextView = createTextView(attempts);
+                TextView boardSizeTextView = createTextView(String.valueOf(board));
+
+                // Add data to the GridLayout dynamically
+                addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+
+
+                rowIndex++;
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("Game", "No data found in database");
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
 
-    //public void moveTo_testDashboard(View view) {
-        //setContentView(R.layout.test_dashboard);
-    //}
+    private TextView createTextView(String text) {
+        // Create a new TextView
+        TextView textView = new TextView(this);
+
+        // Set the text content
+        textView.setText(text);
+
+        // Set appearance attributes
+        textView.setTextSize(30); // Adjust font size
+        textView.setGravity(Gravity.CENTER); // Center the text inside the TextView
+        textView.setPadding(8, 8, 8, 8); // Add padding for better spacing
+
+        return textView;
+    }
+
+    private void addViewToGridLayout(GridLayout gridLayout, String text, int row, int column, float columnWeight, float rowWeight) {
+        // Create a new TextView
+        TextView textView = new TextView(this);
+        textView.setText(text);
+        textView.setTextSize(30); // Adjust text size as needed
+        textView.setGravity(Gravity.CENTER); // Center the text
+        textView.setPadding(8, 8, 8, 8); // Add padding for better spacing
+
+        // Create layout parameters for the TextView
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+
+        // Define row and column specifications
+        params.rowSpec = GridLayout.spec(row, rowWeight); // Specify the row and its weight
+        params.columnSpec = GridLayout.spec(column, columnWeight); // Specify the column and its weight
+
+        // Apply layout parameters to the TextView
+        textView.setLayoutParams(params);
+
+        // Add the TextView to the GridLayout
+        gridLayout.addView(textView);
+    }
 
     public void moveTo_dashboard_user(View view){
         setContentView(R.layout.dashboard_user);
     }
-
-        // Get the username and password from the EditText fields
 
     public void login(View view) {
 
@@ -438,7 +979,9 @@ public class MainActivity extends AppCompatActivity {
         // Know who is logged in
         currentUser = username;
         currentUserId = userDAO.getLoggedInUserId(username);
-        Log.d("User", "User ID: " + currentUserId);
+        userCoins = userDAO.getCoins(currentUserId);
+
+        Log.d("User", "User ID: " + currentUserId + ", Username: " + currentUser + ", Coins: " + userCoins);
 
         if (username.isEmpty() || password.isEmpty()) { // Empty fields
             showEmptyFieldsPopUp();
@@ -451,14 +994,14 @@ public class MainActivity extends AppCompatActivity {
                   userBinding = DashboardUserBinding.inflate(getLayoutInflater());
                   setContentView(userBinding.getRoot());
                   TextView coins = userBinding.numCoins;
-                  coins.setText(String.valueOf(value));
+                  coins.setText(String.valueOf(userCoins));
                 } else {
                     testMode = false;
                     setContentView(R.layout.dashboard_user);
                     userBinding = DashboardUserBinding.inflate(getLayoutInflater());
                     setContentView(userBinding.getRoot());
                     TextView coins = userBinding.numCoins;
-                    coins.setText(String.valueOf(value));
+                    coins.setText(String.valueOf(userCoins));
                 }
 
             } else { // Login failed
@@ -589,7 +1132,7 @@ public class MainActivity extends AppCompatActivity {
 
         View buttonHint = binding3x4.buttonHintBoard3x4User;
         TextView coins = binding3x4.numCoins;
-        coins.setText(String.valueOf(value));
+        coins.setText(String.valueOf(userCoins));
 
         buttonHint.setOnClickListener(v -> {
             buyHint(v, coins, 1);
@@ -609,7 +1152,7 @@ public class MainActivity extends AppCompatActivity {
 
         View buttonHint = binding4x4.buttonHintBoard4x4;
         TextView coins = binding4x4.numCoins;
-        coins.setText(String.valueOf(value));
+        coins.setText(String.valueOf(userCoins));
 
         buttonHint.setOnClickListener(v -> {
             buyHint(v, coins, 2);
@@ -629,7 +1172,7 @@ public class MainActivity extends AppCompatActivity {
 
         View buttonHint = binding6x6.buttonHintBoard6x6;
         TextView coins = binding6x6.numCoins;
-        coins.setText(String.valueOf(value));
+        coins.setText(String.valueOf(userCoins));
 
         buttonHint.setOnClickListener(v -> {
             buyHint(v, coins, 3);
@@ -858,7 +1401,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buyHint(View view, TextView coins, int boardType) {
-        if(value <= 0){//   not enough coins
+        if(userCoins <= 0){//   not enough coins
             showNotEnoughCoinsPopUp();
         }
 

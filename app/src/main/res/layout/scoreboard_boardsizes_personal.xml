@@ -2,19 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scoreboard_page_user"
+    android:id="@+id/boardsize_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/_7"
-    android:onClick="moveTo_board3x4_user"
     android:padding="16dp"
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/backScoreboardPageUser"
+        android:id="@+id/backBoardSizePage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="moveTo_dashboard_user"
+        android:onClick="moveTo_scoreboard_page_user"
         android:scaleType="fitCenter"
         android:src="@drawable/baseline_arrow_back_white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,16 +25,15 @@
         app:layout_constraintVertical_bias="0.01"
         app:layout_constraintWidth_percent="0.12" />
 
-
     <Button
-        android:id="@+id/button_personal_scoreboard"
+        android:id="@+id/button_3x4_board"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
-        android:onClick="moveTo_scoreboard_boardsizes_personal"
-        android:text="@string/personal_scoreboard"
+        android:onClick="moveTo_scoreboard_personal_page_time_3x4"
+        android:text="@string/board3x4"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
@@ -46,38 +44,61 @@
         app:layout_constraintHeight_percent="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.473"
+        app:layout_constraintVertical_bias="0.428"
         app:layout_constraintWidth_percent="0.73" />
 
     <Button
-        android:id="@+id/button_global_scoreboard"
+        android:id="@+id/button_4x4_board"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:autoSizeTextType="uniform"
         android:backgroundTint="#94DCFACE"
         android:fontFamily="serif"
-        android:onClick="moveTo_scoreboard_boardsizes_global"
-        android:text="@string/global_scoreboard"
+        android:onClick="moveTo_scoreboard_personal_page_time_4x4"
+        android:text="@string/board4x4"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
         android:textSize="35sp"
+        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.715"
-        app:layout_constraintWidth_percent="0.73" />
+        app:layout_constraintVertical_bias="0.607"
+        app:layout_constraintWidth_percent="0.73"
+        app:layout_constraintHeight_percent="0.12"/>
+
+    <Button
+        android:id="@+id/button_6x6_board"
+        android:onClick="moveTo_scoreboard_personal_page_time_6x6"
+        android:text="@string/board6x6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#94DCFACE"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#FFFFFF"
+        android:textSize="35sp"
+        android:autoSizeTextType="uniform"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.786"
+        app:layout_constraintWidth_percent="0.73"
+        app:layout_constraintHeight_percent="0.12"/>
 
     <TextView
-        android:id="@+id/textScoreboard"
+        android:id="@+id/textBoardSize"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
         android:fontFamily="serif"
-        android:text="@string/dashboard_button_scoreboard"
+        android:text="@string/personal_scoreboard_sizes"
         android:textAlignment="center"
         android:textColor="#C8E6C9"
         android:textSize="38sp"
@@ -87,7 +108,7 @@
         app:layout_constraintHeight_percent="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.258"
-        app:layout_constraintWidth_percent="0.75" />
+        app:layout_constraintVertical_bias="0.201"
+        app:layout_constraintWidth_percent="0.73" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

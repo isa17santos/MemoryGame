@@ -2,19 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/history_page"
+    android:id="@+id/scoreboard_page_user"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/_7"
     android:padding="16dp"
-    app:layout_anchorGravity="center"
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/backDashboardUser"
+        android:id="@+id/backScoreboardPageUser"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="moveTo_dashboard_user"
+        android:onClick="moveTo_scoreboard_boardsizes_global"
         android:scaleType="fitCenter"
         android:src="@drawable/baseline_arrow_back_white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,19 +23,87 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.01"
-        app:layout_constraintWidth_percent="0.12"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintWidth_percent="0.12" />
+
+
+    <TextView
+        android:id="@+id/textScoreboard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="serif"
+        android:text="@string/personal_leaderboard_board4x4"
+        android:textAlignment="center"
+        android:textColor="#C8E6C9"
+        android:textSize="38sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintWidth_percent="0.75" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/Change_Scoreboard_Gridlayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        app:columnCount="2"
+        app:layout_constraintTop_toBottomOf="@id/textScoreboard"
+        app:layout_constraintBottom_toTopOf="@id/GlobalLeaderboard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.9">
+
+        <Button
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/Time_Scoreboard"
+            android:textColor="#332A2A"
+            android:textStyle="italic"
+            android:onClick="moveTo_scoreboard_personal_page_time_4x4"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_row="0"
+            app:layout_rowWeight="1"
+            android:backgroundTint="@color/material_dynamic_neutral70"
+            android:gravity="center"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/order_by_attempts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/attempts_column"
+            android:textColor="#332A2A"
+            android:textStyle="italic"
+            android:onClick="moveTo_scoreboard_personal_page_attempts_4x4"
+            app:layout_column="1"
+            app:layout_columnWeight="1"
+            app:layout_row="0"
+            app:layout_rowWeight="1"
+            android:backgroundTint="@color/material_dynamic_neutral70"
+            android:gravity="center"
+            android:padding="12dp" />
+    </androidx.gridlayout.widget.GridLayout>
+
 
 
     <androidx.gridlayout.widget.GridLayout
-        android:id="@+id/Game_History"
+        android:id="@+id/PersonalLeaderboard"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="35dp"
         android:layout_marginTop="200dp"
         android:layout_marginEnd="35dp"
         android:layout_marginBottom="250dp"
-        app:columnCount="4"
+        app:columnCount="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.7"
@@ -47,13 +114,13 @@
 
         <!-- Header Row -->
         <TextView
-            android:id="@+id/header_score"
+            android:id="@+id/header_username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
-            android:text="@string/score_column"
+            android:text="@string/user"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -83,25 +150,6 @@
             app:layout_columnWeight="1"
             app:layout_row="0"
             app:layout_rowWeight="1" />
-        <TextView
-            android:id="@+id/header_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:autoSizeTextType="uniform"
-            android:fontFamily="sans-serif"
-            android:text="@string/time_column"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:background="@color/header_background"
-            app:layout_column="2"
-            app:layout_columnWeight="1"
-            app:layout_row="0"
-            app:layout_rowWeight="1" />
-
 
         <TextView
             android:id="@+id/header_board_size"
@@ -117,34 +165,10 @@
             android:textStyle="bold"
             android:gravity="center_vertical"
             android:background="@color/header_background"
-            app:layout_column="3"
+            app:layout_column="2"
             app:layout_columnWeight="2"
             app:layout_row="0"
             app:layout_rowWeight="1" />
     </androidx.gridlayout.widget.GridLayout>
-
-    <TextView
-        android:id="@+id/name_game_dashboard_user"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:autoSizeTextType="uniform"
-        android:fontFamily="serif"
-        android:text="@string/history_page"
-        android:textAlignment="center"
-        android:textColor="#C8E6C9"
-        android:textSize="38sp"
-        android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintHorizontal_bias="0.585"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.109"
-        app:layout_constraintWidth_percent="0.6" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
