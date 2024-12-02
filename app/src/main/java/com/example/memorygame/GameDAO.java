@@ -26,6 +26,7 @@ public class GameDAO {
     }
 
     // Query games for a specific user by date
+
     public Cursor getHistorico(int userId) {
         return db.query(
                 "Games",
