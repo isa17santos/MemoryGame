@@ -142,9 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean testMode = false;
 
-    List<Notification> notificationList = new ArrayList<>();
-
     private GameDAO gameDAO;
+    private NotificationDAO notificationDAO;
 
     private String currentUser = null;
     private int currentUserId = 0;
@@ -167,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        notificationList.add(new Notification("Bem Vindo!", "Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!"));
-
         //------------------------------- DATABASE --------------------------------------
         // Initialize the database helper
         MemoryGameDatabaseHelper dbHelper = new MemoryGameDatabaseHelper(this);
@@ -180,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
             // Create a new UserDAO instance
             userDAO = new UserDAO(db);
             gameDAO = new GameDAO(db);
+            notificationDAO = new NotificationDAO(db);
 
 
             // Check if users have already been created using SharedPreferences
@@ -229,11 +227,6 @@ public class MainActivity extends AppCompatActivity {
             //Cursor gamesCursor = gameDAO.getGamesByUser((int) userId);
             //gamesCursor.close();
 
-
-            // For Notifications
-            //NotificationDAO notificationDAO = new NotificationDAO(db);
-            //notificationDAO.insertNotification("Welcome to the game!", (int) userId);
-
         //------------------------------- DATABASE --------------------------------------
     }
 
@@ -244,6 +237,31 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("carolina", "carolina123", 20);
         userDAO.insertUser("duarte", "duarte123", 20);
         userDAO.insertUser("test", "test123", 100);
+
+    }
+
+    private void displayNotifications() {
+        Cursor cursor = notificationDAO.getNotificationsByUser(currentUserId);
+        List<Notification> notifications = new ArrayList<>();
+
+        notificationDAO.insertNotification("Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!", currentUserId);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                @SuppressLint("Range") String message = cursor.getString(cursor.getColumnIndexOrThrow("message"));
+                @SuppressLint("Range") int userId = cursor.getInt(cursor.getColumnIndexOrThrow("idUser"));
+                notifications.add(new Notification("Notification " + id, message));
+                Log.d("Notifications", "ID: " + id + ", Message: " + message + ", User ID: " + userId);
+                System.out.println("ID: " + id + ", Message: " + message + ", User ID: " + userId);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_notifications);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        NotificationAdapter notificationAdapter = new NotificationAdapter(notifications);
+        recyclerView.setAdapter(notificationAdapter);
 
     }
 
@@ -956,13 +974,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_notification_page(View view) {
         setContentView(R.layout.notification_page);
-        if(findViewById(R.id.recyclerView_notifications) != null){
-            RecyclerView recyclerView = findViewById(R.id.recyclerView_notifications);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            NotificationAdapter notificationAdapter = new NotificationAdapter(notificationList);
-            recyclerView.setAdapter(notificationAdapter);
-        }
+        displayNotifications();
     }
 
     public ArrayList<MemoryCard> CreateMemoryCards(int size) {
@@ -1313,10 +1325,10 @@ public class MainActivity extends AppCompatActivity {
                                     // ... (time is less than bestTime) ...
                                     Log.d("MemoryCard", "New Record!!!!");
                                     String notificationMessage = String.format("You beat your personal best time in board %d!!", boardSize);
-                                    notificationList.add(new Notification("Record!!!",notificationMessage));
+                                    notificationDAO.insertNotification(notificationMessage, currentUserId);
 
                                     userDAO.incrementCoins(currentUserId,userCoins);
-                                    notificationList.add(new Notification("Coin", "A reward for proving you are the best, here's a Coin"));
+                                    notificationDAO.insertNotification("A reward for proving you are the best, here's a Coin", currentUserId);
                                 }
                             }
 
@@ -1327,10 +1339,10 @@ public class MainActivity extends AppCompatActivity {
                                 if (timeInSeconds < thirdBestTimeInSeconds) {
                                     Log.d("MemoryCard", "Top 3 Global Leaderboard!!!!");
                                     String notificationMessage = String.format("You are now top 3 Global on board %d!!", boardSize);
-                                    notificationList.add(new Notification("TOP 3!!!",notificationMessage));
+                                    notificationDAO.insertNotification(notificationMessage, currentUserId);
 
                                     userDAO.incrementCoins(currentUserId,userCoins);
-                                    notificationList.add(new Notification("Coin", "A reward for proving you are the best, here's a Coin"));
+                                    notificationDAO.insertNotification("A reward for proving you are the best, here's a Coin", currentUserId);
                                 }
                             }
 
