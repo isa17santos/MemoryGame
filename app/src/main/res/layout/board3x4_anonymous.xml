@@ -8,73 +8,21 @@
     android:background="@android:color/system_accent2_100"
     tools:ignore="NewApi">
 
-    <TextView
-        android:id="@+id/IdTimeBoard3x4Anonymous"
+    <ImageView
+        android:id="@+id/backBoard3x4Anonymous"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:autoSizeTextType="uniform"
-        android:gravity="left"
-        android:text="@string/Time"
-        android:textColor="#000000"
+        android:onClick="showLeavingGameLoginPopUpAnonymous"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_arrow_back_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.07"
-        app:layout_constraintHorizontal_bias="0.35"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.093"
-        app:layout_constraintWidth_percent="0.3" />
-
-    <TextView
-        android:id="@+id/timerTextViewBoard3x4Anonymous"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:autoSizeTextType="uniform"
-        android:text="@string/Timer"
-        android:textColor="#000000"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHeight_percent="0.06"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintHeight_percent="0.06"
-        app:layout_constraintStart_toEndOf="@id/IdTimeBoard3x4Anonymous"
-        app:layout_constraintTop_toTopOf="@id/IdTimeBoard3x4Anonymous"
-        app:layout_constraintWidth_percent="0.3" />
-
-    <TextView
-        android:id="@+id/IdScoreBoard3x4Anonymous"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:autoSizeTextType="uniform"
-        android:gravity="left"
-        android:text="@string/Score"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.07"
-        app:layout_constraintHorizontal_bias="0.856"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.018"
-        app:layout_constraintWidth_percent="0.3"
-        tools:ignore="LabelFor" />
-
-    <TextView
-        android:id="@+id/attemptsTextBoard3x4Anonymous"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:autoSizeTextType="uniform"
-        android:gravity="left"
-        android:text="@string/AttemptText"
-        android:textColor="@color/black"
-        android:textSize="10sp"
-        app:layout_constraintHeight_percent="0.06"
-        app:layout_constraintStart_toEndOf="@id/IdAttemptsBoard3x4Anonymous"
-        app:layout_constraintTop_toTopOf="@id/IdAttemptsBoard3x4Anonymous"
-        app:layout_constraintWidth_percent="0.15" />
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/IdAttemptsBoard3x4Anonymous"
@@ -91,24 +39,9 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.018"
+        app:layout_constraintVertical_bias="0.076"
         app:layout_constraintWidth_percent="0.38"
         tools:ignore="LabelFor" />
-
-    <TextView
-        android:id="@+id/scoreTextBoard3x4Anonymous"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="4dp"
-        android:autoSizeTextType="uniform"
-        android:gravity="left"
-        android:text="@string/ScoreText"
-        android:textColor="@color/black"
-        android:textSize="10sp"
-        app:layout_constraintHeight_percent="0.06"
-        app:layout_constraintStart_toEndOf="@id/IdScoreBoard3x4Anonymous"
-        app:layout_constraintTop_toTopOf="@id/IdScoreBoard3x4Anonymous"
-        app:layout_constraintWidth_percent="0.15" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/MemoryGrid"
@@ -120,10 +53,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.70"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.694"
+        app:layout_constraintVertical_bias="0.809"
         app:layout_constraintWidth_percent="0.95"
         tools:ignore="MissingConstraints">
 
@@ -355,6 +288,88 @@
         </ImageView>
 
     </androidx.gridlayout.widget.GridLayout>
+
+    <TextView
+        android:id="@+id/scoreTextBoard3x4Anonymous"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="left"
+        android:text="@string/ScoreText"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        app:layout_constraintHeight_percent="0.06"
+        app:layout_constraintStart_toEndOf="@id/IdScoreBoard3x4Anonymous"
+        app:layout_constraintTop_toTopOf="@id/IdScoreBoard3x4Anonymous"
+        app:layout_constraintWidth_percent="0.15" />
+
+    <TextView
+        android:id="@+id/IdTimeBoard3x4Anonymous"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="left"
+        android:text="@string/Time"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.152"
+        app:layout_constraintWidth_percent="0.3" />
+
+    <TextView
+        android:id="@+id/attemptsTextBoard3x4Anonymous"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="left"
+        android:text="@string/AttemptText"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        app:layout_constraintHeight_percent="0.06"
+        app:layout_constraintStart_toEndOf="@id/IdAttemptsBoard3x4Anonymous"
+        app:layout_constraintTop_toTopOf="@id/IdAttemptsBoard3x4Anonymous"
+        app:layout_constraintWidth_percent="0.15" />
+
+    <TextView
+        android:id="@+id/IdScoreBoard3x4Anonymous"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="left"
+        android:text="@string/Score"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintHorizontal_bias="0.856"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.076"
+        app:layout_constraintWidth_percent="0.3"
+        tools:ignore="LabelFor" />
+
+    <TextView
+        android:id="@+id/timerTextViewBoard3x4Anonymous"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:autoSizeTextType="uniform"
+        android:text="@string/Timer"
+        android:textColor="#000000"
+        app:layout_constraintHeight_percent="0.06"
+        app:layout_constraintStart_toEndOf="@id/IdTimeBoard3x4Anonymous"
+        app:layout_constraintTop_toTopOf="@id/IdTimeBoard3x4Anonymous"
+        app:layout_constraintWidth_percent="0.3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

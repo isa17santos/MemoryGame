@@ -111,9 +111,17 @@
 
     <string name="error">ERROR!</string>
 
+    <string name="warning">WARNING!</string>
+
     <string name="emptyFields">Empty fields! Write our username and password.</string>
 
     <string name="notEnoughCoins">Not enough coins!</string>
+
+    <string name="invalidLogin">Invalid credentials! Please try again</string>
+
+    <string name="leaveGame">Are you sure you want to leave the game?</string>
+
+    <string name="leaveGame2">If you do that, you can not come back to this game again</string>
 
 
 

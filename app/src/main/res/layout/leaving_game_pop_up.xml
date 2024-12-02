@@ -19,7 +19,7 @@
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
         android:fontFamily="serif"
-        android:text="@string/error"
+        android:text="@string/warning"
         android:textAlignment="center"
         android:textColor="@color/design_default_color_error"
         android:textSize="34sp"
@@ -42,20 +42,21 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.4"
+        app:layout_constraintHeight_percent="0.48"
+        app:layout_constraintHorizontal_bias="0.525"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.428"
-        app:layout_constraintWidth_percent="0.85">
+        app:layout_constraintVertical_bias="0.445"
+        app:layout_constraintWidth_percent="0.9">
 
         <TextView
-            android:id="@+id/Attempts"
+            android:id="@+id/Attempts1"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="3dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
-            android:text="@string/invalidLogin"
+            android:text="@string/leaveGame"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -73,6 +74,31 @@
             app:layout_row="0"
             app:layout_rowWeight="1" />
 
+        <TextView
+            android:id="@+id/Attempts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="3dp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="sans-serif"
+            android:text="@string/leaveGame2"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="italic"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.07"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.018"
+            app:layout_constraintWidth_percent="0.88"
+            app:layout_row="1"
+            app:layout_rowWeight="1" />
+
 
     </androidx.gridlayout.widget.GridLayout>
 
@@ -86,10 +112,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
-        app:layout_constraintHorizontal_bias="0.923"
+        app:layout_constraintHorizontal_bias="0.911"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_bias="0.956"
         app:layout_constraintWidth_percent="0.4" />
 
 
