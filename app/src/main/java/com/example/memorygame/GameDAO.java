@@ -3,6 +3,7 @@ package com.example.memorygame;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class GameDAO {
     // this class handles all crud operations for Games' table
@@ -28,67 +29,76 @@ public class GameDAO {
     // Query games for a specific user by date
 
     public Cursor getHistorico(int userId) {
-        return db.query(
-                "Games",
-                null,
-                "idUser = ?",
-                new String[]{String.valueOf(userId)},
-                null,
-                null,
-                "date ASC" // Sort by score descending
-        );
+        // Log the userId to ensure it's being passed correctly
+        Log.d("DBQuery", "Getting historical data for userId: " + userId);
+
+        // Modify the query to check for any issues with the ORDER BY clause
+        String query = "SELECT * FROM Games WHERE idUser = ? ORDER BY date ASC";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        // Check the number of rows returned
+        Log.d("DBQuery", "Number of rows returned: " + cursor.getCount());
+
+        return cursor;
     }
 
-    // Query games for a specific user by time and boardSize
-    public Cursor getGamesByUserByTimeAndBoardSize(int userId, int boardSize) {
-        return db.query(
-                "Games",
-                null,
-                "idUser = ? AND boardSize = ?", // Updated selection
-                new String[]{String.valueOf(userId), String.valueOf(boardSize)}, // Updated selectionArgs
-                null,
-                null,
-                "time ASC"
-        );
-    }
 
     // Query games for a specific user by time and boardSize
-    public Cursor getGamesByUserByAttemptsAndBoardSize(int userId, int boardSize) {
-        return db.query(
-                "Games",
-                null,
-                "idUser = ? AND boardSize = ?", // Updated selection
-                new String[]{String.valueOf(userId), String.valueOf(boardSize)}, // Updated selectionArgs
-                null,
-                null,
-                "time ASC" // Sort by score descending
-        );
+    public Cursor getPersonalScoreboardByTimeAndBoardSize(int userId, int boardSize) {
+        // Log the userId to ensure it's being passed correctly
+        Log.d("DBQuery", "Getting personal data for userId: " + userId);
+
+        String query = "SELECT Users.username, Games.time, Games.boardSize " +
+                "FROM Games " +
+                "INNER JOIN Users ON Games.idUser = Users.id " +
+                "WHERE Games.idUser = ? AND Games.boardSize = ? " +
+                "ORDER BY Games.time ASC";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(boardSize)});
+
+        // Check the number of rows returned
+        Log.d("DBQuery", "Number of rows returned: " + cursor.getCount());
+
+        return db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(boardSize)});
+    }
+
+    // Query games for a specific user by attempts and boardSize
+    public Cursor getPersonalScoreboardByAttemptsAndBoardSize(int userId, int boardSize) {
+        // Log the userId to ensure it's being passed correctly
+        Log.d("DBQuery", "Getting personal data for userId: " + userId);
+
+        String query = "SELECT Users.username, Games.time, Games.boardSize " +
+                "FROM Games " +
+                "INNER JOIN Users ON Games.idUser = Users.id " +
+                "WHERE Games.idUser = ? AND Games.boardSize = ? " +
+                "ORDER BY Games.attempts ASC";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(boardSize)});
+
+        // Check the number of rows returned
+        Log.d("DBQuery", "Number of rows returned: " + cursor.getCount());
+
+        return db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(boardSize)});
     }
 
     // Query the best game by time of a certain boardSize of each user
     public Cursor getLeaderboardByTimeAndBoardSize(int boardSize) {
-        return db.query(
-                "Games", // Table name
-                null,    // All columns
-                "boardSize = ?", // Updated selection
-                new String[]{String.valueOf(boardSize)},
-                "idUser",    //  Group by userId
-                null,    // No having
-                "time ASC" // Sort by username
-        );
+        String query = "SELECT Users.username, Games.time, Games.boardSize " +
+                "FROM Games " +
+                "INNER JOIN Users ON Games.idUser = Users.id " +
+                "WHERE Games.boardSize = ? " +
+                "ORDER BY Games.time ASC";
+        return db.rawQuery(query, new String[]{String.valueOf(boardSize)});
     }
 
     // Query all games by attempts of a certain boardSize
-    public Cursor getLeadboardByAttemptsAndBoardSize(int boardSize) {
-        return db.query(
-                "Games", // Table name
-                null,    // All columns
-                "boardSize = ?", // Updated selection
-                new String[]{String.valueOf(boardSize)},
-                "idUser",    // Group by userId
-                null,    // No having
-                "attempts ASC" // Sort by attempts
-        );
+    public Cursor getLeaderboardByAttemptsAndBoardSize(int boardSize) {
+        String query = "SELECT Users.username, Games.attempts, Games.boardSize " +
+                "FROM Games " +
+                "INNER JOIN Users ON Games.idUser = Users.id " +
+                "WHERE Games.boardSize = ? " +
+                "ORDER BY Games.attempts ASC";
+        return db.rawQuery(query, new String[]{String.valueOf(boardSize)});
     }
 
     // Delete all games for a specific user
