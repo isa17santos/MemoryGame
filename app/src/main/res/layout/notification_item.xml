@@ -12,7 +12,7 @@
         android:id="@+id/notification_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:paddingBottom="4dp" />
@@ -21,6 +21,6 @@
         android:id="@+id/notification_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="22sp"
         android:textColor="@color/black" />
 </LinearLayout>

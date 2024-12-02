@@ -247,25 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void notEnoughtCoins()
-    {
-        // Create an AlertDialog.Builder instance
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Set title, message, and buttons
-        builder.setTitle("Not enough coins!");
-
-        // Positive Button (e.g., OK)
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            // Handle OK button click
-            dialog.dismiss(); // Close the pop-up
-        });
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     private void startTimer() {
         // Define the Runnable that updates the TextView every second
         updateTimerRunnable = new Runnable() {
