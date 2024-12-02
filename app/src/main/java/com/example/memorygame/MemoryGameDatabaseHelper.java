@@ -27,7 +27,7 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ATTEMPTS = "attempts";
     public static final String COLUMN_SCORE = "score";
     public static final String COLUMN_TIME = "time"; // Format: MI:SS
-    public static final String COLUMN_BOARD_SIZE = "boardSize"; // Values: 3, 4, 6
+    public static final String COLUMN_BOARD_SIZE = "boardSize"; // Values: 1, 2, 3, 4
     public static final String COLUMN_GAME_USER_ID = "idUser"; // Foreign Key
     public static final String COLUMN_GAME_DATE = "date"; // Format: YYYY-MM-DD
 
