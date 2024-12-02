@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
     private int attempts = 0;
     private int score = 0;
     int userCoins = 0;
+    private String bestTime = null;
+    private String thirdBestTime = null;
     private boolean initializeTimer = false;
 
 
@@ -216,69 +218,6 @@ public class MainActivity extends AppCompatActivity {
             if (cursor != null) {
                 cursor.close();
             }
-
-            Cursor cursor_history = gameDAO.getHistorico(1);
-
-            if (cursor_history != null && cursor_history.moveToFirst()) {
-                do {
-                    @SuppressLint("Range") String username = cursor_history.getString(cursor_history.getColumnIndex("username"));
-                    @SuppressLint("Range") String score = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("score")));
-                    @SuppressLint("Range") String attempts = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("attempts")));
-                    @SuppressLint("Range") String time = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("time")));
-                    @SuppressLint("Range") String boardSize = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("boardSize")));
-
-                    // Create a new TableRow
-                    TableRow tableRow = new TableRow(this);
-                    tableRow.setLayoutParams(new TableRow.LayoutParams(
-                            TableRow.LayoutParams.MATCH_PARENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
-                    ));
-
-                    // Add columns (TextViews) to the row
-                    TextView userColumn = new TextView(this);
-                    userColumn.setText(username);
-                    userColumn.setGravity(Gravity.CENTER);
-                    userColumn.setPadding(8, 8, 8, 8);
-
-                    TextView scoreColumn = new TextView(this);
-                    scoreColumn.setText(score);
-                    scoreColumn.setGravity(Gravity.CENTER);
-                    scoreColumn.setPadding(8, 8, 8, 8);
-
-                    // Add more TextViews as needed for other columns (e.g., attempts, time, board size)
-                    // Here is an example for placeholder text:
-                    TextView attemptsColumn = new TextView(this);
-                    attemptsColumn.setText(attempts); // Placeholder for attempts
-                    attemptsColumn.setGravity(Gravity.CENTER);
-                    attemptsColumn.setPadding(8, 8, 8, 8);
-
-                    TextView timeColumn = new TextView(this);
-                    timeColumn.setText(time); // Placeholder for time
-                    timeColumn.setGravity(Gravity.CENTER);
-                    timeColumn.setPadding(8, 8, 8, 8);
-
-                    TextView boardSizeColumn = new TextView(this);
-                    boardSizeColumn.setText(boardSize); // Placeholder for board size
-                    boardSizeColumn.setGravity(Gravity.CENTER);
-                    boardSizeColumn.setPadding(8, 8, 8, 8);
-
-                    // Add TextViews to the row
-                    tableRow.addView(userColumn);
-                    tableRow.addView(scoreColumn);
-                    tableRow.addView(attemptsColumn);
-                    tableRow.addView(timeColumn);
-                    tableRow.addView(boardSizeColumn);
-
-                    // Add the row to the TableLayout
-                    tableLayout.addView(tableRow);
-                } while (cursor_history.moveToNext());
-            }
-
-            if (cursor_history != null) {
-                cursor_history.close();
-            }
-
-
 
         } catch (Exception e) {
             Log.e("Database", "Error interacting with the database", e);
@@ -435,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
         historyPageBinding = HistoryPageBinding.inflate(getLayoutInflater());
         setContentView(historyPageBinding.getRoot());
 
-        Cursor cursor = gameDAO.getHistorico(currentUserId);
+        Cursor cursor = gameDAO.getHistory(currentUserId);
         GridLayout gridLayout = historyPageBinding.GameHistory;
         int rowIndex = 1;
 
@@ -966,7 +905,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo_dashboard_user(View view){
-        setContentView(R.layout.dashboard_user);
+        userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+        TextView coins = userBinding.numCoins;
+        coins.setText(String.valueOf(userCoins));
+        setContentView(userBinding.getRoot());
     }
 
     public void login(View view) {
@@ -992,16 +934,16 @@ public class MainActivity extends AppCompatActivity {
                   testMode = true;
                   setContentView(R.layout.dashboard_user);
                   userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-                  setContentView(userBinding.getRoot());
                   TextView coins = userBinding.numCoins;
                   coins.setText(String.valueOf(userCoins));
+                  setContentView(userBinding.getRoot());
                 } else {
                     testMode = false;
                     setContentView(R.layout.dashboard_user);
                     userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-                    setContentView(userBinding.getRoot());
                     TextView coins = userBinding.numCoins;
                     coins.setText(String.valueOf(userCoins));
+                    setContentView(userBinding.getRoot());
                 }
 
             } else { // Login failed
@@ -1345,21 +1287,10 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("MemoryCard", "Game Over");
                             stopTimer();
 
-                            if(gameMode == 0) // anonymous
-                            {
-                                showGameOverPopUp(0);
-                            }
-                            else if(gameMode == 1) // user
-                            {
-                                showGameOverPopUp(1);
-                            }
-                            else if (gameMode == 2) // test
-                            {
-                                showGameOverPopUp(2);
-                            }
+                            bestTime = gameDAO.getBestTime(currentUserId, boardSize);
+                            thirdBestTime = gameDAO.getThirdBestTime(boardSize);
 
                             // Insert a game record
-
                             String time = String.format("%02d:%02d", minutes, seconds);
 
                             long val = gameDAO.insertGame(attempts, score, time, boardSize, currentUserId, currentDate);
@@ -1368,6 +1299,54 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MemoryCard", "Game record insertion failed");
                             }
 
+                            // Assuming 'time' and 'bestTime' are strings in the format "mm:ss"
+                            String[] timeParts = time.split(":");
+                            int timeInSeconds = Integer.parseInt(timeParts[0]) * 60 + Integer.parseInt(timeParts[1]);
+
+                            if (bestTime != null) {
+                                String[] bestTimeParts = bestTime.split(":");
+                                int bestTimeInSeconds = Integer.parseInt(bestTimeParts[0]) * 60 + Integer.parseInt(bestTimeParts[1]);
+                                Log.d("MemoryCard", "Best Time: " + bestTime);
+
+                                // Now you can compare the times in seconds
+                                if (timeInSeconds < bestTimeInSeconds) {
+                                    // ... (time is less than bestTime) ...
+                                    Log.d("MemoryCard", "New Record!!!!");
+                                    String notificationMessage = String.format("You beat your personal best time in board %d!!", boardSize);
+                                    notificationList.add(new Notification("Record!!!",notificationMessage));
+
+                                    userDAO.incrementCoins(currentUserId,userCoins);
+                                    notificationList.add(new Notification("Coin", "A reward for proving you are the best, here's a Coin"));
+                                }
+                            }
+
+                            if (thirdBestTime != null) {
+                                String[] thirdBestTimeParts = thirdBestTime.split(":");
+                                int thirdBestTimeInSeconds = Integer.parseInt(thirdBestTimeParts[0]) * 60 + Integer.parseInt(thirdBestTimeParts[1]);
+                                Log.d("MemoryCard", "Top 3 Time: " + thirdBestTime);
+                                if (timeInSeconds < thirdBestTimeInSeconds) {
+                                    Log.d("MemoryCard", "Top 3 Global Leaderboard!!!!");
+                                    String notificationMessage = String.format("You are now top 3 Global on board %d!!", boardSize);
+                                    notificationList.add(new Notification("TOP 3!!!",notificationMessage));
+
+                                    userDAO.incrementCoins(currentUserId,userCoins);
+                                    notificationList.add(new Notification("Coin", "A reward for proving you are the best, here's a Coin"));
+                                }
+                            }
+
+                            if(gameMode == 0) // anonymous
+                            {
+                                showGameOverPopUp(0);
+                            }
+                            else if(gameMode == 1) // user
+                            {
+                                showGameOverPopUp(1);
+
+                            }
+                            else if (gameMode == 2) // test
+                            {
+                                showGameOverPopUp(2);
+                            }
                         }
                     } else {
                         isWaiting = true;
