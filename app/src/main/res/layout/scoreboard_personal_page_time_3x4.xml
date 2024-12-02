@@ -89,11 +89,12 @@
             android:autoSizeTextType="uniform"
             android:textColor="#332A2A"
             android:textStyle="italic"
-            android:onClick="moveTo_scoreboard_global_page_attempts_6x6"
+            android:onClick="moveTo_scoreboard_personal_page_attempts_3x4"
             android:backgroundTint="@color/material_dynamic_neutral70"
             android:gravity="center"
             android:padding="12dp"
             android:scaleType="fitCenter"
+
             app:layout_column="1"
             app:layout_columnWeight="1"
             app:layout_row="0"

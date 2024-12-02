@@ -119,7 +119,7 @@ public class GameDAO {
         // Log the userId to ensure it's being passed correctly
         Log.d("DBQuery", "Getting personal data for userId: " + userId);
 
-        String query = "SELECT Users.username, Games.time, Games.boardSize " +
+        String query = "SELECT Users.username, Games.attempts, Games.boardSize " +
                 "FROM Games " +
                 "INNER JOIN Users ON Games.idUser = Users.id " +
                 "WHERE Games.idUser = ? AND Games.boardSize = ? " +
