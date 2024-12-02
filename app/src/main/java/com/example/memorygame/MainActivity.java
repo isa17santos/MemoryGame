@@ -3,8 +3,11 @@ package com.example.memorygame;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -25,6 +28,8 @@ import java.util.Collections;
 
 import android.annotation.SuppressLint;
 
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.Handler;
 
@@ -59,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
     private PopUpBinding popUpBinding;
 
      private GameOverPopUpBinding gameOverPopUpBinding;
+
+    private GameDAO gameDAO;
+    private TableLayout tableLayout;
 
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
@@ -99,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
 
         //------------------------------- DATABASE --------------------------------------
         // Initialize the database helper
@@ -148,6 +157,69 @@ public class MainActivity extends AppCompatActivity {
             if (cursor != null) {
                 cursor.close();
             }
+
+            Cursor cursor_history = gameDAO.getHistorico(1);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
+                    @SuppressLint("Range") String score = String.valueOf(cursor.getInt(cursor.getColumnIndex("score")));
+                    @SuppressLint("Range") String attempts = String.valueOf(cursor.getInt(cursor.getColumnIndex("attempts")));
+                    @SuppressLint("Range") String time = String.valueOf(cursor.getInt(cursor.getColumnIndex("time")));
+                    @SuppressLint("Range") String boardSize = String.valueOf(cursor.getInt(cursor.getColumnIndex("boardSize")));
+
+                    // Create a new TableRow
+                    TableRow tableRow = new TableRow(this);
+                    tableRow.setLayoutParams(new TableRow.LayoutParams(
+                            TableRow.LayoutParams.MATCH_PARENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    ));
+
+                    // Add columns (TextViews) to the row
+                    TextView userColumn = new TextView(this);
+                    userColumn.setText(username);
+                    userColumn.setGravity(Gravity.CENTER);
+                    userColumn.setPadding(8, 8, 8, 8);
+
+                    TextView scoreColumn = new TextView(this);
+                    scoreColumn.setText(score);
+                    scoreColumn.setGravity(Gravity.CENTER);
+                    scoreColumn.setPadding(8, 8, 8, 8);
+
+                    // Add more TextViews as needed for other columns (e.g., attempts, time, board size)
+                    // Here is an example for placeholder text:
+                    TextView attemptsColumn = new TextView(this);
+                    attemptsColumn.setText(attempts); // Placeholder for attempts
+                    attemptsColumn.setGravity(Gravity.CENTER);
+                    attemptsColumn.setPadding(8, 8, 8, 8);
+
+                    TextView timeColumn = new TextView(this);
+                    timeColumn.setText(time); // Placeholder for time
+                    timeColumn.setGravity(Gravity.CENTER);
+                    timeColumn.setPadding(8, 8, 8, 8);
+
+                    TextView boardSizeColumn = new TextView(this);
+                    boardSizeColumn.setText(boardSize); // Placeholder for board size
+                    boardSizeColumn.setGravity(Gravity.CENTER);
+                    boardSizeColumn.setPadding(8, 8, 8, 8);
+
+                    // Add TextViews to the row
+                    tableRow.addView(userColumn);
+                    tableRow.addView(scoreColumn);
+                    tableRow.addView(attemptsColumn);
+                    tableRow.addView(timeColumn);
+                    tableRow.addView(boardSizeColumn);
+
+                    // Add the row to the TableLayout
+                    tableLayout.addView(tableRow);
+                } while (cursor.moveToNext());
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+
+
 
         } catch (Exception e) {
             Log.e("Database", "Error interacting with the database", e);
@@ -859,6 +931,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("PopupError", "Error in showPopupWithDynamicLayout", e);
         }
     }
+
 
 }
 

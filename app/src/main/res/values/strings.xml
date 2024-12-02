@@ -109,6 +109,12 @@
     <string name="time">Time:</string>
     <string name="close">close</string>
 
+    <string name="history_page">History</string>
+    <string name="user">User</string>
+    <string name="user_column">User</string>
+    <string name="score_column">Score</string>
+    <string name="attempts_column">Attempts</string>
+    <string name="time_column">Time</string>
 
 
 </resources>

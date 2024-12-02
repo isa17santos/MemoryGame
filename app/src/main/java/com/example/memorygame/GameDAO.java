@@ -25,7 +25,7 @@ public class GameDAO {
     }
 
     // Query games for a specific user
-    public Cursor getGamesByUser(int userId) {
+    public Cursor getHistorico(int userId) {
         return db.query(
                 "Games",
                 null,
@@ -33,7 +33,7 @@ public class GameDAO {
                 new String[]{String.valueOf(userId)},
                 null,
                 null,
-                "score DESC" // Sort by score descending
+                "date ASC" // Sort by score descending
         );
     }
 
