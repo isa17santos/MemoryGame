@@ -37,6 +37,32 @@ public class GameDAO {
         );
     }
 
+    // Query games
+    public Cursor getAllGamesByTime() {
+        return db.query(
+                "Games", // Table name
+                null,    // All columns
+                null,    // No WHERE clause
+                null,    // No arguments
+                null,    // No grouping
+                null,    // No having
+                "time ASC" // Sort by username
+        );
+    }
+
+    // Query games
+    public Cursor getAllGamesByAttempts() {
+        return db.query(
+                "Games", // Table name
+                null,    // All columns
+                null,    // No WHERE clause
+                null,    // No arguments
+                null,    // No grouping
+                null,    // No having
+                "attempts ASC" // Sort by username
+        );
+    }
+
     // Delete all games for a specific user
     public int deleteGamesByUser(int userId) {
         return db.delete("Games", "idUser = ?", new String[]{String.valueOf(userId)});
