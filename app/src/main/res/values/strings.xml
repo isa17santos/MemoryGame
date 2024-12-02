@@ -109,6 +109,14 @@
     <string name="time">Time:</string>
     <string name="close">close</string>
 
+
+    <string name="history_page">History</string>
+    <string name="user">User</string>
+    <string name="user_column">User</string>
+    <string name="score_column">Score</string>
+    <string name="attempts_column">Attempts</string>
+    <string name="time_column">Time</string>
+
     <string name="Time_Scoreboard">Time</string>
     <string name="dashboard_button_scoreboard">Scoreboard</string>
 
@@ -118,6 +126,7 @@
     <string name="emptyFields">Empty fields! Write our username and password.</string>
 
     <string name="notEnoughCoins">Not enough coins!</string>
+
 
 
 

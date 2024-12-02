@@ -1,7 +1,15 @@
 package com.example.memorygame;
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +31,8 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.Handler;
 
@@ -47,8 +57,9 @@ public class MainActivity extends AppCompatActivity {
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
 
-
-     private GameOverPopUpBinding gameOverPopUpBinding;
+    private GameOverPopUpBinding gameOverPopUpBinding;
+ 
+    private TableLayout tableLayout;
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -98,6 +109,148 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+
+        //------------------------------- DATABASE --------------------------------------
+        // Initialize the database helper
+        MemoryGameDatabaseHelper dbHelper = new MemoryGameDatabaseHelper(this);
+
+        try {
+            db = dbHelper.getWritableDatabase(); // Open or create the database
+            Log.d("Database", "Database initialized successfully.");
+
+            // Create a new UserDAO instance
+            UserDAO userDAO = new UserDAO(db);
+
+
+            // Check if users have already been created using SharedPreferences
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            boolean usersCreated = preferences.getBoolean("users_created", false);
+
+            if (!usersCreated) {
+                // If users haven't been created, insert users
+                insertTestUsers(userDAO);
+
+                // After creating users, set the flag to true
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("users_created", true);
+                editor.apply();
+
+                Log.d("UserCreation", "Users created successfully.");
+            } else {
+                Log.d("UserCreation", "Users already created, skipping.");
+            }
+
+            // Retrieve and log all users
+            Cursor cursor = userDAO.getAllUsers();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
+                    @SuppressLint("Range") String password = cursor.getString(cursor.getColumnIndex("password"));
+                    @SuppressLint("Range") int coins = cursor.getInt(cursor.getColumnIndex("coins"));
+                    Log.d("User", "ID: " + id + ", Username: " + username + ", Coins: " + coins);
+                } while (cursor.moveToNext());
+            } else {
+                Log.d("User", "No users found in the database.");
+            }
+
+            // Close the cursor
+            if (cursor != null) {
+                cursor.close();
+            }
+
+            Cursor cursor_history = gameDAO.getHistorico(1);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
+                    @SuppressLint("Range") String score = String.valueOf(cursor.getInt(cursor.getColumnIndex("score")));
+                    @SuppressLint("Range") String attempts = String.valueOf(cursor.getInt(cursor.getColumnIndex("attempts")));
+                    @SuppressLint("Range") String time = String.valueOf(cursor.getInt(cursor.getColumnIndex("time")));
+                    @SuppressLint("Range") String boardSize = String.valueOf(cursor.getInt(cursor.getColumnIndex("boardSize")));
+
+                    // Create a new TableRow
+                    TableRow tableRow = new TableRow(this);
+                    tableRow.setLayoutParams(new TableRow.LayoutParams(
+                            TableRow.LayoutParams.MATCH_PARENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    ));
+
+                    // Add columns (TextViews) to the row
+                    TextView userColumn = new TextView(this);
+                    userColumn.setText(username);
+                    userColumn.setGravity(Gravity.CENTER);
+                    userColumn.setPadding(8, 8, 8, 8);
+
+                    TextView scoreColumn = new TextView(this);
+                    scoreColumn.setText(score);
+                    scoreColumn.setGravity(Gravity.CENTER);
+                    scoreColumn.setPadding(8, 8, 8, 8);
+
+                    // Add more TextViews as needed for other columns (e.g., attempts, time, board size)
+                    // Here is an example for placeholder text:
+                    TextView attemptsColumn = new TextView(this);
+                    attemptsColumn.setText(attempts); // Placeholder for attempts
+                    attemptsColumn.setGravity(Gravity.CENTER);
+                    attemptsColumn.setPadding(8, 8, 8, 8);
+
+                    TextView timeColumn = new TextView(this);
+                    timeColumn.setText(time); // Placeholder for time
+                    timeColumn.setGravity(Gravity.CENTER);
+                    timeColumn.setPadding(8, 8, 8, 8);
+
+                    TextView boardSizeColumn = new TextView(this);
+                    boardSizeColumn.setText(boardSize); // Placeholder for board size
+                    boardSizeColumn.setGravity(Gravity.CENTER);
+                    boardSizeColumn.setPadding(8, 8, 8, 8);
+
+                    // Add TextViews to the row
+                    tableRow.addView(userColumn);
+                    tableRow.addView(scoreColumn);
+                    tableRow.addView(attemptsColumn);
+                    tableRow.addView(timeColumn);
+                    tableRow.addView(boardSizeColumn);
+
+                    // Add the row to the TableLayout
+                    tableLayout.addView(tableRow);
+                } while (cursor.moveToNext());
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+
+
+
+        } catch (Exception e) {
+            Log.e("Database", "Error interacting with the database", e);
+        }
+
+
+
+            // For Games
+            //GameDAO gameDAO = new GameDAO(db);
+            //gameDAO.insertGame(5, 200, "02:30", 4, (int) userId);
+            //Cursor gamesCursor = gameDAO.getGamesByUser((int) userId);
+            //gamesCursor.close();
+
+
+            // For Notifications
+            //NotificationDAO notificationDAO = new NotificationDAO(db);
+            //notificationDAO.insertNotification("Welcome to the game!", (int) userId);
+
+        //------------------------------- DATABASE --------------------------------------
+    }
+
+    // Method to insert test users
+    private void insertTestUsers(UserDAO userDAO) {
+        userDAO.insertUser("isa", "isa123", 20);
+        userDAO.insertUser("bruno", "bruno123", 20);
+        userDAO.insertUser("carolina", "carolina123", 20);
+        userDAO.insertUser("duarte", "duarte123", 20);
+        userDAO.insertUser("test", "test123", 100);
     }
 
     private void notEnoughtCoins()
