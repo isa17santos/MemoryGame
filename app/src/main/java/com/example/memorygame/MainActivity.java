@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        notificationList.add(new Notification("Bem Vindo!", "Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!"));
+
     }
 
     private void notEnoughtCoins()
@@ -230,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
             TextView coins = userBinding.numCoins;
             coins.setText(String.valueOf(value));
         } else {
+            testMode = false;
             setContentView(R.layout.dashboard_user);
             userBinding = DashboardUserBinding.inflate(getLayoutInflater());
             setContentView(userBinding.getRoot());
@@ -250,11 +254,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_notification_page(View view) {
         setContentView(R.layout.notification_page);
-        if( findViewById(R.id.recyclerView_notifications) != null){
+        if(findViewById(R.id.recyclerView_notifications) != null){
             RecyclerView recyclerView = findViewById(R.id.recyclerView_notifications);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            notificationList.add(new Notification("Bem Vindo!", "Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!"));
 
             NotificationAdapter notificationAdapter = new NotificationAdapter(notificationList);
             recyclerView.setAdapter(notificationAdapter);
