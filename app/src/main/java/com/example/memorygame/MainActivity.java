@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
+        notificationList.add(new Notification("Bem Vindo!", "Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!"));
 
         //------------------------------- DATABASE --------------------------------------
         // Initialize the database helper
@@ -251,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("carolina", "carolina123", 20);
         userDAO.insertUser("duarte", "duarte123", 20);
         userDAO.insertUser("test", "test123", 100);
+
     }
 
     private void notEnoughtCoins()
@@ -404,6 +405,7 @@ public class MainActivity extends AppCompatActivity {
                   TextView coins = userBinding.numCoins;
                   coins.setText(String.valueOf(value));
                 } else {
+                  testMode = false;
                   setContentView(R.layout.dashboard_user);
                   userBinding = DashboardUserBinding.inflate(getLayoutInflater());
                   setContentView(userBinding.getRoot());
@@ -413,7 +415,6 @@ public class MainActivity extends AppCompatActivity {
                 // TO DO
                 // POP UP INVALID LOGIN
             }
-
         }
     }
 
@@ -429,11 +430,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_notification_page(View view) {
         setContentView(R.layout.notification_page);
-        if( findViewById(R.id.recyclerView_notifications) != null){
+        if(findViewById(R.id.recyclerView_notifications) != null){
             RecyclerView recyclerView = findViewById(R.id.recyclerView_notifications);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            notificationList.add(new Notification("Bem Vindo!", "Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!"));
 
             NotificationAdapter notificationAdapter = new NotificationAdapter(notificationList);
             recyclerView.setAdapter(notificationAdapter);
