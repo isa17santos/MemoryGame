@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -50,6 +51,14 @@ import com.example.memorygame.databinding.Board6x6Binding;
 import com.example.memorygame.databinding.BoardsizePageBinding;
 import com.example.memorygame.databinding.DashboardUserBinding;
 
+
+import com.example.memorygame.databinding.EmptyFieldsPopUpBinding;
+import com.example.memorygame.databinding.InvalidLoginPopUpBinding;
+import com.example.memorygame.databinding.LeavingGamePopUpBinding;
+import com.example.memorygame.databinding.PopUpNotEnoughCoinsBinding;
+import com.example.memorygame.databinding.Testboard3x4Binding;
+import com.example.memorygame.databinding.TestDashboardBinding;
+
 import com.example.memorygame.databinding.GameOverPopUpBinding;
 
 
@@ -69,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
     private TableLayout tableLayout;
 
+     private PopUpNotEnoughCoinsBinding popUpNotEnoughCoinsBinding;
+
+     private EmptyFieldsPopUpBinding emptyFieldsPopUpBinding;
+
+     private InvalidLoginPopUpBinding invalidLoginPopUpBinding;
+
+     private LeavingGamePopUpBinding leavingGamePopUpBinding;
 
     private ArrayList<MemoryCard> memoryCards = new ArrayList<>();
     MemoryCard FirstCard = null;
@@ -325,15 +341,17 @@ public class MainActivity extends AppCompatActivity {
         button3x4.setOnClickListener(v -> {
 
             if(value <= 0) { //   not enough coins
-                //notEnoughtCoins();
+                showNotEnoughCoinsPopUp();
             }else{
                 moveTo_board3x4_user(button3x4);
             }
         });
 
         button4x4.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+            if(value <= 0){//   not enough coins
+                showNotEnoughCoinsPopUp();
+            }
+
             else{
                 buyingThings(button4x4, coins);
                 moveTo_board4x4(button4x4);
@@ -341,8 +359,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button6x6.setOnClickListener(v -> {
-            if(value <= 0) //   not enough coins
-                notEnoughtCoins();
+
+            if(value <= 0){ //   not enough coins
+                showNotEnoughCoinsPopUp();
+            }
+
             else{
                 buyingThings(button6x6, coins);
                 moveTo_board6x6(button6x6);
@@ -358,7 +379,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (value <= 0) //not enough coins
         {
-            notEnoughtCoins();
+
+            showNotEnoughCoinsPopUp();
+
         }
         else {
             // Decrement the value
@@ -390,6 +413,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.test_dashboard);
     }
 
+    public void moveTo_dashboard_user(View view){
+        setContentView(R.layout.dashboard_user);
+    }
+
         // Get the username and password from the EditText fields
 
     public void login(View view) {
@@ -405,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("User", "User ID: " + currentUserId);
 
         if (username.isEmpty() || password.isEmpty()) { // Empty fields
-
+            showEmptyFieldsPopUp();
         } else { // written fields
             boolean isAuthenticated = userDAO.authenticateUser(username, password);
             if (isAuthenticated) { // Login successful
@@ -425,8 +452,7 @@ public class MainActivity extends AppCompatActivity {
                   coins.setText(String.valueOf(value));
 
             } else { // Login failed
-                // TO DO
-                // POP UP INVALID LOGIN
+                showInvalidLoginPopUp();
             }
         }
     }
@@ -776,15 +802,15 @@ public class MainActivity extends AppCompatActivity {
 
                             if(gameMode == 0) // anonymous
                             {
-                                showPopupWithDynamicLayout(1,0);
+                                showGameOverPopUp(0);
                             }
                             else if(gameMode == 1) // user
                             {
-                                showPopupWithDynamicLayout(1,1);
+                                showGameOverPopUp(1);
                             }
                             else if (gameMode == 2) // test
                             {
-                                showPopupWithDynamicLayout(1,2);
+                                showGameOverPopUp(2);
                             }
 
                             // Insert a game record
@@ -830,8 +856,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buyHint(View view, TextView coins, int boardType) {
-        if(value <= 0) //   not enough coins
-            notEnoughtCoins();
+        if(value <= 0){//   not enough coins
+            showNotEnoughCoinsPopUp();
+        }
+
         else {
             buyingThings(view, coins);
             getHint(boardType);
@@ -899,81 +927,318 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void showPopupWithDynamicLayout(int caseType, int gameMode) {
-        // caseType values:
-        // 1- game over pop up
-        // 2- not enough coins pop up
-        // 3- leave game pop up
-        // 4- invalid login pop up
-        // 5- empty fields pop up
-
+    private void showGameOverPopUp(int gameMode) {
         // gameMode values:
         // 0 -> anonymous
         // 1 -> user
         // 2 -> test
 
-
         try {
+            gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
+            timerTextView = gameOverPopUpBinding.TimeValue;
+            attemptsTextView = gameOverPopUpBinding.AttemptsValue;
+            scoreTextView = gameOverPopUpBinding.ScoreValue;
 
-            if (caseType == 1) { // 1- game over pop up
+            attemptsTextView.setText(String.valueOf(attempts));
+            scoreTextView.setText(String.valueOf(score));
+            timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
 
-                gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
-                timerTextView = gameOverPopUpBinding.TimeValue;
-                attemptsTextView = gameOverPopUpBinding.AttemptsValue;
-                scoreTextView = gameOverPopUpBinding.ScoreValue;
-
-                attemptsTextView.setText(String.valueOf(attempts));
-                scoreTextView.setText(String.valueOf(score));
-                timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
-
-
-                Log.d("PopupDebug", "CaseType: " + caseType);
-                Log.d("PopupDebug", "Attempts: " + attempts + ", Time: " + minutes + ":" + remainingSeconds + ", Score: " + score);
+            Log.d("PopupDebug", "Attempts: " + attempts + ", Time: " + minutes + ":" + remainingSeconds + ", Score: " + score);
 
 
-                View close = gameOverPopUpBinding.closeButtonGameOver;
+            View close = gameOverPopUpBinding.closeButtonGameOver;
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setView(gameOverPopUpBinding.getRoot());
-                final AlertDialog dialog = builder.create(); // Make the dialog final
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(gameOverPopUpBinding.getRoot());
+            final AlertDialog dialog = builder.create(); // Make the dialog final
 
 
-                close.setOnClickListener(v -> {
-                    dialog.dismiss(); // Close the dialog
+            close.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
 
-                    if(gameMode == 0 ) //  anonymous
-                        moveTo_dashboard_anonymous(null);
-                    else if (gameMode == 1){  //  user
-                        moveTo_dashboard_user(null);
-                    }
-                    else if (gameMode == 2){  //  test
-                        moveTo_testDashboard(null);
-                    }
+                if(gameMode == 0 ) //  anonymous
+                    moveTo_dashboard_anonymous(null);
+                else if (gameMode == 1){  //  user
+                    moveTo_dashboard_user(null);
+                }
+                else if (gameMode == 2){  //  test
+                    moveTo_testDashboard(null);
+                }
+            });
 
-                });
+            dialog.show();
 
-                dialog.show();
-
+            // Get the dialog's window and set fixed dimensions
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(
+                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
+                        (int) (400 * getResources().getDisplayMetrics().density)
+                );
             }
-            else if (caseType == 2) { // 2- not enough coins pop up
 
-            }
-            else if (caseType == 3) { // 3- leave game pop up
+        }
+        catch (Exception e){
+            Log.e("PopupError", "Error in showGameOverPopUp", e);
+        }
+    }
 
-                //viewStub.setLayoutResource(R.layout.p);
-            }
-            else if (caseType == 4) { // 4- invalid login pop up
+    @SuppressLint("DefaultLocale")
+    private void showNotEnoughCoinsPopUp() {
+        try {
+            LayoutInflater inflater = getLayoutInflater();
+            Log.d("InflaterDebug", "LayoutInflater: " + inflater);
 
-                //viewStub.setLayoutResource(R.layout.p);
-            }
-            else if (caseType == 5) { // 5- empty fields pop up
-            }
-        });
+            popUpNotEnoughCoinsBinding = PopUpNotEnoughCoinsBinding.inflate(getLayoutInflater());
 
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            if (popUpNotEnoughCoinsBinding != null) {
+                Log.d("BindingDebug", "Root View: " + popUpNotEnoughCoinsBinding.getRoot());
+            } else {
+                Log.d("BindingDebug", "Binding is NULL.");
+            }
+
+            View close = popUpNotEnoughCoinsBinding.closeButton;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setView(popUpNotEnoughCoinsBinding.getRoot());
+            AlertDialog dialog = builder.create(); // Make the dialog final
+
+            close.setOnClickListener(v -> {
+               dialog.dismiss(); // Close the dialog
+            });
+
+            dialog.show();
+
+            // Get the dialog's window and set fixed dimensions
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(
+                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
+                        (int) (300 * getResources().getDisplayMetrics().density)
+                );
+            }
+        }
+        catch (Exception e) {
+            Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
+        }
 
     }
-}
+
+
+    @SuppressLint("DefaultLocale")
+    private void showEmptyFieldsPopUp() {
+        try {
+            LayoutInflater inflater = getLayoutInflater();
+            Log.d("InflaterDebug", "LayoutInflater: " + inflater);
+
+            emptyFieldsPopUpBinding = EmptyFieldsPopUpBinding.inflate(getLayoutInflater());
+
+            if (emptyFieldsPopUpBinding != null) {
+                Log.d("BindingDebug", "Root View: " + emptyFieldsPopUpBinding.getRoot());
+            } else {
+                Log.d("BindingDebug", "Binding is NULL.");
+            }
+
+            View close = emptyFieldsPopUpBinding.closeButton;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setView(emptyFieldsPopUpBinding.getRoot());
+            AlertDialog dialog = builder.create(); // Make the dialog final
+
+            close.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
+            });
+
+            dialog.show();
+
+            // Get the dialog's window and set fixed dimensions
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(
+                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
+                        (int) (300 * getResources().getDisplayMetrics().density)
+                );
+            }
+        }
+        catch (Exception e) {
+            Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void showInvalidLoginPopUp() {
+        try {
+            LayoutInflater inflater = getLayoutInflater();
+            Log.d("InflaterDebug", "LayoutInflater: " + inflater);
+
+            invalidLoginPopUpBinding = InvalidLoginPopUpBinding.inflate(getLayoutInflater());
+
+            if (invalidLoginPopUpBinding != null) {
+                Log.d("BindingDebug", "Root View: " + invalidLoginPopUpBinding.getRoot());
+            } else {
+                Log.d("BindingDebug", "Binding is NULL.");
+            }
+
+            View close = invalidLoginPopUpBinding.closeButton;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setView(invalidLoginPopUpBinding.getRoot());
+            AlertDialog dialog = builder.create(); // Make the dialog final
+
+            close.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
+            });
+
+            dialog.show();
+
+            // Get the dialog's window and set fixed dimensions
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(
+                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
+                        (int) (300 * getResources().getDisplayMetrics().density)
+                );
+            }
+        }
+        catch (Exception e) {
+            Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
+        }
+
+    }
+
+
+    @SuppressLint("DefaultLocale")
+    public void showLeavingGameLoginPopUpAnonymous(View view) {
+
+        try {
+            LayoutInflater inflater = getLayoutInflater();
+            Log.d("InflaterDebug", "LayoutInflater: " + inflater);
+
+            leavingGamePopUpBinding = LeavingGamePopUpBinding.inflate(getLayoutInflater());
+
+            if (leavingGamePopUpBinding != null) {
+                Log.d("BindingDebug", "Root View: " + leavingGamePopUpBinding.getRoot());
+            } else {
+                Log.d("BindingDebug", "Binding is NULL.");
+            }
+
+            View close = leavingGamePopUpBinding.closeButton;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setView(leavingGamePopUpBinding.getRoot());
+            AlertDialog dialog = builder.create(); // Make the dialog final
+
+            close.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
+
+                moveTo_dashboard_anonymous(null);
+
+            });
+
+            dialog.show();
+
+            // Get the dialog's window and set fixed dimensions
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(
+                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
+                        (int) (300 * getResources().getDisplayMetrics().density)
+                );
+            }
+        }
+        catch (Exception e) {
+            Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
+        }
+
+    }
+
+
+    @SuppressLint("DefaultLocale")
+    public void showLeavingGameLoginPopUpUser(View view) {
+
+        try {
+            LayoutInflater inflater = getLayoutInflater();
+            Log.d("InflaterDebug", "LayoutInflater: " + inflater);
+
+            leavingGamePopUpBinding = LeavingGamePopUpBinding.inflate(getLayoutInflater());
+
+            if (leavingGamePopUpBinding != null) {
+                Log.d("BindingDebug", "Root View: " + leavingGamePopUpBinding.getRoot());
+            } else {
+                Log.d("BindingDebug", "Binding is NULL.");
+            }
+
+            View close = leavingGamePopUpBinding.closeButton;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setView(leavingGamePopUpBinding.getRoot());
+            AlertDialog dialog = builder.create(); // Make the dialog final
+
+            close.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
+
+                moveTo_dashboard_user(null);
+            });
+
+            dialog.show();
+
+            // Get the dialog's window and set fixed dimensions
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(
+                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
+                        (int) (300 * getResources().getDisplayMetrics().density)
+                );
+            }
+
+        }
+        catch (Exception e) {
+            Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
+        }
+
+    }
+
+    @SuppressLint("DefaultLocale")
+    public void showLeavingGameLoginPopUpUserTest(View view) {
+
+        try {
+            LayoutInflater inflater = getLayoutInflater();
+            Log.d("InflaterDebug", "LayoutInflater: " + inflater);
+
+            leavingGamePopUpBinding = LeavingGamePopUpBinding.inflate(getLayoutInflater());
+
+            if (leavingGamePopUpBinding != null) {
+                Log.d("BindingDebug", "Root View: " + leavingGamePopUpBinding.getRoot());
+            } else {
+                Log.d("BindingDebug", "Binding is NULL.");
+            }
+    
+            View close = leavingGamePopUpBinding.closeButton;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setView(leavingGamePopUpBinding.getRoot());
+            AlertDialog dialog = builder.create(); // Make the dialog final
+
+            close.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
+
+                moveTo_testDashboard(null);
+            });
+
+            dialog.show();
+
+            // Get the dialog's window and set fixed dimensions
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(
+                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
+                        (int) (300 * getResources().getDisplayMetrics().density)
+                );
+            }
+        }
+        catch (Exception e) {
+            Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
+        }
+
+    }
+
 

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ConstraintLayout"
-    android:layout_width="350dp"
+    android:layout_width="300dp"
     android:layout_height="200dp"
-    android:background="#FBE5E5"
+    android:background="#FFFFFF"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.488"
@@ -13,14 +12,9 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintVertical_bias="0.694">
 
-    <ViewStub
-        android:id="@+id/view_stub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/Error"
+        android:id="@+id/Game_finished"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
@@ -33,32 +27,57 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.053"
-        app:layout_constraintWidth_percent="1" />
+        app:layout_constraintVertical_bias="0.037"
+        app:layout_constraintWidth_percent="0.7" />
 
-
-    <TextView
-        android:id="@+id/textEmptyFields"
+    <androidx.gridlayout.widget.GridLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:autoSizeTextType="uniform"
-        android:fontFamily="sans-serif-condensed"
-        android:padding="10dp"
-        android:text="@string/emptyFields"
-        android:textAlignment="center"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="250dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.38"
+        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintVertical_bias="0.428"
+        app:layout_constraintWidth_percent="0.85">
+
+        <TextView
+            android:id="@+id/Attempts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="sans-serif"
+            android:text="@string/emptyFields"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="italic"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.07"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.018"
+            app:layout_constraintWidth_percent="0.88"
+            app:layout_row="0"
+            app:layout_rowWeight="1" />
+
+
+    </androidx.gridlayout.widget.GridLayout>
 
     <Button
-        android:id="@+id/closeButtonEmptyFields"
+        android:id="@+id/closeButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
@@ -66,12 +85,12 @@
         android:text="Close"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.23"
-        app:layout_constraintHorizontal_bias="0.863"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintHorizontal_bias="0.923"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.896"
-        app:layout_constraintWidth_percent="0.27" />
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintWidth_percent="0.4" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,17 +44,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.5"
-        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.367"
-        app:layout_constraintWidth_percent="0.9">
+        app:layout_constraintVertical_bias="0.407"
+        app:layout_constraintWidth_percent="0.8">
 
         <TextView
             android:id="@+id/Attempts"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
             android:text="@string/attempts"
@@ -80,7 +80,7 @@
             android:id="@+id/Score_column"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
             android:text="@string/score"
@@ -106,7 +106,7 @@
             android:id="@+id/Time"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
             android:text="@string/time"
@@ -131,7 +131,7 @@
             android:id="@+id/Attempts_value"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
             android:text="@string/AttemptText"
@@ -150,7 +150,7 @@
             android:id="@+id/Score_value"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
             android:text="@string/AttemptText"
@@ -170,7 +170,7 @@
             android:id="@+id/Time_value"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
             android:fontFamily="sans-serif"
             android:text="@string/AttemptText"
@@ -202,7 +202,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.947"
-        app:layout_constraintWidth_percent="0.25" />
+        app:layout_constraintWidth_percent="0.4" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
