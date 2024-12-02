@@ -13,7 +13,7 @@
         android:id="@+id/backScoreboardPageUser"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="moveTo_scoreboard_boardsizes_global"
+        android:onClick="moveTo_scoreboard_boardsizes_personal"
         android:scaleType="fitCenter"
         android:src="@drawable/baseline_arrow_back_white"
         app:layout_constraintBottom_toBottomOf="parent"

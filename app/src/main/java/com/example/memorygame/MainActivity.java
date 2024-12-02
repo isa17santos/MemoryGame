@@ -560,7 +560,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
-                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
                 addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
@@ -596,7 +596,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
-                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
                 addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
@@ -632,7 +632,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
-                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
                 addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
@@ -769,18 +769,18 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Game", "Data found in database");
             do {
                 @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("username"));
-                @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
+                @SuppressLint("Range") int attempts = cursor.getInt(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board);
 
                 TextView usernameTextView = createTextView(user);
-                TextView timeTextView = createTextView(attempts);
+                TextView attemptsTextView = createTextView(String.valueOf(attempts));
                 TextView boardSizeTextView = createTextView(String.valueOf(board));
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
-                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, String.valueOf(attempts), rowIndex, 1, 1f, 1f); // Attempts in column 1
                 addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
@@ -811,12 +811,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
 
                 TextView usernameTextView = createTextView(user);
-                TextView timeTextView = createTextView(attempts);
+                TextView attemptsTextView = createTextView(attempts);
                 TextView boardSizeTextView = createTextView(String.valueOf(board));
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
-                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
                 addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
@@ -847,12 +847,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
 
                 TextView usernameTextView = createTextView(user);
-                TextView timeTextView = createTextView(attempts);
+                TextView attemptsTextView = createTextView(attempts);
                 TextView boardSizeTextView = createTextView(String.valueOf(board));
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
-                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Time in column 1
+                addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
                 addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
