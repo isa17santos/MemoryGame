@@ -1,6 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scoreboard_page_user"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/_7"
+    android:onClick="moveTo_board3x4_user"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/backScoreboardPageUser"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="moveTo_dashboard_user"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_arrow_back_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.038"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:layout_constraintWidth_percent="0.12" />
+
+
+    <TextView
+        android:id="@+id/textScoreboard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="serif"
+        android:text="@string/global_leaderboard"
+        android:textAlignment="center"
+        android:textColor="#C8E6C9"
+        android:textSize="38sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintWidth_percent="0.75" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="250dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_percent="0.9"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/Attempts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="sans-serif"
+            android:text="@string/Time_Scoreboard"
+            android:textAlignment="center"
+            android:textColor="#332A2A"
+            android:textStyle="italic"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.07"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.018"
+            app:layout_constraintWidth_percent="0.38"
+            app:layout_row="0"
+            app:layout_rowWeight="1" />
+
+
+        <TextView
+            android:id="@+id/Score"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="sans-serif"
+            android:text="@string/attempts"
+            android:textAlignment="center"
+            android:textColor="#332A2A"
+            android:textStyle="italic"
+            app:layout_column="1"
+            app:layout_columnWeight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.07"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.018"
+            app:layout_constraintWidth_percent="0.38"
+            app:layout_row="0"
+            app:layout_rowWeight="1" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="250dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.082"
+        app:layout_constraintWidth_percent="0.9"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

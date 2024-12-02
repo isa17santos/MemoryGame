@@ -1,6 +1,13 @@
 package com.example.memorygame;
 
+
+import static com.example.memorygame.MemoryGameDatabaseHelper.COLUMN_USER_ID;
+import static com.example.memorygame.MemoryGameDatabaseHelper.COLUMN_USERNAME;
+
+import android.annotation.SuppressLint;
+
 import static com.example.memorygame.MemoryGameDatabaseHelper.TABLE_USERS;
+
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -47,6 +54,22 @@ public class UserDAO {
         );
     }
 
+    @SuppressLint("Range")
+    public int getLoggedInUserId(String username) {
+        // Replace with your actual method to get username
+
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_USER_ID + " FROM Users WHERE " + COLUMN_USERNAME + " = ?", new String[]{username});
+
+        int loggedInUserId = -1; // Default value if user not found
+
+        if (cursor != null && cursor.moveToFirst()) {
+            loggedInUserId = cursor.getInt(cursor.getColumnIndex(COLUMN_USER_ID));
+            cursor.close();
+        }
+
+        return loggedInUserId;
+    }
+
     // Update user coins
     public int updateCoins(int userId, int newCoins) {
         ContentValues values = new ContentValues();
@@ -58,4 +81,5 @@ public class UserDAO {
     public int deleteUser(int userId) {
         return db.delete("Users", "id = ?", new String[]{String.valueOf(userId)});
     }
+
 }

@@ -3,9 +3,13 @@ package com.example.memorygame;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -18,16 +22,28 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import java.util.Date;
+import java.util.Locale;
+
+import java.util.List;
+
+
 import android.annotation.SuppressLint;
 
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.Handler;
 
+import com.example.memorygame.databinding.ActivityMainBinding;
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import com.example.memorygame.databinding.Board3x4UserBinding;
 import com.example.memorygame.databinding.Board4x4Binding;
@@ -54,14 +70,13 @@ public class MainActivity extends AppCompatActivity {
     private Board3x4UserBinding binding3x4;
     private Board4x4Binding binding4x4;
     private Board6x6Binding binding6x6;
-    private Testboard3x4Binding bindingTest3x4;
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
 
     private TestDashboardBinding testBinding;
+    private GameOverPopUpBinding gameOverPopUpBinding;
 
-
-     private GameOverPopUpBinding gameOverPopUpBinding;
+    private TableLayout tableLayout;
 
      private PopUpNotEnoughCoinsBinding popUpNotEnoughCoinsBinding;
 
@@ -95,11 +110,24 @@ public class MainActivity extends AppCompatActivity {
     int value = 5;
     private boolean initializeTimer = false;
 
+
+    // Database variables
+
+    private boolean testMode = false;
+
+    List<Notification> notificationList = new ArrayList<>();
+
+    private GameDAO gameDAO;
+
+    private String currentUser;
+    private int currentUserId;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    String currentDate = dateFormat.format(new Date());
+  
     // Get the writable database
     private SQLiteDatabase db = null;
 
     private UserDAO userDAO;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        notificationList.add(new Notification("Bem Vindo!", "Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!"));
+
         //------------------------------- DATABASE --------------------------------------
         // Initialize the database helper
         MemoryGameDatabaseHelper dbHelper = new MemoryGameDatabaseHelper(this);
@@ -122,25 +152,12 @@ public class MainActivity extends AppCompatActivity {
 
             // Create a new UserDAO instance
             userDAO = new UserDAO(db);
+            gameDAO = new GameDAO(db);
 
 
             // Check if users have already been created using SharedPreferences
             SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             boolean usersCreated = preferences.getBoolean("users_created", false);
-
-            if (!usersCreated) {
-                // If users haven't been created, insert users
-                insertTestUsers(userDAO);
-
-                // After creating users, set the flag to true
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("users_created", true);
-                editor.apply();
-
-                Log.d("UserCreation", "Users created successfully.");
-            } else {
-                Log.d("UserCreation", "Users already created, skipping.");
-            }
 
             // Retrieve and log all users
             Cursor cursor = userDAO.getAllUsers();
@@ -161,11 +178,72 @@ public class MainActivity extends AppCompatActivity {
                 cursor.close();
             }
 
+            Cursor cursor_history = gameDAO.getHistorico(1);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
+                    @SuppressLint("Range") String score = String.valueOf(cursor.getInt(cursor.getColumnIndex("score")));
+                    @SuppressLint("Range") String attempts = String.valueOf(cursor.getInt(cursor.getColumnIndex("attempts")));
+                    @SuppressLint("Range") String time = String.valueOf(cursor.getInt(cursor.getColumnIndex("time")));
+                    @SuppressLint("Range") String boardSize = String.valueOf(cursor.getInt(cursor.getColumnIndex("boardSize")));
+
+                    // Create a new TableRow
+                    TableRow tableRow = new TableRow(this);
+                    tableRow.setLayoutParams(new TableRow.LayoutParams(
+                            TableRow.LayoutParams.MATCH_PARENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    ));
+
+                    // Add columns (TextViews) to the row
+                    TextView userColumn = new TextView(this);
+                    userColumn.setText(username);
+                    userColumn.setGravity(Gravity.CENTER);
+                    userColumn.setPadding(8, 8, 8, 8);
+
+                    TextView scoreColumn = new TextView(this);
+                    scoreColumn.setText(score);
+                    scoreColumn.setGravity(Gravity.CENTER);
+                    scoreColumn.setPadding(8, 8, 8, 8);
+
+                    // Add more TextViews as needed for other columns (e.g., attempts, time, board size)
+                    // Here is an example for placeholder text:
+                    TextView attemptsColumn = new TextView(this);
+                    attemptsColumn.setText(attempts); // Placeholder for attempts
+                    attemptsColumn.setGravity(Gravity.CENTER);
+                    attemptsColumn.setPadding(8, 8, 8, 8);
+
+                    TextView timeColumn = new TextView(this);
+                    timeColumn.setText(time); // Placeholder for time
+                    timeColumn.setGravity(Gravity.CENTER);
+                    timeColumn.setPadding(8, 8, 8, 8);
+
+                    TextView boardSizeColumn = new TextView(this);
+                    boardSizeColumn.setText(boardSize); // Placeholder for board size
+                    boardSizeColumn.setGravity(Gravity.CENTER);
+                    boardSizeColumn.setPadding(8, 8, 8, 8);
+
+                    // Add TextViews to the row
+                    tableRow.addView(userColumn);
+                    tableRow.addView(scoreColumn);
+                    tableRow.addView(attemptsColumn);
+                    tableRow.addView(timeColumn);
+                    tableRow.addView(boardSizeColumn);
+
+                    // Add the row to the TableLayout
+                    tableLayout.addView(tableRow);
+                } while (cursor.moveToNext());
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+
+
+
         } catch (Exception e) {
             Log.e("Database", "Error interacting with the database", e);
         }
-
-
 
             // For Games
             //GameDAO gameDAO = new GameDAO(db);
@@ -188,8 +266,27 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("carolina", "carolina123", 20);
         userDAO.insertUser("duarte", "duarte123", 20);
         userDAO.insertUser("test", "test123", 100);
+
     }
 
+    private void notEnoughtCoins()
+    {
+        // Create an AlertDialog.Builder instance
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set title, message, and buttons
+        builder.setTitle("Not enough coins!");
+
+        // Positive Button (e.g., OK)
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // Handle OK button click
+            dialog.dismiss(); // Close the pop-up
+        });
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     private void startTimer() {
         // Define the Runnable that updates the TextView every second
@@ -232,9 +329,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo_boardsize_page(View view) {
-        setContentView(R.layout.boardsize_page);
         bindingSize = BoardsizePageBinding.inflate(getLayoutInflater());
         setContentView(bindingSize.getRoot());
+
         View button3x4 = bindingSize.button3x4Board;
         View button4x4 = bindingSize.button4x4Board;
         View button6x6 = bindingSize.button6x6Board;
@@ -242,10 +339,10 @@ public class MainActivity extends AppCompatActivity {
         coins.setText(String.valueOf(value));
 
         button3x4.setOnClickListener(v -> {
+
             if(value <= 0) { //   not enough coins
                 showNotEnoughCoinsPopUp();
             }else{
-                buyingThings(button3x4, coins);
                 moveTo_board3x4_user(button3x4);
             }
         });
@@ -262,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button6x6.setOnClickListener(v -> {
+
             if(value <= 0){ //   not enough coins
                 showNotEnoughCoinsPopUp();
             }
@@ -281,7 +379,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (value <= 0) //not enough coins
         {
+
             showNotEnoughCoinsPopUp();
+
         }
         else {
             // Decrement the value
@@ -308,6 +408,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.scoreboard_personal_page);
     }
 
+
     public void moveTo_testDashboard(View view) {
         setContentView(R.layout.test_dashboard);
     }
@@ -316,44 +417,65 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.dashboard_user);
     }
 
-    public void authentication(View view) {
+        // Get the username and password from the EditText fields
+
+    public void login(View view) {
+
         EditText usernameInput = findViewById(R.id.username_input);
         EditText passwordInput = findViewById(R.id.password_input);
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
 
+        // Know who is logged in
+        currentUser = username;
+        currentUserId = userDAO.getLoggedInUserId(username);
+        Log.d("User", "User ID: " + currentUserId);
 
         if (username.isEmpty() || password.isEmpty()) { // Empty fields
             showEmptyFieldsPopUp();
         } else { // written fields
             boolean isAuthenticated = userDAO.authenticateUser(username, password);
             if (isAuthenticated) { // Login successful
-                if (username.equals("test") && password.equals("test123")) {  // test user
+                if (username.equals("test") && password.equals("test123")) {
+                  testMode = true;
+                  setContentView(R.layout.dashboard_user);
+                  userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                  setContentView(userBinding.getRoot());
+                  TextView coins = userBinding.numCoins;
+                  coins.setText(String.valueOf(value));
+                } else {
+                  testMode = false;
+                  setContentView(R.layout.dashboard_user);
+                  userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                  setContentView(userBinding.getRoot());
+                  TextView coins = userBinding.numCoins;
+                  coins.setText(String.valueOf(value));
 
-                    setContentView(R.layout.test_dashboard);
-                    testBinding = TestDashboardBinding.inflate(getLayoutInflater());
-                    setContentView(testBinding.getRoot());
-                    TextView coins = testBinding.numCoins;
-                    coins.setText(String.valueOf(value));
-
-                } else {  // other users
-                    setContentView(R.layout.dashboard_user);
-                    userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-                    setContentView(userBinding.getRoot());
-                    TextView coins = userBinding.numCoins;
-                    coins.setText(String.valueOf(value));
-                }
             } else { // Login failed
                 showInvalidLoginPopUp();
             }
         }
+    }
 
+    public void moveTo_dashboard_user(View view) {
+        setContentView(R.layout.dashboard_user);
+        userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+        setContentView(userBinding.getRoot());
+        TextView coins = userBinding.numCoins;
+        coins.setText(String.valueOf(value));
     }
 
     public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
 
     public void moveTo_notification_page(View view) {
         setContentView(R.layout.notification_page);
+        if(findViewById(R.id.recyclerView_notifications) != null){
+            RecyclerView recyclerView = findViewById(R.id.recyclerView_notifications);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            NotificationAdapter notificationAdapter = new NotificationAdapter(notificationList);
+            recyclerView.setAdapter(notificationAdapter);
+        }
     }
 
     public ArrayList<MemoryCard> CreateMemoryCards(int size) {
@@ -514,25 +636,6 @@ public class MainActivity extends AppCompatActivity {
         setupGame(3);
     }
 
-    public void moveTo_testBoard3x4(View view) {
-
-        bindingTest3x4 = Testboard3x4Binding.inflate(getLayoutInflater());
-        setContentView(bindingTest3x4.getRoot());
-
-        timerTextView = bindingTest3x4.timerTextViewBoard3x4Test;
-        attemptsTextView = bindingTest3x4.attemptsTextBoard3x4Test;
-        scoreTextView = bindingTest3x4.scoreTextBoard3x4Test;
-
-        View buttonHint = bindingTest3x4.buttonHintBoard3x4Test;
-        TextView coins = bindingTest3x4.numCoins;
-        coins.setText(String.valueOf(value));
-
-        buttonHint.setOnClickListener(v -> {
-            buyHint(v, coins, 4);
-        });
-
-        setupGame(4);
-    }
 
     public void setupGame(int boardType) {
         // boardType:
@@ -540,36 +643,40 @@ public class MainActivity extends AppCompatActivity {
         // 1 -> Board 3x4 user
         // 2 -> Board 4x4 user
         // 3 -> Board 6x6 user
-        // 4 -> TestBoard 3x4
 
         if (boardType == 0) // Board 3x4 anonymous
         {
             int cardCount = binding.MemoryGrid.getChildCount();
             memoryCards = CreateMemoryCards(cardCount);
-            Collections.shuffle(memoryCards);
+
+            if(!testMode)
+                Collections.shuffle(memoryCards);
+
         }
         else if (boardType == 1) // Board 3x4 user
         {
             int cardCount = binding3x4.MemoryGrid.getChildCount();
             memoryCards = CreateMemoryCards(cardCount);
-            Collections.shuffle(memoryCards);
+
+            if(!testMode)
+                Collections.shuffle(memoryCards);
 
         }
         else if (boardType == 2) // Board 4x4 user
         {
             int cardCount = binding4x4.MemoryGrid.getChildCount();
             memoryCards = CreateMemoryCards(cardCount);
-            Collections.shuffle(memoryCards);
+
+            if(!testMode)
+                Collections.shuffle(memoryCards);
         }
         else if (boardType == 3) // Board 6x6 user
         {
             int cardCount = binding6x6.MemoryGrid.getChildCount();
             memoryCards = CreateMemoryCards(cardCount);
-            Collections.shuffle(memoryCards);
-        }
-        else if (boardType == 4){
-            int cardCount = bindingTest3x4.MemoryGrid.getChildCount();
-            memoryCards = CreateMemoryCards(cardCount);
+
+            if(!testMode)
+                Collections.shuffle(memoryCards);
         }
         else // Invalid board size
         {
@@ -598,7 +705,6 @@ public class MainActivity extends AppCompatActivity {
         // 1 -> Board 3x4 user
         // 2 -> Board 4x4 user
         // 3 -> Board 6x6 user
-        // 4 -> TestBoard 3x4
 
         for (int i = 0; i < memoryCards.size(); i++) {
 
@@ -609,7 +715,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,0));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -618,7 +724,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 2) // Board 4x4 user
             {
@@ -627,7 +733,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
             }
             else if (boardType == 3) // Board 6x6 user
             {
@@ -638,14 +744,11 @@ public class MainActivity extends AppCompatActivity {
                 // Set click listener for each ImageView
                 imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
             }
-            else if (boardType == 4) // Board 3x4 Test
-            {
-                ImageView imageView = (ImageView) bindingTest3x4.MemoryGrid.getChildAt(i);
-                imageView.setClickable(true);
-                imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2));
+
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2, 4));
+
             }
 
             else // Invalid board size
@@ -656,7 +759,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void handleCardClick(ImageView imageView, int gameMode) {
+    private void handleCardClick(ImageView imageView, int gameMode, int boardSize) {
+
         if (!isWaiting) {
 
             if(!initializeTimer){
@@ -709,6 +813,15 @@ public class MainActivity extends AppCompatActivity {
                                 showGameOverPopUp(2);
                             }
 
+                            // Insert a game record
+
+                            String time = String.format("%02d:%02d", minutes, seconds);
+
+                            long val = gameDAO.insertGame(attempts, score, time, boardSize, currentUserId, currentDate);
+                            Log.d("MemoryCard", "Game record inserted with ID: " + val);
+                            if (val == -1) {
+                                Log.d("MemoryCard", "Game record insertion failed");
+                            }
 
                         }
                     } else {
@@ -783,10 +896,7 @@ public class MainActivity extends AppCompatActivity {
                         } else if (boardType == 3) {
                             imageView1 = (ImageView) binding6x6.MemoryGrid.getChildAt(i);
                             imageView2 = (ImageView) binding6x6.MemoryGrid.getChildAt(j);
-                        } else if (boardType == 4) {
-                            imageView1 = (ImageView) bindingTest3x4.MemoryGrid.getChildAt(i);
-                            imageView2 = (ImageView) bindingTest3x4.MemoryGrid.getChildAt(j);
-                        } else {
+                        }  else {
                             throw new IllegalArgumentException("Invalid board size");
                         }
                         // Flip both cards up
@@ -815,7 +925,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     @SuppressLint("DefaultLocale")
     private void showGameOverPopUp(int gameMode) {
@@ -1080,6 +1189,7 @@ public class MainActivity extends AppCompatActivity {
                         (int) (300 * getResources().getDisplayMetrics().density)
                 );
             }
+
         }
         catch (Exception e) {
             Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
@@ -1101,7 +1211,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
-
+    
             View close = leavingGamePopUpBinding.closeButton;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1131,8 +1241,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
-
-}
 
