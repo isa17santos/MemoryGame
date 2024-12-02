@@ -1,7 +1,531 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/history_page"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/_7"
+    android:padding="16dp"
+    app:layout_anchorGravity="center"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/backDashboardUser"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="moveTo_login_page"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_arrow_back_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.038"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:layout_constraintWidth_percent="0.12"
+        tools:ignore="ContentDescription" />
+
+
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        android:stretchColumns="0,1,2,3,4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.8"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_percent="1">
+
+        <!-- Row 1 -->
+        <TableRow>
+
+            <TextView
+                android:id="@+id/user_column"
+                android:text="@string/user_column"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.8"
+                app:layout_constraintHorizontal_bias="0.585"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.109"
+                app:layout_constraintWidth_percent="1.0" />
+
+            <TextView
+                android:id="@+id/score_column"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/score_column"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/Attempts_column"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/attempts_column"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/time_column"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/time_column"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/boardsize_column"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/board_size"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <!-- Row 2 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 3 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 4 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 5 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 6 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 7 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 8 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 9 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 10 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 11 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 12 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 13 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 14 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+
+        <!-- Row 15 -->
+        <TableRow>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:gravity="center"
+                android:text="Name"
+                android:padding="8dp"
+                android:textSize="16sp"/>
+        </TableRow>
+    </TableLayout>
+
+
+    <TextView
+        android:id="@+id/name_game_dashboard_user"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="serif"
+        android:text="@string/history_page"
+        android:textAlignment="center"
+        android:textColor="#C8E6C9"
+        android:textSize="38sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.585"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.109"
+        app:layout_constraintWidth_percent="0.6" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
