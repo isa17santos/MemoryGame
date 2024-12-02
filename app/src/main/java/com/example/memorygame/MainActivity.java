@@ -240,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void displayNotifications() {
         Cursor cursor = notificationDAO.getNotificationsByUser(currentUserId);
         List<Notification> notifications = new ArrayList<>();
@@ -263,25 +264,6 @@ public class MainActivity extends AppCompatActivity {
         NotificationAdapter notificationAdapter = new NotificationAdapter(notifications);
         recyclerView.setAdapter(notificationAdapter);
 
-    }
-
-    private void notEnoughtCoins()
-    {
-        // Create an AlertDialog.Builder instance
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Set title, message, and buttons
-        builder.setTitle("Not enough coins!");
-
-        // Positive Button (e.g., OK)
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            // Handle OK button click
-            dialog.dismiss(); // Close the pop-up
-        });
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     private void startTimer() {

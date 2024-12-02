@@ -56,7 +56,7 @@
             app:layout_column="0"
             app:layout_columnWeight="1"
             app:layout_row="1"
-            app:layout_rowWeight="1"></ImageView>
+            app:layout_rowWeight="1"/>
 
         <ImageView
             android:id="@+id/imageView2Board6x6"
@@ -73,7 +73,7 @@
             app:layout_columnWeight="1"
             app:layout_row="1"
             app:layout_rowWeight="1"
-            tools:ignore="KeyboardInaccessibleWidget"></ImageView>
+            tools:ignore="KeyboardInaccessibleWidget"/>
 
         <ImageView
             android:id="@+id/imageView3Board6x6"
@@ -91,7 +91,7 @@
             app:layout_columnWeight="1"
             app:layout_row="1"
             app:layout_rowWeight="1"
-            tools:ignore="ImageContrastCheck"></ImageView>
+            tools:ignore="ImageContrastCheck"/>
 
         <ImageView
             android:id="@+id/imageView4Board6x6"
@@ -109,7 +109,7 @@
             app:layout_columnWeight="1"
             app:layout_row="1"
             app:layout_rowWeight="1"
-            tools:ignore="ImageContrastCheck"></ImageView>
+            tools:ignore="ImageContrastCheck"/>
 
         <ImageView
             android:id="@+id/imageView5Board6x6"
@@ -127,7 +127,7 @@
             app:layout_columnWeight="1"
             app:layout_row="1"
             app:layout_rowWeight="1"
-            tools:ignore="ImageContrastCheck"></ImageView>
+            tools:ignore="ImageContrastCheck"/>
 
         <ImageView
             android:id="@+id/imageView6Board6x6"
@@ -145,7 +145,7 @@
             app:layout_columnWeight="1"
             app:layout_row="1"
             app:layout_rowWeight="1"
-            tools:ignore="ImageContrastCheck"></ImageView>
+            tools:ignore="ImageContrastCheck"/>
 
         <ImageView
             android:id="@+id/imageView7Board6x6"
@@ -201,7 +201,7 @@
             app:layout_columnWeight="1"
             app:layout_row="2"
             app:layout_rowWeight="1"
-            tools:ignore="ImageContrastCheck"></ImageView>
+            tools:ignore="ImageContrastCheck"/>
 
         <ImageView
             android:id="@+id/imageView10Board6x6"
@@ -218,7 +218,7 @@
             app:layout_column="3"
             app:layout_columnWeight="1"
             app:layout_row="2"
-            app:layout_rowWeight="1"></ImageView>
+            app:layout_rowWeight="1"/>
 
         <ImageView
             android:id="@+id/imageView11Board6x6"
@@ -235,7 +235,7 @@
             app:layout_column="4"
             app:layout_columnWeight="1"
             app:layout_row="2"
-            app:layout_rowWeight="1"></ImageView>
+            app:layout_rowWeight="1"/>
 
         <ImageView
             android:id="@+id/imageView12Board6x6"
@@ -252,7 +252,7 @@
             app:layout_column="5"
             app:layout_columnWeight="1"
             app:layout_row="2"
-            app:layout_rowWeight="1"></ImageView>
+            app:layout_rowWeight="1"/>
 
 
         <ImageView
@@ -270,7 +270,7 @@
             app:layout_column="0"
             app:layout_columnWeight="1"
             app:layout_row="3"
-            app:layout_rowWeight="1"></ImageView>
+            app:layout_rowWeight="1"/>
 
         <ImageView
             android:id="@+id/imageView14Board6x6"
@@ -743,11 +743,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.06"
-        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintHorizontal_bias="0.358"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.962"
-        app:layout_constraintWidth_percent="0.06" />
+        app:layout_constraintWidth_percent="0.25" />
 
     <ImageView
         android:id="@+id/image_coins_board6x6"
