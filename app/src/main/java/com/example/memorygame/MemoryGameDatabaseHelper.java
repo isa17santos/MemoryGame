@@ -9,7 +9,7 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Name and Version
     private static final String DATABASE_NAME = "MemoryGame.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Table Names
     public static final String TABLE_USERS = "Users";
@@ -55,8 +55,9 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_ATTEMPTS + " INTEGER NOT NULL, " +
                 COLUMN_SCORE + " INTEGER NOT NULL, " +
                 COLUMN_TIME + " TEXT NOT NULL, " +
-                COLUMN_BOARD_SIZE + " INTEGER CHECK(" + COLUMN_BOARD_SIZE + " IN (3, 4, 6)), " +
-                COLUMN_GAME_USER_ID + " INTEGER NOT NULL, " + COLUMN_GAME_DATE + " TEXT NOT NULL, " +
+                COLUMN_BOARD_SIZE + " INTEGER CHECK(" + COLUMN_BOARD_SIZE + " IN (1,2,3)), " +
+                COLUMN_GAME_USER_ID + " INTEGER NOT NULL, " +
+                COLUMN_GAME_DATE + " TEXT NOT NULL, " +
                 "FOREIGN KEY(" + COLUMN_GAME_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_USER_ID + "));";
 
         // Create Notifications Table

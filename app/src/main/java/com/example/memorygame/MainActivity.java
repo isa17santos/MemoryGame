@@ -3,15 +3,13 @@ package com.example.memorygame;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.graphics.Typeface;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -43,7 +41,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.Handler;
 
-import com.example.memorygame.databinding.ActivityMainBinding;
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import com.example.memorygame.databinding.Board3x4UserBinding;
 import com.example.memorygame.databinding.Board4x4Binding;
@@ -56,8 +53,7 @@ import com.example.memorygame.databinding.EmptyFieldsPopUpBinding;
 import com.example.memorygame.databinding.InvalidLoginPopUpBinding;
 import com.example.memorygame.databinding.LeavingGamePopUpBinding;
 import com.example.memorygame.databinding.PopUpNotEnoughCoinsBinding;
-import com.example.memorygame.databinding.Testboard3x4Binding;
-import com.example.memorygame.databinding.TestDashboardBinding;
+
 
 import com.example.memorygame.databinding.GameOverPopUpBinding;
 
@@ -73,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     private BoardsizePageBinding bindingSize;
     private DashboardUserBinding userBinding;
 
-    private TestDashboardBinding testBinding;
     private GameOverPopUpBinding gameOverPopUpBinding;
 
     private TableLayout tableLayout;
@@ -159,6 +154,20 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             boolean usersCreated = preferences.getBoolean("users_created", false);
 
+            if (!usersCreated) {
+                // If users haven't been created, insert users
+                insertTestUsers(userDAO);
+
+                // After creating users, set the flag to true
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("users_created", true);
+                editor.apply();
+
+                Log.d("UserCreation", "Users created successfully.");
+            } else {
+                Log.d("UserCreation", "Users already created, skipping.");
+            }
+
             // Retrieve and log all users
             Cursor cursor = userDAO.getAllUsers();
             if (cursor != null && cursor.moveToFirst()) {
@@ -180,13 +189,13 @@ public class MainActivity extends AppCompatActivity {
 
             Cursor cursor_history = gameDAO.getHistorico(1);
 
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor_history != null && cursor_history.moveToFirst()) {
                 do {
-                    @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
-                    @SuppressLint("Range") String score = String.valueOf(cursor.getInt(cursor.getColumnIndex("score")));
-                    @SuppressLint("Range") String attempts = String.valueOf(cursor.getInt(cursor.getColumnIndex("attempts")));
-                    @SuppressLint("Range") String time = String.valueOf(cursor.getInt(cursor.getColumnIndex("time")));
-                    @SuppressLint("Range") String boardSize = String.valueOf(cursor.getInt(cursor.getColumnIndex("boardSize")));
+                    @SuppressLint("Range") String username = cursor_history.getString(cursor_history.getColumnIndex("username"));
+                    @SuppressLint("Range") String score = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("score")));
+                    @SuppressLint("Range") String attempts = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("attempts")));
+                    @SuppressLint("Range") String time = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("time")));
+                    @SuppressLint("Range") String boardSize = String.valueOf(cursor_history.getInt(cursor_history.getColumnIndex("boardSize")));
 
                     // Create a new TableRow
                     TableRow tableRow = new TableRow(this);
@@ -232,11 +241,11 @@ public class MainActivity extends AppCompatActivity {
 
                     // Add the row to the TableLayout
                     tableLayout.addView(tableRow);
-                } while (cursor.moveToNext());
+                } while (cursor_history.moveToNext());
             }
 
-            if (cursor != null) {
-                cursor.close();
+            if (cursor_history != null) {
+                cursor_history.close();
             }
 
 
@@ -409,9 +418,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void moveTo_testDashboard(View view) {
-        setContentView(R.layout.test_dashboard);
-    }
+    //public void moveTo_testDashboard(View view) {
+        //setContentView(R.layout.test_dashboard);
+    //}
 
     public void moveTo_dashboard_user(View view){
         setContentView(R.layout.dashboard_user);
@@ -444,25 +453,18 @@ public class MainActivity extends AppCompatActivity {
                   TextView coins = userBinding.numCoins;
                   coins.setText(String.valueOf(value));
                 } else {
-                  testMode = false;
-                  setContentView(R.layout.dashboard_user);
-                  userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-                  setContentView(userBinding.getRoot());
-                  TextView coins = userBinding.numCoins;
-                  coins.setText(String.valueOf(value));
+                    testMode = false;
+                    setContentView(R.layout.dashboard_user);
+                    userBinding = DashboardUserBinding.inflate(getLayoutInflater());
+                    setContentView(userBinding.getRoot());
+                    TextView coins = userBinding.numCoins;
+                    coins.setText(String.valueOf(value));
+                }
 
             } else { // Login failed
                 showInvalidLoginPopUp();
             }
         }
-    }
-
-    public void moveTo_dashboard_user(View view) {
-        setContentView(R.layout.dashboard_user);
-        userBinding = DashboardUserBinding.inflate(getLayoutInflater());
-        setContentView(userBinding.getRoot());
-        TextView coins = userBinding.numCoins;
-        coins.setText(String.valueOf(value));
     }
 
     public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
@@ -706,6 +708,7 @@ public class MainActivity extends AppCompatActivity {
         // 2 -> Board 4x4 user
         // 3 -> Board 6x6 user
 
+
         for (int i = 0; i < memoryCards.size(); i++) {
 
             if (boardType == 0) // Board 3x4 anonymous
@@ -715,7 +718,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,0, boardType));
             }
             else if (boardType == 1) // Board 3x4 user
             {
@@ -724,7 +727,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v,1, boardType));
             }
             else if (boardType == 2) // Board 4x4 user
             {
@@ -733,7 +736,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, boardType));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1, boardType));
             }
             else if (boardType == 3) // Board 6x6 user
             {
@@ -742,14 +745,13 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setTag(i);
 
                 // Set click listener for each ImageView
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1));
+                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1,boardType));
             }
-
                 // Set click listener for each ImageView
 
-                imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2, 4));
+                //imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2, 4));
 
-            }
+
 
             else // Invalid board size
             {
@@ -962,7 +964,7 @@ public class MainActivity extends AppCompatActivity {
                     moveTo_dashboard_user(null);
                 }
                 else if (gameMode == 2){  //  test
-                    moveTo_testDashboard(null);
+                    //moveTo_testDashboard(null);
                 }
             });
 
@@ -1105,7 +1107,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @SuppressLint("DefaultLocale")
     public void showLeavingGameLoginPopUpAnonymous(View view) {
 
@@ -1151,7 +1152,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @SuppressLint("DefaultLocale")
     public void showLeavingGameLoginPopUpUser(View view) {
 
@@ -1196,49 +1196,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-    @SuppressLint("DefaultLocale")
-    public void showLeavingGameLoginPopUpUserTest(View view) {
-
-        try {
-            LayoutInflater inflater = getLayoutInflater();
-            Log.d("InflaterDebug", "LayoutInflater: " + inflater);
-
-            leavingGamePopUpBinding = LeavingGamePopUpBinding.inflate(getLayoutInflater());
-
-            if (leavingGamePopUpBinding != null) {
-                Log.d("BindingDebug", "Root View: " + leavingGamePopUpBinding.getRoot());
-            } else {
-                Log.d("BindingDebug", "Binding is NULL.");
-            }
-    
-            View close = leavingGamePopUpBinding.closeButton;
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setView(leavingGamePopUpBinding.getRoot());
-            AlertDialog dialog = builder.create(); // Make the dialog final
-
-            close.setOnClickListener(v -> {
-                dialog.dismiss(); // Close the dialog
-
-                moveTo_testDashboard(null);
-            });
-
-            dialog.show();
-
-            // Get the dialog's window and set fixed dimensions
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setLayout(
-                        (int) (400 * getResources().getDisplayMetrics().density), // Convert dp to pixels
-                        (int) (300 * getResources().getDisplayMetrics().density)
-                );
-            }
-        }
-        catch (Exception e) {
-            Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
-        }
-
-    }
+}
 
 

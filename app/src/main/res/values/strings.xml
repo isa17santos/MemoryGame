@@ -112,6 +112,8 @@
 
     <string name="history_page">History</string>
     <string name="user">User</string>
+    <string name="board">Board</string>
+    <string name="textScoreBoard">-</string>
     <string name="user_column">User</string>
     <string name="score_column">Score</string>
     <string name="attempts_column">Attempts</string>
@@ -125,7 +127,7 @@
 
     <string name="warning">WARNING!</string>
 
-    <string name="emptyFields">Empty fields! Write our username and password.</string>
+    <string name="emptyFields">Empty fields! Write your username and password.</string>
 
     <string name="notEnoughCoins">Not enough coins!</string>
 
