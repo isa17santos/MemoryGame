@@ -7,7 +7,7 @@
         <DropdownSelection timestamp="2024-12-05T22:52:36.282583700Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\isa25\.android\avd\Medium_Tablet_API_33.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\AkaNee\.android\avd\Medium_Tablet_API_35.avd" />
             </handle>
           </Target>
         </DropdownSelection>
