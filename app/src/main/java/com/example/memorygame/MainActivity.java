@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("carolina", "carolina123", 20);
         userDAO.insertUser("duarte", "duarte123", 20);
         userDAO.insertUser("test", "test123", 100);
+        userDAO.insertUser("testcoins", "testcoins123", 1);
 
     }
 
@@ -317,12 +318,7 @@ public class MainActivity extends AppCompatActivity {
         coins.setText(String.valueOf(userCoins));
 
         button3x4.setOnClickListener(v -> {
-
-            if(userCoins <= 0) { //   not enough coins
-                showNotEnoughCoinsPopUp();
-            }else{
-                moveTo_board3x4_user(button3x4);
-            }
+            moveTo_board3x4_user(button3x4);
         });
 
         button4x4.setOnClickListener(v -> {
@@ -1450,7 +1446,6 @@ public class MainActivity extends AppCompatActivity {
         // gameMode values:
         // 0 -> anonymous
         // 1 -> user
-        // 2 -> test
 
         try {
             gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
@@ -1479,9 +1474,6 @@ public class MainActivity extends AppCompatActivity {
                     moveTo_dashboard_anonymous(null);
                 else if (gameMode == 1){  //  user
                     moveTo_dashboard_user(null);
-                }
-                else if (gameMode == 2){  //  test
-                    //moveTo_testDashboard(null);
                 }
             });
 
@@ -1639,17 +1631,24 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
 
-            View close = leavingGamePopUpBinding.closeButton;
+            View ok = leavingGamePopUpBinding.OKButton;
+
+            View cancel = leavingGamePopUpBinding.CancelButton;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setView(leavingGamePopUpBinding.getRoot());
             AlertDialog dialog = builder.create(); // Make the dialog final
 
-            close.setOnClickListener(v -> {
+            ok.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
 
                 moveTo_dashboard_anonymous(null);
+
+            });
+
+            cancel.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
 
             });
 
@@ -1684,17 +1683,24 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
 
-            View close = leavingGamePopUpBinding.closeButton;
+            View ok = leavingGamePopUpBinding.OKButton;
+
+            View cancel= leavingGamePopUpBinding.CancelButton;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setView(leavingGamePopUpBinding.getRoot());
             AlertDialog dialog = builder.create(); // Make the dialog final
 
-            close.setOnClickListener(v -> {
+            ok.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
 
                 moveTo_dashboard_user(null);
+            });
+
+            cancel.setOnClickListener(v -> {
+                dialog.dismiss(); // Close the dialog
+
             });
 
             dialog.show();
