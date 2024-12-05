@@ -85,17 +85,49 @@ public class UserDAO {
     }
 
     // Increment coins
-    public int incrementCoins(int userId, int newCoins) {
+    @SuppressLint("Range")
+    public int incrementCoins(int userId) {
+        // 1. Get current coins
+        Cursor cursor = db.rawQuery("SELECT coins FROM Users WHERE id = ?", new String[]{String.valueOf(userId)});
+        int currentCoins = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            currentCoins = cursor.getInt(cursor.getColumnIndex("coins"));
+            cursor.close();
+        }
+
+        // 2. Increment coins
+        int newCoins = currentCoins + 1;
+
+        // 3. Update in database
         ContentValues values = new ContentValues();
-        values.put("coins", newCoins+1);
-        return db.update("Users", values, "id = ?", new String[]{String.valueOf(userId)});
+        values.put("coins", newCoins);
+        db.update("Users", values, "id = ?", new String[]{String.valueOf(userId)});
+
+        // 4. Return new coins value
+        return newCoins;
     }
 
     // Decrement coins
-    public int decrementCoins(int userId, int newCoins) {
+    @SuppressLint("Range")
+    public int decrementCoins(int userId) {
+        // 1. Get current coins
+        Cursor cursor = db.rawQuery("SELECT coins FROM Users WHERE id = ?", new String[]{String.valueOf(userId)});
+        int currentCoins = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            currentCoins = cursor.getInt(cursor.getColumnIndex("coins"));
+            cursor.close();
+        }
+
+        // 2. Decrement coins (with a check to prevent negative values)
+        int newCoins = Math.max(0, currentCoins - 1); // Ensure coins don't go below 0
+
+        // 3. Update in database
         ContentValues values = new ContentValues();
-        values.put("coins", newCoins-1);
-        return db.update("Users", values, "id = ?", new String[]{String.valueOf(userId)});
+        values.put("coins", newCoins);
+        db.update("Users", values, "id = ?", new String[]{String.valueOf(userId)});
+
+        // 4. Return new coins value
+        return newCoins;
     }
 
     // Delete a user

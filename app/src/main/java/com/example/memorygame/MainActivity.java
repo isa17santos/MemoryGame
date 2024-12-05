@@ -363,11 +363,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             // Decrement the value
-            userDAO.decrementCoins(currentUserId, userCoins);
+            userCoins = userDAO.decrementCoins(currentUserId);
+            // Update the TextView with the new value
+            coins.setText(String.valueOf(userCoins));
         }
-
-        // Update the TextView with the new value
-        coins.setText(String.valueOf(userCoins));
     }
 
     public void moveTo_history_page(View view) {
@@ -1060,7 +1059,6 @@ public class MainActivity extends AppCompatActivity {
     public void moveTo_board3x4_user(View view) {
 
         binding3x4 = Board3x4UserBinding.inflate(getLayoutInflater());
-        setContentView(binding3x4.getRoot());
 
         timerTextView = binding3x4.timerTextViewBoard3x4User;
         attemptsTextView = binding3x4.attemptsTextBoard3x4User;
@@ -1069,6 +1067,7 @@ public class MainActivity extends AppCompatActivity {
         View buttonHint = binding3x4.buttonHintBoard3x4User;
         TextView coins = binding3x4.numCoins;
         coins.setText(String.valueOf(userCoins));
+        setContentView(binding3x4.getRoot());
 
         buttonHint.setOnClickListener(v -> {
             buyHint(v, coins, 1);
@@ -1080,7 +1079,6 @@ public class MainActivity extends AppCompatActivity {
     public void moveTo_board4x4(View view) {
 
         binding4x4 = Board4x4Binding.inflate(getLayoutInflater());
-        setContentView(binding4x4.getRoot());
 
         timerTextView = binding4x4.timerTextViewBoard4x4;
         attemptsTextView = binding4x4.attemptsTextBoard4x4;
@@ -1089,6 +1087,7 @@ public class MainActivity extends AppCompatActivity {
         View buttonHint = binding4x4.buttonHintBoard4x4;
         TextView coins = binding4x4.numCoins;
         coins.setText(String.valueOf(userCoins));
+        setContentView(binding4x4.getRoot());
 
         buttonHint.setOnClickListener(v -> {
             buyHint(v, coins, 2);
@@ -1100,7 +1099,6 @@ public class MainActivity extends AppCompatActivity {
     public void moveTo_board6x6(View view) {
 
         binding6x6 = Board6x6Binding.inflate(getLayoutInflater());
-        setContentView(binding6x6.getRoot());
 
         timerTextView = binding6x6.timerTextViewBoard6x6;
         attemptsTextView = binding6x6.attemptsTextBoard6x6;
@@ -1109,6 +1107,7 @@ public class MainActivity extends AppCompatActivity {
         View buttonHint = binding6x6.buttonHintBoard6x6;
         TextView coins = binding6x6.numCoins;
         coins.setText(String.valueOf(userCoins));
+        setContentView(binding6x6.getRoot());
 
         buttonHint.setOnClickListener(v -> {
             buyHint(v, coins, 3);
@@ -1309,7 +1308,7 @@ public class MainActivity extends AppCompatActivity {
                                     String notificationMessage = String.format("You beat your personal best time in board %d!!", boardSize);
                                     notificationDAO.insertNotification(notificationMessage, currentUserId);
 
-                                    userDAO.incrementCoins(currentUserId,userCoins);
+                                    userCoins = userDAO.incrementCoins(currentUserId);
                                     notificationDAO.insertNotification("A reward for proving you are the best, here's a Coin", currentUserId);
                                 }
                             }
@@ -1323,7 +1322,7 @@ public class MainActivity extends AppCompatActivity {
                                     String notificationMessage = String.format("You are now top 3 Global on board %d!!", boardSize);
                                     notificationDAO.insertNotification(notificationMessage, currentUserId);
 
-                                    userDAO.incrementCoins(currentUserId,userCoins);
+                                    userDAO.incrementCoins(currentUserId);
                                     notificationDAO.insertNotification("A reward for proving you are the best, here's a Coin", currentUserId);
                                 }
                             }
