@@ -1309,7 +1309,8 @@ public class MainActivity extends AppCompatActivity {
                                     notificationDAO.insertNotification(notificationMessage, currentUserId);
 
                                     userCoins = userDAO.incrementCoins(currentUserId);
-                                    notificationDAO.insertNotification("A reward for proving you are the best, here's a Coin", currentUserId);
+                                    Log.d("User", "Coins: " + userCoins);
+                                    notificationDAO.insertNotification("A reward for beating your best time, here's a Coin", currentUserId);
                                 }
                             }
 
@@ -1322,8 +1323,9 @@ public class MainActivity extends AppCompatActivity {
                                     String notificationMessage = String.format("You are now top 3 Global on board %d!!", boardSize);
                                     notificationDAO.insertNotification(notificationMessage, currentUserId);
 
-                                    userDAO.incrementCoins(currentUserId);
-                                    notificationDAO.insertNotification("A reward for proving you are the best, here's a Coin", currentUserId);
+                                    userCoins = userDAO.incrementCoins(currentUserId);
+                                    Log.d("User", "Coins: " + userCoins);
+                                    notificationDAO.insertNotification("A reward for being Top 3 Global, here's a Coin", currentUserId);
                                 }
                             }
 

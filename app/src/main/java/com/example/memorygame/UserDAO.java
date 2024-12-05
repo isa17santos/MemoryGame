@@ -13,6 +13,7 @@ import static com.example.memorygame.MemoryGameDatabaseHelper.TABLE_USERS;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class UserDAO {
     // this class handles all crud operations for Users' table
@@ -102,6 +103,7 @@ public class UserDAO {
         ContentValues values = new ContentValues();
         values.put("coins", newCoins);
         db.update("Users", values, "id = ?", new String[]{String.valueOf(userId)});
+        Log.d("UserDAO", "Updated coins for user with ID " + userId + " to " + newCoins);
 
         // 4. Return new coins value
         return newCoins;
@@ -125,6 +127,7 @@ public class UserDAO {
         ContentValues values = new ContentValues();
         values.put("coins", newCoins);
         db.update("Users", values, "id = ?", new String[]{String.valueOf(userId)});
+        Log.d("UserDAO", "Updated coins for user with ID " + userId + " to " + newCoins);
 
         // 4. Return new coins value
         return newCoins;
