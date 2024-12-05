@@ -138,4 +138,9 @@ public class UserDAO {
         return db.delete("Users", "id = ?", new String[]{String.valueOf(userId)});
     }
 
+    // Delete all users
+    public int deleteAllUsers() {
+        return db.delete("Users", null, null);
+    }
+
 }

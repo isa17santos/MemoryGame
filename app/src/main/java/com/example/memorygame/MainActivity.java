@@ -1,11 +1,12 @@
 package com.example.memorygame;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 
@@ -38,7 +39,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.Handler;
 
@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     private int attempts = 0;
     private int score = 0;
     int userCoins = 0;
+    private String boardName = null;
     private String bestTime = null;
     private String thirdBestTime = null;
     private boolean initializeTimer = false;
@@ -179,27 +180,10 @@ public class MainActivity extends AppCompatActivity {
             gameDAO = new GameDAO(db);
             notificationDAO = new NotificationDAO(db);
 
-
-            // Check if users have already been created using SharedPreferences
-            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-            boolean usersCreated = preferences.getBoolean("users_created", false);
-
-            if (!usersCreated) {
-                // If users haven't been created, insert users
-                insertTestUsers(userDAO);
-
-                // After creating users, set the flag to true
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("users_created", true);
-                editor.apply();
-
-                Log.d("UserCreation", "Users created successfully.");
-            } else {
-                Log.d("UserCreation", "Users already created, skipping.");
-            }
+            Cursor cursor = userDAO.getAllUsers();
+            int usersCreated = cursor.getCount();
 
             // Retrieve and log all users
-            Cursor cursor = userDAO.getAllUsers();
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -210,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
                 } while (cursor.moveToNext());
             } else {
                 Log.d("User", "No users found in the database.");
+                insertTestUsers(userDAO);
+                Log.d("UserCreation", "Users created successfully.");
             }
 
             // Close the cursor
@@ -303,6 +289,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo_login_page(View view) {
+        currentUser = null;
+        currentUserId = 0;
         setContentView(R.layout.activity_main);
     }
 
@@ -387,18 +375,26 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
                 @SuppressLint("Range") String date = cursor.getString(cursor.getColumnIndex("date"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Score: " + score + ", Attempts: " + attempts + ", Time: " + time + ", Board Size: " + board + ", Date: " + date);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Score: " + score + ", Attempts: " + attempts + ", Time: " + time + "Board Name: " + boardName + ", Board Size: " + board + ", Date: " + date);
 
                 TextView scoreTextView = createTextView(score);
                 TextView attemptsTextView = createTextView(attempts);
                 TextView timeTextView = createTextView(attempts);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, score, rowIndex, 0, 1f, 1f); // Score in column 0
                 addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 0
                 addViewToGridLayout(gridLayout, time, rowIndex, 2, 1f, 1f); // Time in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 3, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 3, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -444,16 +440,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(time);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
                 rowIndex++;
             } while (cursor.moveToNext());
@@ -479,16 +483,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(time);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -515,16 +527,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(time);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -551,16 +571,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(attempts);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -587,16 +615,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(attempts);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -623,16 +659,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(attempts);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -664,16 +708,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(time);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
                 rowIndex++;
             } while (cursor.moveToNext());
@@ -699,16 +751,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(time);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -735,16 +795,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + time + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView timeTextView = createTextView(time);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, time, rowIndex, 1, 1f, 1f); // Time in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -771,16 +839,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") int attempts = cursor.getInt(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView attemptsTextView = createTextView(String.valueOf(attempts));
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, String.valueOf(attempts), rowIndex, 1, 1f, 1f); // Attempts in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -807,16 +883,24 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView attemptsTextView = createTextView(attempts);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board size in column 2
 
 
                 rowIndex++;
@@ -843,16 +927,25 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
 
-                Log.d("Game", "Adding Row - Username: " + user + ", Time: " + attempts + ", Board Size: " + board);
+
+                if(board == 1){
+                    boardName = "3x4";
+                } else if(board == 2){
+                    boardName = "4x4";
+                } else if(board == 3){
+                    boardName = "6x6";
+                }
+
+                Log.d("Game", "Adding Row - Username: " + user + ", Attempts: " + attempts + ", Board Size: " + board + ", Board Name: " + boardName);
 
                 TextView usernameTextView = createTextView(user);
                 TextView attemptsTextView = createTextView(attempts);
-                TextView boardSizeTextView = createTextView(String.valueOf(board));
+                TextView boardSizeTextView = createTextView(boardName);
 
                 // Add data to the GridLayout dynamically
                 addViewToGridLayout(gridLayout, user, rowIndex, 0, 1f, 1f); // Username in column 0
                 addViewToGridLayout(gridLayout, attempts, rowIndex, 1, 1f, 1f); // Attempts in column 1
-                addViewToGridLayout(gridLayout, String.valueOf(board), rowIndex, 2, 1f, 1f); // Board size in column 2
+                addViewToGridLayout(gridLayout, boardName, rowIndex, 2, 1f, 1f); // Board name in column 2
 
 
                 rowIndex++;
@@ -873,10 +966,14 @@ public class MainActivity extends AppCompatActivity {
         // Set the text content
         textView.setText(text);
 
-        // Set appearance attributes
-        textView.setTextSize(30); // Adjust font size
+        // Get the dimension resource
+        float textSize = getResources().getDimension(R.dimen.text_size_large);
+
+        // Set the text size
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         textView.setGravity(Gravity.CENTER); // Center the text inside the TextView
         textView.setPadding(8, 8, 8, 8); // Add padding for better spacing
+        textView.setTextColor(Color.WHITE); // Set text color to white
 
         return textView;
     }
@@ -885,8 +982,14 @@ public class MainActivity extends AppCompatActivity {
         // Create a new TextView
         TextView textView = new TextView(this);
         textView.setText(text);
-        textView.setTextSize(30); // Adjust text size as needed
+
+        // Get the dimension resource
+        float textSize = getResources().getDimension(R.dimen.text_size_large);
+
+        // Set the text size
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         textView.setGravity(Gravity.CENTER); // Center the text
+        textView.setTextColor(Color.WHITE); // Set text color to white
         textView.setPadding(8, 8, 8, 8); // Add padding for better spacing
 
         // Create layout parameters for the TextView
@@ -1284,10 +1387,10 @@ public class MainActivity extends AppCompatActivity {
                             thirdBestTime = gameDAO.getThirdBestTime(boardSize);
 
                             // Insert a game record
-                            String time = String.format("%02d:%02d", minutes, seconds);
+                            String time = String.format("%02d:%02d", minutes, remainingSeconds);
 
                             long val = gameDAO.insertGame(attempts, score, time, boardSize, currentUserId, currentDate);
-                            Log.d("MemoryCard", "Game record inserted with ID: " + val);
+                            Log.d("MemoryCard", "Game record inserted with ID: " + val + "\nAttempts: " + attempts + ", Score: " + score + ", Time: " + time + ", Board Size: " + boardSize + ", User: " + currentUser);
                             if (val == -1) {
                                 Log.d("MemoryCard", "Game record insertion failed");
                             }

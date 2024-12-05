@@ -39,7 +39,7 @@ public class GameDAO {
         Log.d("DBQuery", "Getting historical data for userId: " + userId);
 
         // Modify the query to check for any issues with the ORDER BY clause
-        String query = "SELECT * FROM Games WHERE idUser = ? ORDER BY date ASC";
+        String query = "SELECT * FROM Games WHERE idUser = ? ORDER BY date DESC";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
 
         // Check the number of rows returned
@@ -135,21 +135,23 @@ public class GameDAO {
 
     // Query the best game by time of a certain boardSize of each user
     public Cursor getLeaderboardByTimeAndBoardSize(int boardSize) {
-        String query = "SELECT Users.username, Games.time, Games.boardSize " +
+        String query = "SELECT Users.username, MIN(Games.time) AS time, Games.boardSize " +
                 "FROM Games " +
                 "INNER JOIN Users ON Games.idUser = Users.id " +
                 "WHERE Games.boardSize = ? " +
-                "ORDER BY Games.time ASC";
+                "GROUP BY Users.username " +
+                "ORDER BY time ASC";
         return db.rawQuery(query, new String[]{String.valueOf(boardSize)});
     }
 
     // Query all games by attempts of a certain boardSize
     public Cursor getLeaderboardByAttemptsAndBoardSize(int boardSize) {
-        String query = "SELECT Users.username, Games.attempts, Games.boardSize " +
+        String query = "SELECT Users.username, MIN(Games.attempts) AS attempts, Games.boardSize " +
                 "FROM Games " +
                 "INNER JOIN Users ON Games.idUser = Users.id " +
                 "WHERE Games.boardSize = ? " +
-                "ORDER BY Games.attempts ASC";
+                "GROUP BY Users.username " +
+                "ORDER BY attempts ASC";
         return db.rawQuery(query, new String[]{String.valueOf(boardSize)});
     }
 
