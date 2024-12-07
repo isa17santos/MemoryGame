@@ -9,7 +9,7 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Name and Version
     private static final String DATABASE_NAME = "MemoryGame.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     // Table Names
     public static final String TABLE_USERS = "Users";
@@ -21,6 +21,7 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_COINS = "coins";
+    public static final String COLUMN_FIRST_TIME_LOGGING = "firstTimeLogging";
 
     // Games Table Columns
     public static final String COLUMN_GAME_ID = "id";
@@ -34,7 +35,9 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
     // Notifications Table Columns
     public static final String COLUMN_NOTIFICATION_ID = "id";
     public static final String COLUMN_MESSAGE = "message";
+    public static final String COLUMN_HAS_BEEN_READ = "hasBeenRead";
     public static final String COLUMN_NOTIFICATION_USER_ID = "idUser"; // Foreign Key
+    public static final String COLUMN_TITLE = "title";
 
     public MemoryGameDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,6 +50,7 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_USERNAME + " TEXT NOT NULL UNIQUE, " +
                 COLUMN_PASSWORD + " TEXT NOT NULL, " +
+                COLUMN_FIRST_TIME_LOGGING + " TEXT NOT NULL DEFAULT 'yes', " +
                 COLUMN_COINS + " INTEGER DEFAULT 0);";
 
         // Create Games Table
@@ -63,7 +67,9 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
         // Create Notifications Table
         String createNotificationsTable = "CREATE TABLE " + TABLE_NOTIFICATIONS + " (" +
                 COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_TITLE + " TEXT NOT NULL, " +
                 COLUMN_MESSAGE + " TEXT NOT NULL, " +
+                COLUMN_HAS_BEEN_READ + " TEXT NOT NULL DEFAULT 'no', " +
                 COLUMN_NOTIFICATION_USER_ID + " INTEGER NOT NULL, " +
                 "FOREIGN KEY(" + COLUMN_NOTIFICATION_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_USER_ID + "));";
 
@@ -75,12 +81,25 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older tables if existed
+        if (oldVersion > newVersion) {
+            // Handle database downgrade
+            onDowngrade(db, oldVersion, newVersion);
+        } else {
+            // Handle database upgrade
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATIONS);
+            onCreate(db);
+        }
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Drop the existing tables
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATIONS);
-
-        // Create tables again
+        // Recreate the tables with the schema for version 3
         onCreate(db);
     }
 }

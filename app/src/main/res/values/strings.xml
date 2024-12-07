@@ -151,8 +151,7 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-
-
+    <string name="exclamationPoint">!</string>
 
 
 </resources>

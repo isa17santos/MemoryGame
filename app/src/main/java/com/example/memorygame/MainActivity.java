@@ -72,6 +72,8 @@ import com.example.memorygame.databinding.ScoreboardPersonalPageTime3x4Binding;
 import com.example.memorygame.databinding.ScoreboardPersonalPageTime4x4Binding;
 import com.example.memorygame.databinding.ScoreboardPersonalPageTime6x6Binding;
 
+import org.w3c.dom.Text;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
     private String thirdBestTime = null;
     private boolean initializeTimer = false;
 
+    private boolean hasUnreadNotifications = true;
 
     // Database variables
 
@@ -150,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentUserId = 0;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
     String currentDate = dateFormat.format(new Date());
+
   
     // Get the writable database
     private SQLiteDatabase db = null;
@@ -170,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         //------------------------------- DATABASE --------------------------------------
         // Initialize the database helper
         MemoryGameDatabaseHelper dbHelper = new MemoryGameDatabaseHelper(this);
+        Log.d("Teste", "Teste.");
 
         try {
             db = dbHelper.getWritableDatabase(); // Open or create the database
@@ -189,8 +194,16 @@ public class MainActivity extends AppCompatActivity {
                     @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
                     @SuppressLint("Range") String username = cursor.getString(cursor.getColumnIndex("username"));
                     @SuppressLint("Range") String password = cursor.getString(cursor.getColumnIndex("password"));
+                    @SuppressLint("Range") String firstTimeLogging = cursor.getString(cursor.getColumnIndex("firstTimeLogging"));
                     @SuppressLint("Range") int coins = cursor.getInt(cursor.getColumnIndex("coins"));
-                    Log.d("User", "ID: " + id + ", Username: " + username + ", Coins: " + coins);
+
+                    if(firstTimeLogging.equals("yes")) {
+                        notificationDAO.insertNotification("Welcome!", "Start playing now and get rewards!", currentUserId);
+                        hasUnreadNotifications = true;
+                        userDAO.updateFirstTimeLogging(currentUserId, "no");
+                    }
+
+                    Log.d("User", "ID: " + id + ", Username: " + username + ", Password: " + password + ", First Time Logging: " + firstTimeLogging + ", Coins: " + coins);
                 } while (cursor.moveToNext());
             } else {
                 Log.d("User", "No users found in the database.");
@@ -224,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("duarte", "duarte123", 20);
         userDAO.insertUser("test", "test123", 100);
         userDAO.insertUser("testcoins", "testcoins123", 1);
-
     }
 
 
@@ -232,16 +244,21 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = notificationDAO.getNotificationsByUser(currentUserId);
         List<Notification> notifications = new ArrayList<>();
 
-        notificationDAO.insertNotification("Seja bem vindo ao Memory Game! Comece a jogar agora e diverta-se!", currentUserId);
-
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 @SuppressLint("Range") String message = cursor.getString(cursor.getColumnIndexOrThrow("message"));
+                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
+                @SuppressLint("Range") String hasBeenRead = String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow("hasBeenRead")));
                 @SuppressLint("Range") int userId = cursor.getInt(cursor.getColumnIndexOrThrow("idUser"));
-                notifications.add(new Notification("Notification " + id, message));
-                Log.d("Notifications", "ID: " + id + ", Message: " + message + ", User ID: " + userId);
-                System.out.println("ID: " + id + ", Message: " + message + ", User ID: " + userId);
+                if (hasBeenRead.equals("no")) {
+                    hasUnreadNotifications = true;
+                }
+                else {
+                    hasUnreadNotifications = false;
+                }
+                notifications.add(new Notification(title , message));
+                Log.d("Notification", "ID: " + id + ", Message: " + message + ", Title: " + title + ", Has Been Read: " + hasBeenRead + ", User ID: " + userId);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -250,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         NotificationAdapter notificationAdapter = new NotificationAdapter(notifications);
         recyclerView.setAdapter(notificationAdapter);
-
     }
 
     private void startTimer() {
@@ -1007,6 +1023,13 @@ public class MainActivity extends AppCompatActivity {
         TextView coins = userBinding.numCoins;
         coins.setText(String.valueOf(userCoins));
         setContentView(userBinding.getRoot());
+
+        TextView exclamationPoint = findViewById(R.id.exclamationPoint);
+        if (hasUnreadNotifications) {
+            exclamationPoint.setVisibility(View.VISIBLE);
+        } else {
+            exclamationPoint.setVisibility(View.GONE);
+        }
     }
 
     public void login(View view) {
@@ -1405,11 +1428,12 @@ public class MainActivity extends AppCompatActivity {
                                     // ... (time is less than bestTime) ...
                                     Log.d("MemoryCard", "New Record!!!!");
                                     String notificationMessage = String.format("You beat your personal best time in board %d!!", boardSize);
-                                    notificationDAO.insertNotification(notificationMessage, currentUserId);
+                                    notificationDAO.insertNotification("New Record!", notificationMessage, currentUserId);
 
                                     userCoins = userDAO.incrementCoins(currentUserId);
                                     Log.d("User", "Coins: " + userCoins);
-                                    notificationDAO.insertNotification("A reward for beating your best time, here's a Coin", currentUserId);
+                                    notificationDAO.insertNotification("Reward Received!", "A reward for beating your best time, here's a Coin", currentUserId);
+                                    hasUnreadNotifications = true;
                                 }
                             }
 
@@ -1420,11 +1444,12 @@ public class MainActivity extends AppCompatActivity {
                                 if (timeInSeconds < thirdBestTimeInSeconds) {
                                     Log.d("MemoryCard", "Top 3 Global Leaderboard!!!!");
                                     String notificationMessage = String.format("You are now top 3 Global on board %d!!", boardSize);
-                                    notificationDAO.insertNotification(notificationMessage, currentUserId);
+                                    notificationDAO.insertNotification("Top 3 Global Leaderboard!!!!!", notificationMessage, currentUserId);
 
                                     userCoins = userDAO.incrementCoins(currentUserId);
                                     Log.d("User", "Coins: " + userCoins);
-                                    notificationDAO.insertNotification("A reward for being Top 3 Global, here's a Coin", currentUserId);
+                                    notificationDAO.insertNotification("Reward Received" ,"A reward for being Top 3 Global, here's a Coin", currentUserId);
+                                    hasUnreadNotifications = true;
                                 }
                             }
 
