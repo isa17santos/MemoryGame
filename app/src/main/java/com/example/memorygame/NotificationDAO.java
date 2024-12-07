@@ -14,8 +14,9 @@ public class NotificationDAO {
     }
 
     // Insert a notification
-    public long insertNotification(String message, int userId) {
+    public long insertNotification(String title, String message, int userId) {
         ContentValues values = new ContentValues();
+        values.put("title", title);
         values.put("message", message);
         values.put("idUser", userId);
         return db.insert("Notifications", null, values);

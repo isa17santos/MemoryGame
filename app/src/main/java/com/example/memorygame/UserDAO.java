@@ -133,6 +133,12 @@ public class UserDAO {
         return newCoins;
     }
 
+    public void updateFirstTimeLogging(int userId, String value) {
+        ContentValues values = new ContentValues();
+        values.put("firstTimeLogging", value);
+        db.update("Users", values, "id = ?", new String[]{String.valueOf(userId)});
+    }
+
     // Delete a user
     public int deleteUser(int userId) {
         return db.delete("Users", "id = ?", new String[]{String.valueOf(userId)});
