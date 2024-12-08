@@ -220,6 +220,12 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Database", "Error interacting with the database", e);
         }
 
+            // For Games
+            //GameDAO gameDAO = new GameDAO(db);
+            //gameDAO.insertGame(5, 200, "02:30", 4, (int) userId);
+            //Cursor gamesCursor = gameDAO.getGamesByUser((int) userId);
+            //gamesCursor.close();
+
         //------------------------------- DATABASE --------------------------------------
     }
 
@@ -230,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("carolina", "carolina123", 20);
         userDAO.insertUser("duarte", "duarte123", 20);
         userDAO.insertUser("test", "test123", 100);
-        userDAO.insertUser("testcoins", "testcoins123", 0);
+        userDAO.insertUser("testcoins", "testcoins123", 1);
     }
 
 
