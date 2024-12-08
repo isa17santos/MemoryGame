@@ -43,7 +43,7 @@ public class UserDAO {
         return isAuthenticated;
     }
 
-    // Query all users
+    // Show all users
     public Cursor getAllUsers() {
         return db.query(
                 "Users", // Table name
@@ -70,6 +70,7 @@ public class UserDAO {
         return coins;
     }
 
+    //shows the id of the logged in user
     @SuppressLint("Range")
     public int getLoggedInUserId(String username) {
         // Replace with your actual method to get username

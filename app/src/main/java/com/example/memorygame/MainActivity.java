@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             db = dbHelper.getWritableDatabase(); // Open or create the database
             Log.d("Database", "Database initialized successfully.");
 
-            // Create a new UserDAO instance
+            // Create a new UserDAO, GameDAO and NotificationDAO instance
             userDAO = new UserDAO(db);
             gameDAO = new GameDAO(db);
             notificationDAO = new NotificationDAO(db);
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         //------------------------------- DATABASE --------------------------------------
     }
 
-    // Method to insert test users
+    // Method to insert users
     private void insertTestUsers(UserDAO userDAO) {
         userDAO.insertUser("isa", "isa123", 20);
         userDAO.insertUser("bruno", "bruno123", 20);
@@ -315,21 +315,26 @@ public class MainActivity extends AppCompatActivity {
         TextView coins = bindingSize.numCoins;
         coins.setText(String.valueOf(userCoins));
 
+        // when clicking on 3x4 button
         button3x4.setOnClickListener(v -> {
-            moveTo_board3x4_user(button3x4);
+            moveTo_board3x4_user(button3x4);  //goes to 3x4 board
         });
 
+
+        // when clicking on 4x4 button
         button4x4.setOnClickListener(v -> {
             if(userCoins <= 0){//   not enough coins
                 showNotEnoughCoinsPopUp();
             }
 
             else{
-                buyingThings(button4x4, coins);
-                moveTo_board4x4(button4x4);
+                buyingThings(button4x4, coins); // buys the game (decrements coins value)
+                moveTo_board4x4(button4x4); // goes to 4x4 board
             }
         });
 
+
+        // when clicking on 6x6 button
         button6x6.setOnClickListener(v -> {
 
             if(userCoins <= 0){ //   not enough coins
@@ -337,8 +342,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             else{
-                buyingThings(button6x6, coins);
-                moveTo_board6x6(button6x6);
+                buyingThings(button6x6, coins); // buys the game (decrements coins value)
+                moveTo_board6x6(button6x6); // goes to 6x6 board
             }
         });
     }
@@ -1045,7 +1050,7 @@ public class MainActivity extends AppCompatActivity {
         } else { // written fields
             boolean isAuthenticated = userDAO.authenticateUser(username, password);
             if (isAuthenticated) { // Login successful
-                if (username.equals("test") && password.equals("test123")) {
+                if (username.equals("test") && password.equals("test123")) {  //logged in as test user
                   testMode = true;
                   setContentView(R.layout.dashboard_user);
                   userBinding = DashboardUserBinding.inflate(getLayoutInflater());
@@ -1341,11 +1346,6 @@ public class MainActivity extends AppCompatActivity {
                 // Set click listener for each ImageView
                 imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 1,boardType));
             }
-                // Set click listener for each ImageView
-
-                //imageView.setOnClickListener(v -> handleCardClick((ImageView) v, 2, 4));
-
-
 
             else // Invalid board size
             {

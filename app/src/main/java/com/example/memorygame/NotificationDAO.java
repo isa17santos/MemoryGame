@@ -22,7 +22,7 @@ public class NotificationDAO {
         return db.insert("Notifications", null, values);
     }
 
-    // Query notifications for a specific user
+    // show notifications for a specific user
     public Cursor getNotificationsByUser(int userId) {
         return db.query(
                 "Notifications",
