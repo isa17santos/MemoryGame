@@ -1,8 +1,8 @@
 //-----------------------------------------   CONTEXT   -------------------------------------------------- 
 
     In this read me file, we will have very important notes about the project such as which users are
-created in the data base and they're credentials, how to work with our local DataBase, etc.
-     Also, on this file, you can read the notes of each first daily meeting of each sprint. In those daily 
+created in the data base and their credentials, how to work with our local DataBase, etc.
+     Also, in this file, you can read the notes of each first daily meeting of each sprint. In those daily 
 meetings we organized all the work, in the other ones we made a situation point to know what was already done or
 not. For this reason, we will only right the notes of the first daily meetings of each sprint.  
 
