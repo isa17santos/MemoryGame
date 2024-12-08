@@ -1,9 +1,9 @@
 //-----------------------------------------   CONTEXT   -------------------------------------------------- 
 
     In this read me file, we will have very important notes about the project such as which users are
-created in the data base and there credentials, how to work with our locate DataBase, etc.
-     Also, in this file, you can read the notes of each first daily meeting of each sprint. In those first daily 
-meeting we organized all work and in the others we made a situation point to know what was already done or
+created in the data base and they're credentials, how to work with our local DataBase, etc.
+     Also, on this file, you can read the notes of each first daily meeting of each sprint. In those daily 
+meetings we organized all the work, in the other ones we made a situation point to know what was already done or
 not. For this reason, we will only right the notes of the first daily meetings of each sprint.  
 
 //-----------------------------------------   CONTEXT   -------------------------------------------------- 
@@ -14,7 +14,7 @@ not. For this reason, we will only right the notes of the first daily meetings o
 
     **************************************   DATABASE   *****************************************
 
-        Our first idea was to use FireBase to do our remote DataBase, but when we saw that FireBase works with NoSQL and saw all the disadvantages that this would bring us, we decided that the best approach was to create a local DataBase in our project in SQLite. 
+        Our first idea was to use FireBase to do our remote DataBase, but when we saw that FireBase works with NoSQL and saw all the disadvantages that this would bring us. We decided that the best approach was to create a local DataBase in our project with SQLite. 
         Our DataBase is incorporated in our project repository and the only thing that you need to do is run the application in Android Studio. This will automatically run the DataBase and create the tables.
         It is important to note that every device has it's own DataBase with it's own data, so if you run the application in different types of devices, you will have different data in each device.
 
