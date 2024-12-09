@@ -332,6 +332,8 @@ public class MainActivity extends AppCompatActivity {
     public void moveTo_buying_coins_page(View view) {
 
         setContentView(R.layout.buying_coins_page);
+        TextView coins = findViewById(R.id.num_coins);
+        coins.setText(String.valueOf(userCoins));
     }
 
     public void moveTo_boardsize_page(View view) {
@@ -1882,27 +1884,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private boolean validatePaymentData(String type, String reference, int value) {
-        if (value <= 0 || value >= 100) {
-            return false;
-        }
-
-        switch (type) {
-            case "MBWAY":
-                return reference.matches("^9\\d{8}$");
-            case "PAYPAL":
-                return reference.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
-            case "IBAN":
-                return reference.matches("^[A-Z]{2}\\d{23}$");
-            case "MB":
-                return reference.matches("^\\d{5}-\\d{9}$");
-            case "VISA":
-                return reference.matches("^4\\d{15}$");
-            default:
-                return false;
-        }
-    }
-
     private void sendDebitRequest(String type, String reference, int value) {
         String url = "https://dad-202425-payments-api.vercel.app/api/debit";
         JSONObject jsonBody = new JSONObject();
@@ -1942,6 +1923,55 @@ public class MainActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
+
+        for(int i = 0; i < value; i++){
+            userCoins = userDAO.incrementCoins(currentUserId);
+        }
+    }
+
+    public void increaseValue(View view) {
+        TextView valueTextView = findViewById(R.id.valueTextView);
+        int value = Integer.parseInt(valueTextView.getText().toString());
+        value++;
+        if(value > 100){
+            value = 100;
+        }
+        valueTextView.setText(String.valueOf(value));
+    }
+
+    public void decreaseValue(View view) {
+        TextView valueTextView = findViewById(R.id.valueTextView);
+        int value = Integer.parseInt(valueTextView.getText().toString());
+        value--;
+        if (value < 1) {
+            value = 1;
+        }
+        valueTextView.setText(String.valueOf(value));
+    }
+
+    public void onPaymentButtonClick(View view) {
+        String type = "";
+        String reference = "exampleReference"; // Replace with actual reference
+
+        TextView valueTextView = findViewById(R.id.valueTextView);
+        int addValue = Integer.parseInt(valueTextView.getText().toString());
+
+        if (view.getId() == R.id.buttonMBWAY) {
+            type = "MBWAY";
+        } else if (view.getId() == R.id.buttonPayPal) {
+            type = "PAYPAL";
+        } else if (view.getId() == R.id.buttonIBAN) {
+            type = "IBAN";
+        } else if (view.getId() == R.id.buttonMB) {
+            type = "MB";
+        } else if (view.getId() == R.id.buttonVISA) {
+            type = "VISA";
+        } else {
+            throw new IllegalStateException("Unexpected value: " + view.getId());
+        }
+
+        sendDebitRequest(type, reference, addValue);
+        moveTo_dashboard_user(view);
     }
 }
 

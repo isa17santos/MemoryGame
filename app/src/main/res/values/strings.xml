@@ -152,6 +152,18 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="exclamationPoint">!</string>
+    <string name="plus">+</string>
+    <string name="buy_coins">Buy Coins</string>
+    <string name="minus">-</string>
+    <string name="minusText">-</string>
+    <string name="increment">+</string>
+    <string name="decrement">-</string>
+
+    <string name="MBWAY">MBWAY</string>
+    <string name="VISA">VISA</string>
+    <string name="IBAN">IBAN</string>
+    <string name="PayPal">PayPal</string>
+    <string name="MB">MB</string>
 
 
 </resources>
