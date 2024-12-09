@@ -402,23 +402,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveTo_history_page(View view) {
+        // Inflate the layout for the history page
         historyPageBinding = HistoryPageBinding.inflate(getLayoutInflater());
+
+        // Set the content view to the inflated layout
         setContentView(historyPageBinding.getRoot());
 
+        // Retrieve game history data from the database for the current user
         Cursor cursor = gameDAO.getHistory(currentUserId);
+
+        // Get the GridLayout from the layout to display the history
         GridLayout gridLayout = historyPageBinding.GameHistory;
+        // Initialize the row index for adding data to the GridLayout
         int rowIndex = 1;
 
+        // Check if the cursor is not null and contains data
         if (cursor != null && cursor.moveToFirst()) {
             Log.d("Game", "Data found in database");
+            // Iterate through the cursor to retrieve game data for each row
             do {
-                    @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("idUser"));
+                // Get data for each column from the cursor
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex("idUser"));
                 @SuppressLint("Range") String score = cursor.getString(cursor.getColumnIndex("score"));
                 @SuppressLint("Range") String attempts = cursor.getString(cursor.getColumnIndex("attempts"));
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") int board = cursor.getInt(cursor.getColumnIndex("boardSize"));
                 @SuppressLint("Range") String date = cursor.getString(cursor.getColumnIndex("date"));
 
+                // Determine the board name based on the board size
                 if(board == 1){
                     boardName = "3x4";
                 } else if(board == 2){
@@ -427,8 +438,10 @@ public class MainActivity extends AppCompatActivity {
                     boardName = "6x6";
                 }
 
+                // Log the data being added to the GridLayout
                 Log.d("Game", "Adding Row - Username: " + user + ", Score: " + score + ", Attempts: " + attempts + ", Time: " + time + "Board Name: " + boardName + ", Board Size: " + board + ", Date: " + date);
 
+                // Create TextViews for each data item (score, attempts, time, board size)
                 TextView scoreTextView = createTextView(score);
                 TextView attemptsTextView = createTextView(attempts);
                 TextView timeTextView = createTextView(attempts);
@@ -440,12 +453,13 @@ public class MainActivity extends AppCompatActivity {
                 addViewToGridLayout(gridLayout, time, rowIndex, 2, 1f, 1f); // Time in column 1
                 addViewToGridLayout(gridLayout, boardName, rowIndex, 3, 1f, 1f); // Board size in column 2
 
-
+                // Increment the row index for the next data row
                 rowIndex++;
-            } while (cursor.moveToNext());
+            } while (cursor.moveToNext()); // Continue looping while there is more data in the cursor
         } else {
             Log.d("Game", "No data found in database");
         }
+        // Close the cursor to release resources
         if (cursor != null) {
             cursor.close();
         }
@@ -1104,17 +1118,11 @@ public class MainActivity extends AppCompatActivity {
                 showInvalidLoginPopUp();
             }
         }
-
-        getNotificationStatus();
-        TextView exclamationPoint = findViewById(R.id.exclamationPoint);
-        if (hasUnreadNotifications) {
-            exclamationPoint.setVisibility(View.VISIBLE);
-        } else {
-            exclamationPoint.setVisibility(View.GONE);
-        }
     }
 
-    public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
+    public void moveTo_dashboard_anonymous(View view) {
+        // Set the content view to the layout for the anonymous dashboard
+        setContentView(R.layout.dashboard_anonymous); }
 
     public void moveTo_notification_page(View view) {
         setContentView(R.layout.notification_page);
@@ -1209,33 +1217,46 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveTo_board3x4_anonymous(View view) {
 
+        // Inflate the layout for the 3x4 anonymous board
         binding = Board3x4AnonymousBinding.inflate(getLayoutInflater());
+        // Set the content view to the inflated layout
         setContentView(binding.getRoot());
-        
+
+        // Get references to UI elements in the layout
         timerTextView = binding.timerTextViewBoard3x4Anonymous;
         attemptsTextView = binding.attemptsTextBoard3x4Anonymous;
         scoreTextView = binding.scoreTextBoard3x4Anonymous;
 
+        // Set up the game with board type 0 (presumably for the 3x4 anonymous board)
         setupGame(0);
     }
 
     public void moveTo_board3x4_user(View view) {
-
+        // Inflate the layout for the 3x4 user board
         binding3x4 = Board3x4UserBinding.inflate(getLayoutInflater());
 
+        // Get references to UI elements in the layout
         timerTextView = binding3x4.timerTextViewBoard3x4User;
         attemptsTextView = binding3x4.attemptsTextBoard3x4User;
         scoreTextView = binding3x4.scoreTextBoard3x4User;
 
+        // Get references to the hint button and coins TextView
         View buttonHint = binding3x4.buttonHintBoard3x4User;
         TextView coins = binding3x4.numCoins;
+
+        // Set the initial number of coins in the TextView
         coins.setText(String.valueOf(userCoins));
+
+        // Set the content view to the inflated layout
         setContentView(binding3x4.getRoot());
 
+        // Set an OnClickListener for the hint button
         buttonHint.setOnClickListener(v -> {
+            // Call the buyHint() method when the hint button is clicked
             buyHint(v, coins, 1);
         });
 
+        // Set up the game with board type 1 (presumably for the 3x4 user board)
         setupGame(1);
     }
 
@@ -1614,28 +1635,37 @@ public class MainActivity extends AppCompatActivity {
         // 1 -> user
 
         try {
+            // Inflate the layout for the game over pop-up
             gameOverPopUpBinding = GameOverPopUpBinding.inflate(getLayoutInflater());
+
+            // Get references to UI elements in the pop-up layout
             timerTextView = gameOverPopUpBinding.TimeValue;
             attemptsTextView = gameOverPopUpBinding.AttemptsValue;
             scoreTextView = gameOverPopUpBinding.ScoreValue;
 
+            // Set the values for attempts, score, and time in the TextViews
             attemptsTextView.setText(String.valueOf(attempts));
             scoreTextView.setText(String.valueOf(score));
             timerTextView.setText(String.format("%02d:%02d", minutes, remainingSeconds));
 
+            // Log the game statistics for debugging
             Log.d("PopupDebug", "Attempts: " + attempts + ", Time: " + minutes + ":" + remainingSeconds + ", Score: " + score);
 
-
+            // Get a reference to the close button in the pop-up
             View close = gameOverPopUpBinding.closeButtonGameOver;
 
+            // Create an AlertDialog.Builder to build the pop-up dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Set the view for the dialog using the inflated layout
             builder.setView(gameOverPopUpBinding.getRoot());
+            // Create and show the dialog
             final AlertDialog dialog = builder.create(); // Make the dialog final
 
-
+            // Set an OnClickListener for the close button
             close.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
 
+                // Navigate to the appropriate dashboard based on the game mode
                 if(gameMode == 0 ) //  anonymous
                     moveTo_dashboard_anonymous(null);
                 else if (gameMode == 1){  //  user
@@ -1643,6 +1673,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            // Show the dialog
             dialog.show();
 
             // Get the dialog's window and set fixed dimensions
@@ -1655,6 +1686,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         catch (Exception e){
+            // Log any errors that occur during pop-up creation
             Log.e("PopupError", "Error in showGameOverPopUp", e);
         }
     }
@@ -1662,28 +1694,37 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     private void showNotEnoughCoinsPopUp() {
         try {
+            // Get the LayoutInflater to inflate the pop-up layout
             LayoutInflater inflater = getLayoutInflater();
             Log.d("InflaterDebug", "LayoutInflater: " + inflater);
 
+            // Inflate the layout for the "Not Enough Coins" pop-up
             popUpNotEnoughCoinsBinding = PopUpNotEnoughCoinsBinding.inflate(getLayoutInflater());
 
+            // Check if the binding is successful
             if (popUpNotEnoughCoinsBinding != null) {
                 Log.d("BindingDebug", "Root View: " + popUpNotEnoughCoinsBinding.getRoot());
             } else {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
 
+            // Get a reference to the close button in the pop-up
             View close = popUpNotEnoughCoinsBinding.closeButton;
 
+            // Create an AlertDialog.Builder to build the pop-up dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+            // Set the view for the dialog using the inflated layout
             builder.setView(popUpNotEnoughCoinsBinding.getRoot());
+            // Create and show the dialog
             AlertDialog dialog = builder.create(); // Make the dialog final
 
+            // Set an OnClickListener for the close button
             close.setOnClickListener(v -> {
                dialog.dismiss(); // Close the dialog
             });
 
+            // Show the dialog
             dialog.show();
 
             // Get the dialog's window and set fixed dimensions
@@ -1695,6 +1736,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         catch (Exception e) {
+            // Log any errors that occur during pop-up creation
             Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
         }
 
@@ -1704,28 +1746,36 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     private void showEmptyFieldsPopUp() {
         try {
+            // Get the LayoutInflater to inflate the pop-up layout
             LayoutInflater inflater = getLayoutInflater();
             Log.d("InflaterDebug", "LayoutInflater: " + inflater);
 
+            // Inflate the layout for the "Empty Fields" pop-up
             emptyFieldsPopUpBinding = EmptyFieldsPopUpBinding.inflate(getLayoutInflater());
 
+            // Check if the binding is successful
             if (emptyFieldsPopUpBinding != null) {
                 Log.d("BindingDebug", "Root View: " + emptyFieldsPopUpBinding.getRoot());
             } else {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
 
+            // Get a reference to the close button in the pop-up
             View close = emptyFieldsPopUpBinding.closeButton;
 
+            // Create an AlertDialog.Builder to build the pop-up dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+            // Set the view for the dialog using the inflated layout
             builder.setView(emptyFieldsPopUpBinding.getRoot());
+            // Create and show the dialog
             AlertDialog dialog = builder.create(); // Make the dialog final
 
+            // Set an OnClickListener for the close button
             close.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
             });
 
+            // Show the dialog
             dialog.show();
 
             // Get the dialog's window and set fixed dimensions
@@ -1737,6 +1787,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         catch (Exception e) {
+            // Log any errors that occur during pop-up creation
             Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
         }
     }
@@ -1744,28 +1795,35 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     private void showInvalidLoginPopUp() {
         try {
+            // Get the LayoutInflater to inflate the pop-up layout
             LayoutInflater inflater = getLayoutInflater();
             Log.d("InflaterDebug", "LayoutInflater: " + inflater);
 
+            // Inflate the layout for the "Invalid Login" pop-up
             invalidLoginPopUpBinding = InvalidLoginPopUpBinding.inflate(getLayoutInflater());
 
+            // Check if the binding is successful
             if (invalidLoginPopUpBinding != null) {
                 Log.d("BindingDebug", "Root View: " + invalidLoginPopUpBinding.getRoot());
             } else {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
 
+            // Get a reference to the close button in the pop-up
             View close = invalidLoginPopUpBinding.closeButton;
-
+            // Create an AlertDialog.Builder to build the pop-up dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+            // Set the view for the dialog using the inflated layout
             builder.setView(invalidLoginPopUpBinding.getRoot());
+            // Create and show the dialog
             AlertDialog dialog = builder.create(); // Make the dialog final
 
+            // Set an OnClickListener for the close button
             close.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
             });
 
+            // Show the dialog
             dialog.show();
 
             // Get the dialog's window and set fixed dimensions
@@ -1777,6 +1835,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         catch (Exception e) {
+            // Log any errors that occur during pop-up creation
             Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
         }
 
@@ -1786,26 +1845,32 @@ public class MainActivity extends AppCompatActivity {
     public void showLeavingGameLoginPopUpAnonymous(View view) {
 
         try {
+            // Get the LayoutInflater to inflate the pop-up layout
             LayoutInflater inflater = getLayoutInflater();
             Log.d("InflaterDebug", "LayoutInflater: " + inflater);
 
+            // Inflate the layout for the "Leaving Game" pop-up for anonymous users
             leavingGamePopUpBinding = LeavingGamePopUpBinding.inflate(getLayoutInflater());
 
+            // Check if the binding is successful
             if (leavingGamePopUpBinding != null) {
                 Log.d("BindingDebug", "Root View: " + leavingGamePopUpBinding.getRoot());
             } else {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
 
+            // Get references to the OK and Cancel buttons in the pop-up
             View ok = leavingGamePopUpBinding.OKButton;
-
             View cancel = leavingGamePopUpBinding.CancelButton;
 
+            // Create an AlertDialog.Builder to build the pop-up dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+            // Set the view for the dialog using the inflated layout
             builder.setView(leavingGamePopUpBinding.getRoot());
+            // Create and show the dialog
             AlertDialog dialog = builder.create(); // Make the dialog final
-
+            // Set an OnClickListener for the OK button
             ok.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
 
@@ -1813,11 +1878,12 @@ public class MainActivity extends AppCompatActivity {
 
             });
 
+            // Set an OnClickListener for the Cancel button
             cancel.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
 
             });
-
+            // Show the dialog
             dialog.show();
 
             // Get the dialog's window and set fixed dimensions
@@ -1829,6 +1895,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         catch (Exception e) {
+            // Log any errors that occur during pop-up creation
             Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
         }
 
@@ -1838,37 +1905,45 @@ public class MainActivity extends AppCompatActivity {
     public void showLeavingGameLoginPopUpUser(View view) {
 
         try {
+            // Get the LayoutInflater to inflate the pop-up layout
             LayoutInflater inflater = getLayoutInflater();
             Log.d("InflaterDebug", "LayoutInflater: " + inflater);
 
+            // Inflate the layout for the "Leaving Game" pop-up for logged-in users
             leavingGamePopUpBinding = LeavingGamePopUpBinding.inflate(getLayoutInflater());
 
+            // Check if the binding is successful
             if (leavingGamePopUpBinding != null) {
                 Log.d("BindingDebug", "Root View: " + leavingGamePopUpBinding.getRoot());
             } else {
                 Log.d("BindingDebug", "Binding is NULL.");
             }
 
+            // Get references to the OK and Cancel buttons in the pop-up
             View ok = leavingGamePopUpBinding.OKButton;
-
             View cancel= leavingGamePopUpBinding.CancelButton;
-
+            // Create an AlertDialog.Builder to build the pop-up dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+            // Set the view for the dialog using the inflated layout
             builder.setView(leavingGamePopUpBinding.getRoot());
+
+            // Create and show the dialog
             AlertDialog dialog = builder.create(); // Make the dialog final
 
+            // Set an OnClickListener for the OK button
             ok.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
 
                 moveTo_dashboard_user(null);
             });
 
+            // Set an OnClickListener for the Cancel button
             cancel.setOnClickListener(v -> {
                 dialog.dismiss(); // Close the dialog
 
             });
 
+            // Show the dialog
             dialog.show();
 
             // Get the dialog's window and set fixed dimensions
@@ -1881,6 +1956,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         catch (Exception e) {
+            // Log any errors that occur during pop-up creation
             Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
         }
 
