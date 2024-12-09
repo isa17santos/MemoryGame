@@ -2045,9 +2045,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
                     }
                     for(int i = 0; i < value; i++){
-                        userDAO.incrementCoins(currentUserId);
+                        userCoins = userDAO.incrementCoins(currentUserId);
                     }
-                    userCoins = userDAO.getCoins(currentUserId);
                 },
                 error -> {
 
