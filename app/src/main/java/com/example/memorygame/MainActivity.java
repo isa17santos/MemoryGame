@@ -1100,14 +1100,6 @@ public class MainActivity extends AppCompatActivity {
                 showInvalidLoginPopUp();
             }
         }
-
-        getNotificationStatus();
-        TextView exclamationPoint = findViewById(R.id.exclamationPoint);
-        if (hasUnreadNotifications) {
-            exclamationPoint.setVisibility(View.VISIBLE);
-        } else {
-            exclamationPoint.setVisibility(View.GONE);
-        }
     }
 
     public void moveTo_dashboard_anonymous(View view) { setContentView(R.layout.dashboard_anonymous); }
