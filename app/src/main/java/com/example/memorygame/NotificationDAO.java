@@ -38,7 +38,8 @@ public class NotificationDAO {
         db.update("Notifications", values, "id = ? AND idUser = ?", new String[]{String.valueOf(notificationId), String.valueOf(userId)});
     }
 
-    // Query notifications for a specific user
+ 
+    // show notifications for a specific user
     public Cursor getNotificationsByUser(int userId) {
         return db.query(
                 "Notifications",

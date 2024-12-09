@@ -43,6 +43,7 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Creates all tables
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create Users Table
@@ -93,6 +94,8 @@ public class MemoryGameDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+
+    // Drops all tables and creates them again
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop the existing tables

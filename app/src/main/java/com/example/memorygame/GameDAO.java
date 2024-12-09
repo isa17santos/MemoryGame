@@ -32,8 +32,7 @@ public class GameDAO {
         return db.insert("Games", null, values);
     }
 
-    // Query games for a specific user by date
-
+    // Show games for a specific user by date
     public Cursor getHistory(int userId) {
         // Log the userId to ensure it's being passed correctly
         Log.d("DBQuery", "Getting historical data for userId: " + userId);
@@ -95,7 +94,7 @@ public class GameDAO {
         return thirdBestTime;
     }
 
-    // Query games for a specific user by time and boardSize
+    // Show games for a specific user by time and boardSize
     public Cursor getPersonalScoreboardByTimeAndBoardSize(int userId, int boardSize) {
         // Log the userId to ensure it's being passed correctly
         Log.d("DBQuery", "Getting personal data for userId: " + userId);
@@ -114,7 +113,7 @@ public class GameDAO {
         return db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(boardSize)});
     }
 
-    // Query games for a specific user by attempts and boardSize
+    // Show games for a specific user by attempts and boardSize
     public Cursor getPersonalScoreboardByAttemptsAndBoardSize(int userId, int boardSize) {
         // Log the userId to ensure it's being passed correctly
         Log.d("DBQuery", "Getting personal data for userId: " + userId);
@@ -133,7 +132,7 @@ public class GameDAO {
         return db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(boardSize)});
     }
 
-    // Query the best game by time of a certain boardSize of each user
+    // Show the best game by time of a certain boardSize of each user
     public Cursor getLeaderboardByTimeAndBoardSize(int boardSize) {
         String query = "SELECT Users.username, MIN(Games.time) AS time, Games.boardSize " +
                 "FROM Games " +
@@ -144,7 +143,7 @@ public class GameDAO {
         return db.rawQuery(query, new String[]{String.valueOf(boardSize)});
     }
 
-    // Query all games by attempts of a certain boardSize
+    // Show all games by attempts of a certain boardSize
     public Cursor getLeaderboardByAttemptsAndBoardSize(int boardSize) {
         String query = "SELECT Users.username, MIN(Games.attempts) AS attempts, Games.boardSize " +
                 "FROM Games " +
