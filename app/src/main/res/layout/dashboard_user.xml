@@ -113,6 +113,39 @@
         app:layout_constraintVertical_bias="0.171"
         app:layout_constraintWidth_percent="0.73" />
 
+
+    <ImageView
+        android:id="@+id/image_coins_dashboard_user"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/image_coin"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintHorizontal_bias="0.539"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.925"
+        app:layout_constraintWidth_percent="0.14"
+        app:srcCompat="@drawable/coin_image" />
+
+    <ImageView
+        android:id="@+id/purchasingCoins"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="moveTo_buying_coins_page"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintHorizontal_bias="0.757"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.925"
+        app:layout_constraintWidth_percent="0.14"
+        app:srcCompat="@drawable/piggy_bank_11706497" />
+
     <TextView
         android:id="@+id/num_coins"
         android:layout_width="0dp"
@@ -127,27 +160,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintHorizontal_bias="0.373"
+        app:layout_constraintHorizontal_bias="0.285"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.925"
         app:layout_constraintWidth_percent="0.25" />
-
-    <ImageView
-        android:id="@+id/image_coins_dashboard_user"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/image_coin"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintHorizontal_bias="0.616"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.925"
-        app:layout_constraintWidth_percent="0.14"
-        app:srcCompat="@drawable/coin_image" />
 
     <ImageView
         android:id="@+id/image_notifications"
@@ -182,5 +199,6 @@
         app:layout_constraintStart_toStartOf="@id/image_notifications"
         app:layout_constraintTop_toTopOf="@id/image_notifications"
         app:layout_constraintVertical_bias="1.0"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
