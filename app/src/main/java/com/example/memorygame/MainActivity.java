@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean hasUnreadNotifications = false;
 
+    private int buyingCoinsAmount = 0;
+
     // Database variables
 
     private boolean testMode = false;
@@ -1883,6 +1885,68 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    public void getPaymentInfo(View view) {
+        EditText editText;
+        String reference;
+
+        if (view.getId() == R.id.mbway_submit_button) {
+            editText = findViewById(R.id.mbway_phone_number);
+            reference = editText.getText().toString();
+            if (reference.length() != 9) {
+                Toast.makeText(this, "Please enter a valid phone number (9 digits only)", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                sendDebitRequest("MBWAY", reference, buyingCoinsAmount);
+                moveTo_dashboard_user(view);
+            }
+        } else if (view.getId() == R.id.paypal_submit_button) {
+            editText = findViewById(R.id.paypal_email);
+            reference = editText.getText().toString();
+            if (reference.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(reference).matches()) {
+                Toast.makeText(this, "Please enter a valid PayPal email", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                sendDebitRequest("PAYPAL", reference, buyingCoinsAmount);
+                moveTo_dashboard_user(view);
+            }
+
+        } else if (view.getId() == R.id.iban_submit_button) {
+            editText = findViewById(R.id.iban_number);
+            reference = editText.getText().toString();
+            if (reference.length() != 25 || !reference.matches("[A-Z]{2}[0-9]{23}")) {
+                Toast.makeText(this, "Please enter a valid IBAN number", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                sendDebitRequest("IBAN", reference, buyingCoinsAmount);
+                moveTo_dashboard_user(view);
+            }
+
+        } else if (view.getId() == R.id.mb_submit_button) {
+            editText = findViewById(R.id.mb_reference);
+            reference = editText.getText().toString();
+            if (reference.length() != 14) {
+                Toast.makeText(this, "Please enter a valid MB reference", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                reference = reference.substring(0, 5) + "-" + reference.substring(5);
+                sendDebitRequest("MB", reference, buyingCoinsAmount);
+                moveTo_dashboard_user(view);
+            }
+        } else if (view.getId() == R.id.visa_submit_button) {
+            editText = findViewById(R.id.visa_card_number);
+            reference = editText.getText().toString();
+            if (reference.length() != 16 && reference.matches("[4]{1}")) {
+                Toast.makeText(this, "Please enter a valid VISA card number", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                sendDebitRequest("VISA", reference, buyingCoinsAmount);
+                moveTo_dashboard_user(view);
+            }
+        } else {
+            throw new IllegalStateException("Unexpected value: " + view.getId());
+        }
+
+    }
 
     private void sendDebitRequest(String type, String reference, int value) {
         String url = "https://dad-202425-payments-api.vercel.app/api/debit";
@@ -1898,13 +1962,20 @@ public class MainActivity extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST, url, jsonBody,
                 response -> {
+                    Log.d("ServerResponse", "Response: " + response.toString());
                     // Handle successful response
                     if (response.optInt("statusCode") == 201) {
                         // Debit created successfully
                         Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
                     }
+                    for(int i = 0; i < value; i++){
+                        userDAO.incrementCoins(currentUserId);
+                    }
+                    userCoins = userDAO.getCoins(currentUserId);
                 },
                 error -> {
+
+                    Log.d("ServerResponse", "Error: " + error.toString());
                     // Handle error response
                     if (error.networkResponse != null) {
                         if (error.networkResponse.statusCode == 422) {
@@ -1923,10 +1994,6 @@ public class MainActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
-
-        for(int i = 0; i < value; i++){
-            userCoins = userDAO.incrementCoins(currentUserId);
-        }
     }
 
     public void increaseValue(View view) {
@@ -1949,29 +2016,33 @@ public class MainActivity extends AppCompatActivity {
         valueTextView.setText(String.valueOf(value));
     }
 
-    public void onPaymentButtonClick(View view) {
-        String type = "";
-        String reference = "exampleReference"; // Replace with actual reference
-
+    public void getPaymentCoinsAmount(View view) {
         TextView valueTextView = findViewById(R.id.valueTextView);
-        int addValue = Integer.parseInt(valueTextView.getText().toString());
+        buyingCoinsAmount = Integer.parseInt(valueTextView.getText().toString());
+    }
 
-        if (view.getId() == R.id.buttonMBWAY) {
-            type = "MBWAY";
-        } else if (view.getId() == R.id.buttonPayPal) {
-            type = "PAYPAL";
-        } else if (view.getId() == R.id.buttonIBAN) {
-            type = "IBAN";
-        } else if (view.getId() == R.id.buttonMB) {
-            type = "MB";
-        } else if (view.getId() == R.id.buttonVISA) {
-            type = "VISA";
-        } else {
-            throw new IllegalStateException("Unexpected value: " + view.getId());
-        }
+    public void moveTo_mb_payment_page(View view) {
+        getPaymentCoinsAmount(view);
+        setContentView(R.layout.mb_payment_page);
 
-        sendDebitRequest(type, reference, addValue);
-        moveTo_dashboard_user(view);
+    }
+
+    public void moveTo_visa_payment_page(View view) {
+        getPaymentCoinsAmount(view);
+        setContentView(R.layout.visa_payment_page);
+    }
+    public void moveTo_paypal_payment_page(View view) {
+        getPaymentCoinsAmount(view);
+        setContentView(R.layout.paypal_payment_page);
+    }
+    public void moveTo_mbway_payment_page(View view) {
+        getPaymentCoinsAmount(view);
+        setContentView(R.layout.mbway_payment_page);
+    }
+
+    public void moveTo_iban_payment_page(View view) {
+        getPaymentCoinsAmount(view);
+        setContentView(R.layout.iban_payment_page);
     }
 }
 
