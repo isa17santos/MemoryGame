@@ -42,6 +42,10 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.os.Handler;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.memorygame.databinding.Board3x4AnonymousBinding;
 import com.example.memorygame.databinding.Board3x4UserBinding;
 import com.example.memorygame.databinding.Board4x4Binding;
@@ -71,7 +75,10 @@ import com.example.memorygame.databinding.ScoreboardPersonalPageAttempts6x6Bindi
 import com.example.memorygame.databinding.ScoreboardPersonalPageTime3x4Binding;
 import com.example.memorygame.databinding.ScoreboardPersonalPageTime4x4Binding;
 import com.example.memorygame.databinding.ScoreboardPersonalPageTime6x6Binding;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 
@@ -140,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     private String thirdBestTime = null;
     private boolean initializeTimer = false;
 
-    private boolean hasUnreadNotifications = true;
+    private boolean hasUnreadNotifications = false;
 
     // Database variables
 
@@ -154,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
     String currentDate = dateFormat.format(new Date());
 
-  
     // Get the writable database
     private SQLiteDatabase db = null;
 
@@ -233,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
         userDAO.insertUser("testcoins", "testcoins123", 0);
     }
 
-
     private void displayNotifications() {
         Cursor cursor = notificationDAO.getNotificationsByUser(currentUserId);
         List<Notification> notifications = new ArrayList<>();
@@ -245,11 +250,11 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
                 @SuppressLint("Range") String hasBeenRead = String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow("hasBeenRead")));
                 @SuppressLint("Range") int userId = cursor.getInt(cursor.getColumnIndexOrThrow("idUser"));
-                if (hasBeenRead.equals("no")) {
-                    hasUnreadNotifications = true;
-                }
-                else {
+
+                if(userId == currentUserId){
                     hasUnreadNotifications = false;
+                    notificationDAO.updateNotificationStatus(id, "yes", currentUserId);
+
                 }
                 notifications.add(new Notification(title , message));
                 Log.d("Notification", "ID: " + id + ", Message: " + message + ", Title: " + title + ", Has Been Read: " + hasBeenRead + ", User ID: " + userId);
@@ -261,6 +266,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         NotificationAdapter notificationAdapter = new NotificationAdapter(notifications);
         recyclerView.setAdapter(notificationAdapter);
+    }
+
+    private void getNotificationStatus(){
+        Cursor cursor = notificationDAO.getNotificationsByUser(currentUserId);
+        List<Notification> notifications = new ArrayList<>();
+
+        if(cursor != null && cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int id = cursor.getColumnIndex("id");
+                @SuppressLint("Range") String hasBeenRead = cursor.getString(cursor.getColumnIndex("hasBeenRead"));
+               if(id == currentUserId) {
+                   if (hasBeenRead.equals("no")) {
+                       hasUnreadNotifications = true;
+                   } else {
+                       hasUnreadNotifications = false;
+                   }
+               }
+            } while (cursor.moveToNext());
+        }
     }
 
     private void startTimer() {
@@ -1023,6 +1047,7 @@ public class MainActivity extends AppCompatActivity {
         coins.setText(String.valueOf(userCoins));
         setContentView(userBinding.getRoot());
 
+        getNotificationStatus();
         TextView exclamationPoint = findViewById(R.id.exclamationPoint);
         if (hasUnreadNotifications) {
             exclamationPoint.setVisibility(View.VISIBLE);
@@ -1069,6 +1094,14 @@ public class MainActivity extends AppCompatActivity {
             } else { // Login failed
                 showInvalidLoginPopUp();
             }
+        }
+
+        getNotificationStatus();
+        TextView exclamationPoint = findViewById(R.id.exclamationPoint);
+        if (hasUnreadNotifications) {
+            exclamationPoint.setVisibility(View.VISIBLE);
+        } else {
+            exclamationPoint.setVisibility(View.GONE);
         }
     }
 
@@ -1427,6 +1460,7 @@ public class MainActivity extends AppCompatActivity {
                                     userCoins = userDAO.incrementCoins(currentUserId);
                                     Log.d("User", "Coins: " + userCoins);
                                     notificationDAO.insertNotification("Reward Received!", "A reward for beating your best time, here's a Coin", currentUserId);
+                                    notificationDAO.updateNotificationStatus(notificationDAO.getNotificationsIdByTitleByUser("New Record!", currentUserId), "no", currentUserId);
                                     hasUnreadNotifications = true;
                                 }
                             }
@@ -1443,6 +1477,7 @@ public class MainActivity extends AppCompatActivity {
                                     userCoins = userDAO.incrementCoins(currentUserId);
                                     Log.d("User", "Coins: " + userCoins);
                                     notificationDAO.insertNotification("Reward Received" ,"A reward for being Top 3 Global, here's a Coin", currentUserId);
+                                    notificationDAO.updateNotificationStatus(notificationDAO.getNotificationsIdByTitleByUser("Top 3 Global Leaderboard!!!!!", currentUserId), "no", currentUserId);
                                     hasUnreadNotifications = true;
                                 }
                             }
@@ -1840,6 +1875,68 @@ public class MainActivity extends AppCompatActivity {
             Log.e("PopupError", "Error in showNotEnoughCoinsPopUp", e);
         }
 
+    }
+
+    private boolean validatePaymentData(String type, String reference, int value) {
+        if (value <= 0 || value >= 100) {
+            return false;
+        }
+
+        switch (type) {
+            case "MBWAY":
+                return reference.matches("^9\\d{8}$");
+            case "PAYPAL":
+                return reference.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
+            case "IBAN":
+                return reference.matches("^[A-Z]{2}\\d{23}$");
+            case "MB":
+                return reference.matches("^\\d{5}-\\d{9}$");
+            case "VISA":
+                return reference.matches("^4\\d{15}$");
+            default:
+                return false;
+        }
+    }
+
+    private void sendDebitRequest(String type, String reference, int value) {
+        String url = "https://dad-202425-payments-api.vercel.app/api/debit";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("type", type);
+            jsonBody.put("reference", reference);
+            jsonBody.put("value", value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST, url, jsonBody,
+                response -> {
+                    // Handle successful response
+                    if (response.optInt("statusCode") == 201) {
+                        // Debit created successfully
+                        Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    // Handle error response
+                    if (error.networkResponse != null) {
+                        if (error.networkResponse.statusCode == 422) {
+                            // Unprocessable Entity
+                            Toast.makeText(this, "Invalid payment data!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Other errors
+                            Toast.makeText(this, "Payment failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Payment failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Add the request to the RequestQueue.
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
     }
 }
 
