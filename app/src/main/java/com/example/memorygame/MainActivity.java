@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -1973,7 +1974,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 sendDebitRequest("MBWAY", reference, buyingCoinsAmount);
-                moveTo_dashboard_user(view);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> moveTo_dashboard_user(view), 2000);
+
             }
         } else if (view.getId() == R.id.paypal_submit_button) {
             editText = findViewById(R.id.paypal_email);
@@ -1983,7 +1985,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 sendDebitRequest("PAYPAL", reference, buyingCoinsAmount);
-                moveTo_dashboard_user(view);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> moveTo_dashboard_user(view), 2000);
+
             }
 
         } else if (view.getId() == R.id.iban_submit_button) {
@@ -1994,7 +1997,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 sendDebitRequest("IBAN", reference, buyingCoinsAmount);
-                moveTo_dashboard_user(view);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> moveTo_dashboard_user(view), 2000);
+
             }
 
         } else if (view.getId() == R.id.mb_submit_button) {
@@ -2006,7 +2010,8 @@ public class MainActivity extends AppCompatActivity {
             else {
                 reference = reference.substring(0, 5) + "-" + reference.substring(5);
                 sendDebitRequest("MB", reference, buyingCoinsAmount);
-                moveTo_dashboard_user(view);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> moveTo_dashboard_user(view), 2000);
+
             }
         } else if (view.getId() == R.id.visa_submit_button) {
             editText = findViewById(R.id.visa_card_number);
@@ -2016,7 +2021,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 sendDebitRequest("VISA", reference, buyingCoinsAmount);
-                moveTo_dashboard_user(view);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> moveTo_dashboard_user(view), 2000);
+
             }
         } else {
             throw new IllegalStateException("Unexpected value: " + view.getId());
@@ -2045,9 +2051,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
                     }
                     for(int i = 0; i < value; i++){
-                        userDAO.incrementCoins(currentUserId);
+                        userCoins = userDAO.incrementCoins(currentUserId);
                     }
-                    userCoins = userDAO.getCoins(currentUserId);
                 },
                 error -> {
 
