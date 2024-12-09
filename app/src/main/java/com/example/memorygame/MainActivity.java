@@ -329,6 +329,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    public void moveTo_buying_coins_page(View view) {
+
+        setContentView(R.layout.buying_coins_page);
+    }
+
     public void moveTo_boardsize_page(View view) {
         bindingSize = BoardsizePageBinding.inflate(getLayoutInflater());
         setContentView(bindingSize.getRoot());
