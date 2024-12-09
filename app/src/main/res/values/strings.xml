@@ -165,5 +165,26 @@
     <string name="PayPal">PayPal</string>
     <string name="MB">MB</string>
 
+    <string name="mbway_info_title">MBWAY Payment Information</string>
+    <string name="mbway_phone_number_hint">Enter phone number</string>
+    <string name="mbway_submit_button_text">Submit</string>
+
+    <string name="paypal_info_title">PayPal Payment Information</string>
+    <string name="paypal_email_hint">Enter PayPal email</string>
+    <string name="paypal_submit_button_text">Submit</string>
+
+    <string name="iban_info_title">IBAN Payment Information</string>
+    <string name="iban_number_hint">Enter IBAN number</string>
+    <string name="iban_submit_button_text">Submit</string>
+
+    <string name="mb_info_title">MB Payment Information</string>
+    <string name="mb_reference_hint">Enter MB reference (hifen (-) added automatically)</string>
+    <string name="mb_submit_button_text">Submit</string>
+
+    <string name="visa_info_title">VISA Payment Information</string>
+    <string name="visa_card_number_hint">Enter VISA card number</string>
+    <string name="visa_submit_button_text">Submit</string>
+    <string name="todo">TODO</string>
+
 
 </resources>
