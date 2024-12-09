@@ -1,5 +1,6 @@
 package com.example.memorygame;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,6 +21,21 @@ public class NotificationDAO {
         values.put("message", message);
         values.put("idUser", userId);
         return db.insert("Notifications", null, values);
+    }
+
+    public int getNotificationsIdByTitleByUser(String title, int userId) {
+        Cursor cursor = db.rawQuery("SELECT id FROM Notifications WHERE title = ? AND idUser = ?",
+                new String[]{title, String.valueOf(userId)});
+        cursor.moveToFirst();
+        @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+        cursor.close();
+        return id;
+    }
+
+    public void updateNotificationStatus(int notificationId, String status, int userId) {
+        ContentValues values = new ContentValues();
+        values.put("hasBeenRead", status);
+        db.update("Notifications", values, "id = ? AND idUser = ?", new String[]{String.valueOf(notificationId), String.valueOf(userId)});
     }
 
     // Query notifications for a specific user
