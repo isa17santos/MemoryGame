@@ -1068,6 +1068,8 @@ public class MainActivity extends AppCompatActivity {
     public void moveTo_dashboard_user(View view){
         userBinding = DashboardUserBinding.inflate(getLayoutInflater());
         TextView coins = userBinding.numCoins;
+
+        //Update the number of coins displayed
         coins.setText(String.valueOf(userCoins));
         setContentView(userBinding.getRoot());
 
@@ -1966,6 +1968,7 @@ public class MainActivity extends AppCompatActivity {
         EditText editText;
         String reference;
 
+        //Gets the payment type selected by the user and gets itss information from the user. Then sends the API request to the server
         if (view.getId() == R.id.mbway_submit_button) {
             editText = findViewById(R.id.mbway_phone_number);
             reference = editText.getText().toString();
@@ -2033,6 +2036,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendDebitRequest(String type, String reference, int value) {
         String url = "https://dad-202425-payments-api.vercel.app/api/debit";
         JSONObject jsonBody = new JSONObject();
+        // Create the JSON object for the POST request
         try {
             jsonBody.put("type", type);
             jsonBody.put("reference", reference);
@@ -2041,6 +2045,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // Create the POST request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST, url, jsonBody,
                 response -> {
@@ -2077,6 +2082,7 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    // Increase the number of coins the user wants to buy
     public void increaseValue(View view) {
         TextView valueTextView = findViewById(R.id.valueTextView);
         int value = Integer.parseInt(valueTextView.getText().toString());
@@ -2087,6 +2093,7 @@ public class MainActivity extends AppCompatActivity {
         valueTextView.setText(String.valueOf(value));
     }
 
+    // Decrease the number of coins the user wants to buy
     public void decreaseValue(View view) {
         TextView valueTextView = findViewById(R.id.valueTextView);
         int value = Integer.parseInt(valueTextView.getText().toString());
@@ -2097,6 +2104,7 @@ public class MainActivity extends AppCompatActivity {
         valueTextView.setText(String.valueOf(value));
     }
 
+    // Get the number of coins the user wants to buy
     public void getPaymentCoinsAmount(View view) {
         TextView valueTextView = findViewById(R.id.valueTextView);
         buyingCoinsAmount = Integer.parseInt(valueTextView.getText().toString());
