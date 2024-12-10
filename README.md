@@ -276,13 +276,38 @@
             Isa      Bruno      Carolina     Duarte
             20        20           15         15
 
+
+
+    **************************************  SPRINT 7 (week 7)  *****************************************
+    Sprint start: 2024/12/10
+    Sprint end: 2024/12/13
+
+    First daily meeting: 
+        Scrum Master: Carolina
+
+        User Stories and tasks of Sprint 7:
+            - T22 - Update the Readme file                                  (Isa)
+            - T23 - Making the powerpoint for final apresentation           (Pair programming)
+            - T24 - Update katalon tests                                    (Pair programming)
+
+        Story Points (Metodo Delphi):
+                      Isa      Bruno      Carolina     Duarte       Decisão_Final
+            T22 -      1         1           1            1               1
+            T23 -      4         4           4            4               4
+            T24 -      8         8           8            8               8
+
+
+        Horas que cada elemento vai colocar por semana (sprint):
+            Isa      Bruno      Carolina     Duarte
+             8         7           7           7
+
 //--------------------------------------  DAILY MEETINGS   ----------------------------------------------- 
 
 
 //------------------------------------  FINAL COUNT OF STORY POINTS   --------------------------------------------- 
 
     Isa      Bruno      Carolina     Duarte
-    42        42          40           40
+    46        45          43           43
 
 
 //------------------------------------  FINAL COUNT OF STORY POINTS   --------------------------------------------- 
