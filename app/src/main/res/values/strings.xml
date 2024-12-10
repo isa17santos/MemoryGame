@@ -178,7 +178,7 @@
     <string name="iban_submit_button_text">Submit</string>
 
     <string name="mb_info_title">MB Payment Information</string>
-    <string name="mb_reference_hint">Enter MB reference (hifen (-) added automatically)</string>
+    <string name="mb_reference_hint">Enter MB reference</string>
     <string name="mb_submit_button_text">Submit</string>
 
     <string name="visa_info_title">VISA Payment Information</string>

@@ -49,6 +49,18 @@
         When you are in the Notifications Page and have many notifications, in order to see all of them, you need to click on the mouse and drag it. The scroll will not work here.
 
 
+    **************************************   PURCHASING COINS PAGE   *****************************************
+
+        In this feature we used the 'Centralized Support Syste', which allow us to purchase coins with MBWAY, PAYPAL, IBAN, MB and VISA.
+        Validation rules depend on the type:
+            o MBWAY: 9 digits starting with 9 (e.g., "915785345")
+            o PAYPAL: A valid email (e.g., "john.doe@gmail.com")
+            o IBAN: 2 letters followed by 23 digits (e.g., "PT50123456781234567812349"). NOTE: the letters must be uppercase! Otherwise it won't work
+            o MB: 14 digits (e.g., "45634123456789").
+            o VISA: 16 digits starting with 4 (e.g., "4321567812345678").
+        Value: Accepts any positive integer greater than 0 and less than 101.
+        
+
 //-----------------------------------------   IMPORTANT NOTES   -------------------------------------------------- 
 
 
