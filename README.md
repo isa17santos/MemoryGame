@@ -12,6 +12,12 @@
 //-----------------------------------------   IMPORTANT NOTES   -------------------------------------------------- 
 
 
+    **************************************   APK FILE   *****************************************
+
+    You can access the apk file in this repository by following this path:
+    \MemoryGame\app\release\app-release.apk
+
+
     **************************************   DATABASE   *****************************************
 
         Our first idea was to use FireBase to do our remote DataBase, but when we saw that FireBase works with NoSQL and saw all the disadvantages that this would bring us. We decided that the best approach was to create a local DataBase in our project with SQLite. 
