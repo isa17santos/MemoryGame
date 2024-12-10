@@ -271,23 +271,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(notificationAdapter);
     }
 
-    private void getNotificationStatus(){
+    private boolean getNotificationStatus(){
         Cursor cursor = notificationDAO.getNotificationsByUser(currentUserId);
-        List<Notification> notifications = new ArrayList<>();
 
         if(cursor != null && cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int id = cursor.getColumnIndex("id");
                 @SuppressLint("Range") String hasBeenRead = cursor.getString(cursor.getColumnIndex("hasBeenRead"));
-               if(id == currentUserId) {
-                   if (hasBeenRead.equals("no")) {
-                       hasUnreadNotifications = true;
-                   } else {
-                       hasUnreadNotifications = false;
-                   }
+               if (hasBeenRead.equals("no")) {
+                   return true;
                }
             } while (cursor.moveToNext());
         }
+        return false;
     }
 
     private void startTimer() {
@@ -1068,10 +1064,12 @@ public class MainActivity extends AppCompatActivity {
     public void moveTo_dashboard_user(View view){
         userBinding = DashboardUserBinding.inflate(getLayoutInflater());
         TextView coins = userBinding.numCoins;
+
+        //Update the number of coins displayed
         coins.setText(String.valueOf(userCoins));
         setContentView(userBinding.getRoot());
 
-        getNotificationStatus();
+        hasUnreadNotifications = getNotificationStatus();
         TextView exclamationPoint = findViewById(R.id.exclamationPoint);
         if (hasUnreadNotifications) {
             exclamationPoint.setVisibility(View.VISIBLE);
@@ -1966,6 +1964,7 @@ public class MainActivity extends AppCompatActivity {
         EditText editText;
         String reference;
 
+        //Gets the payment type selected by the user and gets itss information from the user. Then sends the API request to the server
         if (view.getId() == R.id.mbway_submit_button) {
             editText = findViewById(R.id.mbway_phone_number);
             reference = editText.getText().toString();
@@ -2033,6 +2032,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendDebitRequest(String type, String reference, int value) {
         String url = "https://dad-202425-payments-api.vercel.app/api/debit";
         JSONObject jsonBody = new JSONObject();
+        // Create the JSON object for the POST request
         try {
             jsonBody.put("type", type);
             jsonBody.put("reference", reference);
@@ -2041,15 +2041,22 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // Create the POST request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST, url, jsonBody,
                 response -> {
                     Log.d("ServerResponse", "Response: " + response.toString());
+
                     // Handle successful response
                     if (response.optInt("statusCode") == 201) {
                         // Debit created successfully
-                        Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
+                        // I can't use this because I don't get statusCode201 when it's successful
                     }
+                    Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
+
+                    notificationDAO.insertNotification("Purchase done", "Your purchase of " + value + " coins has been successful", currentUserId);
+                    notificationDAO.updateNotificationStatus(notificationDAO.getNotificationsIdByTitleByUser("Purchase done", currentUserId), "no", currentUserId);
+
                     for(int i = 0; i < value; i++){
                         userCoins = userDAO.incrementCoins(currentUserId);
                     }
@@ -2077,6 +2084,7 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    // Increase the number of coins the user wants to buy
     public void increaseValue(View view) {
         TextView valueTextView = findViewById(R.id.valueTextView);
         int value = Integer.parseInt(valueTextView.getText().toString());
@@ -2087,6 +2095,7 @@ public class MainActivity extends AppCompatActivity {
         valueTextView.setText(String.valueOf(value));
     }
 
+    // Decrease the number of coins the user wants to buy
     public void decreaseValue(View view) {
         TextView valueTextView = findViewById(R.id.valueTextView);
         int value = Integer.parseInt(valueTextView.getText().toString());
@@ -2097,6 +2106,7 @@ public class MainActivity extends AppCompatActivity {
         valueTextView.setText(String.valueOf(value));
     }
 
+    // Get the number of coins the user wants to buy
     public void getPaymentCoinsAmount(View view) {
         TextView valueTextView = findViewById(R.id.valueTextView);
         buyingCoinsAmount = Integer.parseInt(valueTextView.getText().toString());
