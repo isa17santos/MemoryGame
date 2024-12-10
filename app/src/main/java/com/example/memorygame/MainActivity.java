@@ -271,23 +271,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(notificationAdapter);
     }
 
-    private void getNotificationStatus(){
+    private boolean getNotificationStatus(){
         Cursor cursor = notificationDAO.getNotificationsByUser(currentUserId);
-        List<Notification> notifications = new ArrayList<>();
 
         if(cursor != null && cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int id = cursor.getColumnIndex("id");
                 @SuppressLint("Range") String hasBeenRead = cursor.getString(cursor.getColumnIndex("hasBeenRead"));
-               if(id == currentUserId) {
-                   if (hasBeenRead.equals("no")) {
-                       hasUnreadNotifications = true;
-                   } else {
-                       hasUnreadNotifications = false;
-                   }
+               if (hasBeenRead.equals("no")) {
+                   return true;
                }
             } while (cursor.moveToNext());
         }
+        return false;
     }
 
     private void startTimer() {
@@ -1071,7 +1067,7 @@ public class MainActivity extends AppCompatActivity {
         coins.setText(String.valueOf(userCoins));
         setContentView(userBinding.getRoot());
 
-        getNotificationStatus();
+        hasUnreadNotifications = getNotificationStatus();
         TextView exclamationPoint = findViewById(R.id.exclamationPoint);
         if (hasUnreadNotifications) {
             exclamationPoint.setVisibility(View.VISIBLE);
@@ -2045,11 +2041,17 @@ public class MainActivity extends AppCompatActivity {
                 Request.Method.POST, url, jsonBody,
                 response -> {
                     Log.d("ServerResponse", "Response: " + response.toString());
+
                     // Handle successful response
                     if (response.optInt("statusCode") == 201) {
                         // Debit created successfully
-                        Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
+                        // I can't use this because I don't get statusCode201 when it's successful
                     }
+                    Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
+
+                    notificationDAO.insertNotification("Purchase done", "Your purchase of " + value + " coins has been successful", currentUserId);
+                    notificationDAO.updateNotificationStatus(notificationDAO.getNotificationsIdByTitleByUser("Purchase done", currentUserId), "no", currentUserId);
+
                     for(int i = 0; i < value; i++){
                         userCoins = userDAO.incrementCoins(currentUserId);
                     }
